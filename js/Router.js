@@ -129,7 +129,7 @@ let AdharaRouter = null;
      * @returns {String} URL Path (path).
      * */
     function getPathName(){
-        return this.transformURL(getBaseUrl().split('://')[1].substring(window.location.host.length));
+        return AdharaRouter.transformURL(getBaseUrl().split('://')[1].substring(window.location.host.length));
     }
 
     /**
@@ -193,7 +193,7 @@ let AdharaRouter = null;
                         currentUrl = getFullUrl();
                         fetchQueryParams();
                         params.push(queryParams);
-                        if(opts.fn instanceof AdharaView){
+                        if(opts.fn.constructor instanceof AdharaView.constructor){
                             Adhara.onRoute(opts.fn, params);
                         }else{
                             opts.fn.apply(this, params);
@@ -213,6 +213,7 @@ let AdharaRouter = null;
         }
         curr_path = getFullPath();
     }
+    updateHistoryStack();	//updating history stack with the entry URL
 
     /**
      * @private
@@ -292,72 +293,6 @@ let AdharaRouter = null;
     }
 
     class Router{
-
-        constructor(){
-
-            /**
-             * @description
-             * setting current page name to undefined on moving to some other page that is not registered with router.
-             * */
-            window.onpopstate = () => {
-                if(currPageName){
-                    let url_pattern = this.getURLPatternByPageName(currPageName);
-                    if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
-                        currPageName = undefined;
-                    }
-                }
-            };
-
-            window.statechange = () => {
-                let state = history.state;
-                updateHistoryStack();
-                pathParams = {};
-                if(state !== undefined && state !== ''){
-                    let data = state.data;
-                    if(data.__router__ === true){
-                        this.route();
-                    }
-                }
-            };
-            // parent.History.Adapter.bind(window,'statechange',() => {
-            //     let state = History.getState();
-            //     updateHistoryStack();
-            //     if(state !== undefined && state !== ''){
-            //         let data = state.data;
-            //         if(data.__router__ === true){
-            //             this.route();
-            //         }
-            //     }
-            // });
-
-            updateHistoryStack();	//updating history stack with the entry URL
-
-            /**
-             * @static
-             * @readonly
-             * @enum {RouteType}
-             * @description Operations that can be performed on the entity
-             * */
-            this.RouteTypes = Object.freeze({
-                /**
-                 * navigate to the url and call the view function. This will add current URL to History.
-                 * */
-                NAVIGATE : "navigate",
-                /**
-                 * override the current url and call the view function. This will not change History.
-                 * */
-                OVERRIDE : "override",
-                /**
-                 * Just update the URL. Adds current URL to History. View function will not be called.
-                 * */
-                SET : "set",
-                /**
-                 * Overrides the current URL. No modifications made to History. View function will not be called.
-                 * */
-                UPDATE : "update"
-            });
-
-        }
 
         /**
          * @function
@@ -695,7 +630,63 @@ let AdharaRouter = null;
 
     }
 
-    AdharaRouter = new Router();
+    //---------------------
+
+    AdharaRouter = Router;
+
+    /**
+     * @description
+     * setting current page name to undefined on moving to some other page that is not registered with router.
+     * */
+    window.onpopstate = () => {
+        if(currPageName){
+            let url_pattern = Router.getURLPatternByPageName(currPageName);
+            if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
+                currPageName = undefined;
+            }
+        }
+    };
+
+    window.statechange = () => {
+        let state = history.state;
+        updateHistoryStack();
+        pathParams = {};
+        if(state !== undefined && state !== ''){
+            let data = state.data;
+            if(data.__router__ === true){
+                this.route();
+            }
+        }
+    };
+
+    /**
+     * @static
+     * @readonly
+     * @enum {RouteType}
+     * @description Operations that can be performed on the entity
+     * */
+    AdharaRouter.RouteTypes = Object.freeze({
+        /**
+         * navigate to the url and call the view function. This will add current URL to History.
+         * */
+        NAVIGATE : "navigate",
+        /**
+         * override the current url and call the view function. This will not change History.
+         * */
+        OVERRIDE : "override",
+        /**
+         * Just update the URL. Adds current URL to History. View function will not be called.
+         * */
+        SET : "set",
+        /**
+         * Overrides the current URL. No modifications made to History. View function will not be called.
+         * */
+        UPDATE : "update"
+    });
+    
+    //---------------------
+
+
 
 })();
 

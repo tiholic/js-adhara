@@ -5,22 +5,37 @@
 class AdharaView{
 
     constructor(){
-        this.template = "";
-        this.data = {};
+        Adhara.instances[this.constructor.name] = this;
     }
 
-    getTemplate(){
-        return this.template;
+    get data(){
+        return {};
     }
 
-    getData(){
-        return this.data;
+    get template(){
+        if(AdharaRouter.getCurrentPageName()){
+            return AdharaRouter.getCurrentPageName().replace(/_/g, "-");
+        }else{
+            let className = this.constructor.name.toLowerCase();
+            if(className.endsWith("view")){
+                return className.slice(0, className.length - 4);
+            }else{
+                return className;
+            }
+        }
     }
 
-    render(container){
-        container.innerHTML = Handlebars.templates[this.getTemplate()](this.getData());
+    get contentSelector(){
+        throw new Error("Not implemented");
+    }
+
+    render(containerSelector){
+        document.querySelector(containerSelector).innerHTML
+            = this.DOMcontent =  Handlebars.templates[this.template](this.data);
+    }
+
+    getContentContainer(){
+        return this.DOMcontent.querySelector(this.contentSelector);
     }
 
 }
-
-AdharaView.container = null;
