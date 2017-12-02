@@ -1,3 +1,5 @@
 {
-  "presets": ["env"]
+  "presets": [
+    "C:\\Users\\Rohit\\AppData\\Roaming\\npm\\node_modules\\babel-preset-env"
+  ]
 }
