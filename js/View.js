@@ -30,8 +30,13 @@ class AdharaView{
     }
 
     render(containerSelector){
-        document.querySelector(containerSelector).innerHTML
-            = this.DOMcontent =  Handlebars.templates[this.template](this.data);
+        this.container = document.querySelector(containerSelector);
+        this.container.innerHTML = Handlebars.templates[this.template](this.data);
+        this.postProcess(this.container);
+    }
+
+    postProcess(container){
+        //Do something with the DOMContent
     }
 
     getContentContainer(){
