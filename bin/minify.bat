@@ -1,0 +1,1 @@
+uglifyjs ..\dist\js\Utils.js ..\dist\js\py.js ..\dist\js\Router.js ..\dist\js\Adhara.js ..\dist\js\View.js ..\dist\js\ContainerView.js ..\dist\js\RestAPI.js -o ..\dist\adhara.min.js
