@@ -1,4 +1,4 @@
-class RangeIterator {
+/*class RangeIterator {
     constructor(start, stop, step=1) {
         this.value = start;
         this.stop = stop;
@@ -20,4 +20,10 @@ class RangeIterator {
 
 function range(start, stop, step) {
     return new RangeIterator(start, stop, step);
+}*/
+
+function* range(start, stop, step=1){
+    for(let i=start; i+step<=stop; i+=step){
+        yield i;
+    }
 }

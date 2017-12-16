@@ -4,6 +4,7 @@
   "description": "foundation for any kinf of website: microframework",
   "main": "index.js",
   "scripts": {
+    "build": "cd bin && minify.bat",
     "test": "mocha tests/**.spec.js"
   },
   "repository": {
@@ -26,8 +27,12 @@
   "homepage": "https://gitlab.com/infitio/Adhara#README",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-minify": "^0.2.0",
+    "babel-preset-stage-0": "^6.0.15"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",

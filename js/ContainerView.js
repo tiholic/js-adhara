@@ -10,7 +10,8 @@ class AdharaContainerView extends AdharaView{
 
     get data(){
         return {
-            app_name: Adhara.app.name
+            app_name: Adhara.app.name,
+            tag_line: Adhara.app.tag_line
         }
     }
 
