@@ -7,6 +7,7 @@ class AdharaView{
 
     constructor(){
         Adhara.instances[this.constructor.name] = this;
+        this.subViews = [];
     }
 
     set data(data){
@@ -48,6 +49,17 @@ class AdharaView{
         //Control the DOM elements after rendering
     }
 
+    get getSubViews(){
+        return this.subViews;
+    }
+
+    set setSubViews(subViews){
+        this.getSubViews.concat(subViews);
+    }
+
+    set setSubView(subView){
+        this.getSubViews.push(subView);
+    }
 
 
 }
