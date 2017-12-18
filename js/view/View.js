@@ -4,8 +4,14 @@
  * */
 class AdharaView{
 
+
     constructor(){
         Adhara.instances[this.constructor.name] = this;
+        this.subViews = [];
+    }
+
+    set data(data){
+        this.data = data;
     }
 
     get data(){
@@ -35,12 +41,25 @@ class AdharaView{
         this.postProcess(this.container);
     }
 
-    postProcess(container){
-        //Do something with the DOMContent
-    }
-
     getContentContainer(){
         return this.DOMcontent.querySelector(this.contentSelector);
     }
+
+    format(){
+        //Control the DOM elements after rendering
+    }
+
+    get getSubViews(){
+        return this.subViews;
+    }
+
+    set setSubViews(subViews){
+        this.getSubViews.concat(subViews);
+    }
+
+    set setSubView(subView){
+        this.getSubViews.push(subView);
+    }
+
 
 }
