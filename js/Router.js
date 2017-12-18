@@ -633,6 +633,7 @@ let AdharaRouter = null;
     //---------------------
 
     AdharaRouter = Router;
+    AdharaRouter.enableAllAnchors = true;
 
     /**
      * @description
@@ -703,7 +704,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.addEventListener('click', function (e) {
-        if(hasAttribute(e.target, "route")){
+        if(AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route")){
             let url = this.getAttribute('href').trim();
             if(url.indexOf('javascript') !== -1){return;}
             if(url){
