@@ -633,7 +633,6 @@ let AdharaRouter = null;
     //---------------------
 
     AdharaRouter = Router;
-    AdharaRouter.enableAllAnchors = true;
 
     /**
      * @description
@@ -684,39 +683,39 @@ let AdharaRouter = null;
          * */
         UPDATE : "update"
     });
+
+
+    AdharaRouter.enableAllAnchors = true;
+
+    AdharaRouter.listen = function(){
+        /**
+         * Listening to elements with route property in DOM.
+         * If it has href attribute, preventing default event and proceeding with SdpRouting
+         * */
+
+        function hasAttribute(elem, attribute_name) {
+            return elem.hasAttribute(attribute_name);
+        }
+
+        document.addEventListener('click', function (e) {
+            if(e.target.nodeName === "A" && ( AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route") ) ){
+                let url = e.target.getAttribute('href').trim();
+                if(url.indexOf('javascript') !== -1){return;}
+                if(url){
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let go_back = e.target.getAttribute("data-back");
+                let force = e.target.getAttribute("data-force") !== "false";
+                if(go_back){ return AdharaRouter.goBack(url); }
+                AdharaRouter.navigateTo(url, force);
+            }
+
+        }, false);
+    }
     
     //---------------------
 
 
 
 })();
-
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    /**
-     * Listening to elements with route property in DOM.
-     * If it has href attribute, preventing default event and proceeding with SdpRouting
-     * */
-
-    function hasAttribute(elem, attribute_name) {
-        return elem.hasAttribute(attribute_name);
-    }
-
-    document.addEventListener('click', function (e) {
-        if(AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route")){
-            let url = this.getAttribute('href').trim();
-            if(url.indexOf('javascript') !== -1){return;}
-            if(url){
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            let go_back = e.target.getAttribute("data-back");
-            let force = e.target.getAttribute("data-force") !== "false";
-            if(go_back){ return AdharaRouter.goBack(url); }
-            AdharaRouter.navigateTo(url, force);
-        }
-
-    }, false);
-
-});

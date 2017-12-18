@@ -22,6 +22,8 @@ let Adhara = null;
                 this.container = new this.app.container();
                 this.container.render(this.app.DOMSelector||"app");
             }
+            AdharaRouter.register(this.app.routes);
+            AdharaRouter.listen();
             AdharaRouter.route();
         }
 
