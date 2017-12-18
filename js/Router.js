@@ -697,7 +697,26 @@ let AdharaRouter = null;
             return elem.hasAttribute(attribute_name);
         }
 
-        document.addEventListener('click', function (e) {
+        jQuery(document).on("click", "a", function(e){
+            if ((AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route"))) {
+                let url = this.getAttribute('href').trim();
+                if (url.indexOf('javascript') !== -1) {
+                    return;
+                }
+                if (url) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let go_back = this.getAttribute("data-back");
+                let force = this.getAttribute("data-force") !== "false";
+                if (go_back) {
+                    return AdharaRouter.goBack(url);
+                }
+                AdharaRouter.navigateTo(url, force);
+            }
+        });
+
+        /*document.addEventListener('click', function (e) {
             if(e.target.nodeName === "A" && ( AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route") ) ){
                 let url = e.target.getAttribute('href').trim();
                 if(url.indexOf('javascript') !== -1){return;}
@@ -711,7 +730,7 @@ let AdharaRouter = null;
                 AdharaRouter.navigateTo(url, force);
             }
 
-        }, false);
+        }, false);*/
     }
     
     //---------------------
