@@ -4,6 +4,11 @@
 
 class AdharaSubView extends AdharaView{
 
+    constructor(template){
+        super();
+        this.template = template;
+    }
+
     get isSubView(){
         return true;
     }
