@@ -15,6 +15,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                {{#if confirmOptions.isConfirm}}
+                    <button type="button" class="btn btn-secondary confirm-btn" data-dismiss="modal">{{confirmOptions.text}}</button>
+                {{/if}}
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
