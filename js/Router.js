@@ -448,6 +448,16 @@ let AdharaRouter = null;
                 return false;
             }
             history.pushState({__router__:true}, parent.document.title, url);
+            //considering the behaviour of immediate state change
+            let state = history.state;
+            updateHistoryStack();
+            pathParams = {};
+            if(state !== undefined && state !== ''){
+                // let data = state.data;
+                if(state.__router__ === true || state.data.__router__ === true){
+                    this.route();
+                }
+            }
             // History.pushState({__router__:true}, parent.document.title, url);
             return true;
         }
@@ -624,10 +634,6 @@ let AdharaRouter = null;
             return matched_pattern;
         }
 
-        static xxx(){
-            return getPathName();
-        }
-
     }
 
     //---------------------
@@ -643,18 +649,6 @@ let AdharaRouter = null;
             let url_pattern = Router.getURLPatternByPageName(currPageName);
             if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
                 currPageName = undefined;
-            }
-        }
-    };
-
-    window.statechange = () => {
-        let state = history.state;
-        updateHistoryStack();
-        pathParams = {};
-        if(state !== undefined && state !== ''){
-            let data = state.data;
-            if(data.__router__ === true){
-                this.route();
             }
         }
     };
@@ -683,39 +677,58 @@ let AdharaRouter = null;
          * */
         UPDATE : "update"
     });
+
+
+    AdharaRouter.enableAllAnchors = true;
+
+    AdharaRouter.listen = function(){
+        /**
+         * Listening to elements with route property in DOM.
+         * If it has href attribute, preventing default event and proceeding with SdpRouting
+         * */
+
+        function hasAttribute(elem, attribute_name) {
+            return elem.hasAttribute(attribute_name);
+        }
+
+        jQuery(document).on("click", "a", function(e){
+            if ((AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route"))) {
+                let url = this.getAttribute('href').trim();
+                if (url.indexOf('javascript') !== -1) {
+                    return;
+                }
+                if (url) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let go_back = this.getAttribute("data-back");
+                let force = this.getAttribute("data-force") !== "false";
+                if (go_back) {
+                    return AdharaRouter.goBack(url);
+                }
+                AdharaRouter.navigateTo(url, force);
+            }
+        });
+
+        /*document.addEventListener('click', function (e) {
+            if(e.target.nodeName === "A" && ( AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route") ) ){
+                let url = e.target.getAttribute('href').trim();
+                if(url.indexOf('javascript') !== -1){return;}
+                if(url){
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let go_back = e.target.getAttribute("data-back");
+                let force = e.target.getAttribute("data-force") !== "false";
+                if(go_back){ return AdharaRouter.goBack(url); }
+                AdharaRouter.navigateTo(url, force);
+            }
+
+        }, false);*/
+    }
     
     //---------------------
 
 
 
 })();
-
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    /**
-     * Listening to elements with route property in DOM.
-     * If it has href attribute, preventing default event and proceeding with SdpRouting
-     * */
-
-    function hasAttribute(elem, attribute_name) {
-        return elem.hasAttribute(attribute_name);
-    }
-
-    document.addEventListener('click', function (e) {
-        if(hasAttribute(e.target, "route")){
-            let url = this.getAttribute('href').trim();
-            if(url.indexOf('javascript') !== -1){return;}
-            if(url){
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            let go_back = e.target.getAttribute("data-back");
-            let force = e.target.getAttribute("data-force") !== "false";
-            if(go_back){ return AdharaRouter.goBack(url); }
-            AdharaRouter.navigateTo(url, force);
-        }
-
-    }, false);
-
-});
