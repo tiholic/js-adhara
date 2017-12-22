@@ -3,7 +3,7 @@
  * TODO : 1. need to take in different table configurations, 2. need a preprocessor for data before drawing table
  */
 
-class AdharaTableView extends AdharaSubView{
+class AdharaTableView extends AdharaView{
 
     /***
      * @param url The api URL
