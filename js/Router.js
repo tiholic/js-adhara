@@ -448,6 +448,16 @@ let AdharaRouter = null;
                 return false;
             }
             history.pushState({__router__:true}, parent.document.title, url);
+            //considering the behaviour of immediate state change
+            let state = history.state;
+            updateHistoryStack();
+            pathParams = {};
+            if(state !== undefined && state !== ''){
+                // let data = state.data;
+                if(state.__router__ === true || state.data.__router__ === true){
+                    this.route();
+                }
+            }
             // History.pushState({__router__:true}, parent.document.title, url);
             return true;
         }
@@ -624,10 +634,6 @@ let AdharaRouter = null;
             return matched_pattern;
         }
 
-        static xxx(){
-            return getPathName();
-        }
-
     }
 
     //---------------------
@@ -643,18 +649,6 @@ let AdharaRouter = null;
             let url_pattern = Router.getURLPatternByPageName(currPageName);
             if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
                 currPageName = undefined;
-            }
-        }
-    };
-
-    window.statechange = () => {
-        let state = history.state;
-        updateHistoryStack();
-        pathParams = {};
-        if(state !== undefined && state !== ''){
-            let data = state.data;
-            if(data.__router__ === true){
-                this.route();
             }
         }
     };

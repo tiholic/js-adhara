@@ -8,7 +8,7 @@ let Adhara = null;
     class AdharaBase{
 
         init(app_module){
-            this.app_module = app_module;
+            // this.app_module = app_module;
             if(app_module){
                 this.app = new app_module();
                 this.createContainer();
