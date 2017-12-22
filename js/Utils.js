@@ -9,7 +9,7 @@
  * @description
  * Helpers written for handlebars. Can also be used directly.
  * */
-let Helpers = {
+let HandlebarsHelpers = {
     /**
      * @function
      * @static
@@ -135,14 +135,12 @@ let Helpers = {
      * @static
      * @param {Object} object - object in which to lookup.
      * @param {String} path - dot separated keys to be looked up for in depth.
-     * @param {String} [identifier=null] - token that helps to lookup inside arrays.
      * @description
      * Wrapper for {@link getValueFromJSON}
      * @returns {String|Number|Boolean|Object|Array} - Value for the key.
      * */
-    'get' : function(object, path, identifier){		
-        identifier = idCheck(identifier);
-        return getValueFromJSON(object, path, identifier);
+    'get' : function(object, path){
+        return getValueFromJSON(object, path);
     },
     /**
      * @function
@@ -203,10 +201,10 @@ let Helpers = {
     /**
      * @function
      * @static
-     * @returns {String|Number|Boolean|Object|Array} - Value of the global variable.
+     * @returns {String|Number|Boolean|Object|Array} - Value of the global letiable.
      * */
-    'global' : function(global_variable){
-        return getValueFromJSON(window, global_variable);
+    'global' : function(global_letiable){
+        return getValueFromJSON(window, global_letiable);
     },
     'loop' : function(looper, options){
         let structure = '';
@@ -271,27 +269,59 @@ let Helpers = {
     }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    Handlebars.registerHelper(Helpers);
+function handleForm(form){
+    if(form.submitting){
+        return;
+    }else{
+        form.submitting = true;
+    }
+    let hasFiles = !!form.querySelector('input[type="file"]');
+    let apiData;
+    if(hasFiles){
+        apiData = new FormData(form);
+    }else{
+        let formData = jQuery(form).serializeArray();
+        apiData = {};
+        jQuery.each(formData, function (i, fieldData) {
+            apiData[fieldData.name] = fieldData.value;
+        });
+    }
+    let format_fn = form.getAttribute('format-data');
+    if(format_fn){
+        apiData = call_fn(format_fn, apiData);
+    }
+    if(apiData===false){return;}
+    RestAPI[form.getAttribute('api-method')]({
+        url: form.action,
+        data: apiData,
+        successMessage: form.getAttribute('success-message'),
+        handleError: form.getAttribute('handle-error')!=="false",
+        success: function(data){
+            if(form.getAttribute('form-clear')==="true") {
+                form.reset();
+            }
+            jQuery(form).trigger('success', data);
+        },
+        failure: function(message){
+            jQuery(form).trigger('failure', message);
+        }
+    });
+}
+
+Adhara.onInit(()=>{
+    //Register handlebar helpers
+    Handlebars.registerHelper(HandlebarsHelpers);
+    //Form listeners
+    jQuery(document).on('submit', 'form.api-form', function (event) {
+        event.preventDefault();
+        handleForm(this);
+    });
+    //Form listeners
+    jQuery(document).on('success', 'form.dialog-form', function (/*e, d*/) {
+        this.close.click();
+    });
 });
 
-/**
- * @function
- * @private
- * @param {String} [identifier="$"] - identifier to be checked for validity.
- * @returns {String} whether the identifier is a valid one. If no identifier is passed, returns default identifier.
- * @throws `"identifier should not be a number"` Exception.
- * */
-function idCheck(identifier){
-    if(!identifier){
-        return '$';
-    }
-    if(!isNaN(parseInt(identifier))){
-        throw new Error("identifier should not be a number");	
-    }else{
-        return identifier;
-    }
-}
 
 /**
  * @function
@@ -491,7 +521,7 @@ function setValueToJson(object, path, value){
  * @description
  * calls the function with params passed
  * @example
- * let gv = {}; //global_variable
+ * let gv = {}; //global_letiable
  * gv.sample_fn = function(param1, param2, param3){
  * 	//Do Something...
  * 	return "Hello from SampleFN"
@@ -535,7 +565,7 @@ function call_fn(fn){
  * @description
  * calls the function with params passed
  * @example
- * let gv = {}; //global_variable
+ * let gv = {}; //global_letiable
  * gv.sample_fn = function(param1, param2, param3){
  * 	//Do Something...
  * 	return "Hello from SampleFN"

@@ -95,7 +95,19 @@ let RestAPI = {};
         send(o);
     };
 
+    function formatURL(url){
+        let base = Adhara.app?Adhara.app.base_api_url?Adhara.app.base_api_url:"/":"/";
+        if(base.indexOf("/")+1 !== base.length){
+            base += "/";
+        }
+        if(url.indexOf("/") === 0){
+            url = url.substring(1);
+        }
+        return base+url;
+    }
+
     function send(o){
+        o.url = formatURL(o.url);
         let fns = o.success;
         let fnf = o.failure;
         o.success = function(d,s,x){RestAPI.handle_api_success(fns,fnf,d,s,x,o.handleError,o.successMessage);};

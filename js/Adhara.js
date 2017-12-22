@@ -8,7 +8,7 @@ let Adhara = null;
     class AdharaBase{
 
         init(app_module){
-            // this.app_module = app_module;
+            callOnInitListeners();
             if(app_module){
                 this.app = new app_module();
                 this.createContainer();
@@ -35,6 +35,17 @@ let Adhara = null;
         let view = Adhara.instances[view_class.constructor.name] || new view_class();
         view.render(Adhara.container?Adhara.container.contentSelector:"body");
     };
+
+    let on_init_listeners = [];
+    Adhara.onInit = (fn) => {
+        on_init_listeners.push(fn);
+    };
+
+    function callOnInitListeners(){
+        for(let on_init_listener of on_init_listeners){
+            on_init_listener();
+        }
+    }
 
     Adhara.instances = {};
 
