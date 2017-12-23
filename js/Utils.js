@@ -231,7 +231,7 @@ let HandlebarsHelpers = {
      * @description Takes numerous and calls the fn with arguments from 2nd position since 1st argument is fn itself.
      * @returns {String|Number|Boolean|Object|Array} content returned by fn
      * */
-    'call_fn' : function(fn){			
+    'fn_call' : function(fn){
         return call_fn.apply(this, Array.prototype.slice.call(arguments).slice(0, -1));
     },
     /**
@@ -292,7 +292,7 @@ function handleForm(form){
     }
     if(apiData===false){return;}
     RestAPI[form.getAttribute('api-method')]({
-        url: form.action,
+        url: form.action.split(window.location.host)[1],
         data: apiData,
         successMessage: form.getAttribute('success-message'),
         handleError: form.getAttribute('handle-error')!=="false",

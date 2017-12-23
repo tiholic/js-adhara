@@ -4,7 +4,6 @@
  * */
 class AdharaView{
 
-
     constructor(){
         Adhara.instances[this.constructor.name] = this;
         this.subViews = [];
@@ -38,7 +37,7 @@ class AdharaView{
     render(containerSelector){
         this.container = document.querySelector(containerSelector);
         this.container.innerHTML = Handlebars.templates[this.template](this.data);
-        this.postProcess(this.container);
+        this.format(this.container);
     }
 
     getContentContainer(){

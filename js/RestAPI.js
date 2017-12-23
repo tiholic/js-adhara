@@ -47,14 +47,14 @@ let RestAPI = {};
                 }
                 if (d.status === "success") {
                     if (successMessage && successMessage !== "") {
-                        toastr.success(successMessage);
+                        Toast.success(successMessage);
                     }
                     return call_fn(fns, d.data);
                 }
             }
         }
         if(toastFailure !== false) {
-            toastr.error(d.message);
+            Toast.error(d.message);
         }
         call_fn(fne, d.message);
     };
@@ -65,9 +65,9 @@ let RestAPI = {};
         }
         call_fn(fne, e);
         if(x.responseText){
-            return toastr.error(e+"\n"+x.responseText);
+            return Toast.error(e+"\n"+x.responseText);
         }
-        toastr.error(e);
+        Toast.error(e);
     };
 
     RestAPI.post = function(o){
@@ -97,7 +97,7 @@ let RestAPI = {};
 
     function formatURL(url){
         let base = Adhara.app?Adhara.app.base_api_url?Adhara.app.base_api_url:"/":"/";
-        if(base.indexOf("/")+1 !== base.length){
+        if(base.lastIndexOf("/")+1 !== base.length){
             base += "/";
         }
         if(url.indexOf("/") === 0){

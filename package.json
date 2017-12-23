@@ -1,7 +1,7 @@
 {
   "name": "adhara",
-  "version": "1.0.44",
-  "description": "foundation for any kinf of website: microframework",
+  "version": "1.0.49",
+  "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
     "build": "cd bin && minify.bat",

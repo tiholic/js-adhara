@@ -7,6 +7,7 @@ uglifyjs ../dist/js/Utils.js
          ../dist/js/view/ContainerView.js
          ../dist/js/RestAPI.js
          ../dist/js/view/TableView.js
-         ../dist/js/view/Popup.js
+         ../dist/js/view/DialogView.js
+         ../dist/js/components/Toast.js
 
          -o ../dist/adhara.min.js
