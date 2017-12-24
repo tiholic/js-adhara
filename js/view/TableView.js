@@ -24,7 +24,7 @@ class AdharaTableView extends AdharaView{
     render(containerSelector){
         this.container = document.querySelector(containerSelector);
         this.container.innerHTML = Handlebars.templates[this.template]({'config' : this.config, 'data' : this.data});
-        this.postProcess(this.container);
+        this.format(this.container);
     }
 
 }
