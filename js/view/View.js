@@ -6,10 +6,15 @@ class AdharaView{
 
     constructor(){
         Adhara.instances[this.constructor.name] = this;
+        this._data = null;
     }
 
     get data(){
-        return {};
+        return this._data || {};
+    }
+
+    dataChange(new_data){
+        this._data = new_data;
     }
 
     get template(){
@@ -39,12 +44,31 @@ class AdharaView{
         return this.DOMcontent.querySelector(this.contentSelector);
     }
 
-    format(){
-        //Control the DOM elements after rendering
-    }
+    /**
+     * @typedef {Object} SubView - Sub view configuration
+     * @property {String} container_selector - container's CSS selector
+     * @property {class} view - view class reference of the sub view
+     * */
 
+    /**
+     * @function
+     * @instance
+     * @returns Array<SubView>
+     * */
     get subViews(){
         return [];
+    }
+
+    renderSubViews(){
+        for(let sub_view of this.subViews){
+            let view = Adhara.getView(sub_view.view);
+            view.render(sub_view.container_selector);
+        }
+    }
+
+    format(){
+        //Control the DOM elements after rendering
+        this.renderSubViews();
     }
 
 }

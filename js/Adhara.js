@@ -31,8 +31,12 @@ let Adhara = null;
 
     Adhara = new AdharaBase();
 
+    Adhara.getView = (view_class) => {
+        return Adhara.instances[view_class.constructor.name] || new view_class();
+    };
+
     Adhara.onRoute = (view_class) => {
-        let view = Adhara.instances[view_class.constructor.name] || new view_class();
+        let view = Adhara.getView(view_class);
         view.render(Adhara.container?Adhara.container.contentSelector:"body");
     };
 
