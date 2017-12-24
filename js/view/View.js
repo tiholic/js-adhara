@@ -38,6 +38,7 @@ class AdharaView{
         this.container = document.querySelector(containerSelector);
         this.container.innerHTML = Handlebars.templates[this.template](this.data);
         this.format(this.container);
+        this.renderSubViews();
     }
 
     getContentContainer(){
@@ -68,7 +69,6 @@ class AdharaView{
 
     format(){
         //Control the DOM elements after rendering
-        this.renderSubViews();
     }
 
 }
