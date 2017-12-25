@@ -1,8 +1,6 @@
-rm ../js/template.js
+handlebars ../templates/*.hbs -f ../dist/js/templates.js
 
-handlebars ../template/*.hbs -f ../js/template.js
-
-if [ -f ../js/template.js ]
+if [ -f ../js/templates.js ]
 then
 	echo "==> Handlebars compiled successfully."
 else

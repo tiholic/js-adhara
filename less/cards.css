@@ -1,0 +1,49 @@
+.card {
+  border-radius: 3px;
+  padding: 1em;
+  display: inline-block;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
+}
+.card:hover {
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+}
+.card-heading {
+  height: 3.5em;
+  padding: 1em;
+}
+.card-md {
+  border-radius: 3px;
+  padding: 1em;
+  display: inline-block;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
+  margin: 1.5%;
+  width: 30%;
+  min-height: 100px;
+}
+.card-md:hover {
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+}

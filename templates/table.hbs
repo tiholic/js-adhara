@@ -1,0 +1,41 @@
+<div id="adharaTable_{{config.title}}" class="adhara-table-container">
+    <div>
+        <h3>{{config.title}}</h3>
+    </div>
+    <div>
+        {{#if config.add_new}}
+            <button style="display: inline-block; float: left;" class="btn btn-sm btn-primary">Add new {{config.title}}</button>
+        {{/if}}
+        {{#if config.nav}}
+            <button style="display: inline-block; float: right; margin: 0 2px;" class="btn btn-sm btn-dark prev">prev</button>
+            <button style="display: inline-block; float: left; margin: 0 2px;" class="btn btn-sm btn-info">next</button>
+        {{/if}}
+    </div>
+    <div class="adhara-table-wrapper">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                {{#each config.columns as |column index|}}
+                    <th>{{column.display_name}}</th>
+                {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+            {{#each data as |datum index|}}
+                <tr adhara-datum-row="{{index}}">
+                    {{#each ../config.columns as |column value|}}
+                        {{console_log datum column}}
+                        <td adhara-datum-col="{{index}}-{{column}}">
+                            {{#if column.trust_as_html}}
+                                {{{get datum column.name}}}
+                            {{else}}
+                                {{get datum column.name}}
+                            {{/if}}
+                        </td>
+                    {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
