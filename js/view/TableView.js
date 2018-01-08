@@ -5,10 +5,6 @@
 
 class AdharaTableView extends AdharaView{
 
-    constructor(){
-        super();
-    }
-
     /**
      * @typedef {Object} ColumnConfig
      * @property {String} key - column key

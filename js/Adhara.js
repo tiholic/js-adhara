@@ -7,10 +7,10 @@ let Adhara = null;
 (()=>{
     class AdharaBase{
 
-        init(app_module){
+        init(app){
             callOnInitListeners();
-            if(app_module){
-                this.app = new app_module();
+            if(app instanceof AdharaApp){
+                this.app = new app();
                 this.createContainer();
             }else{
                 AdharaRouter.route();
@@ -18,9 +18,9 @@ let Adhara = null;
         }
 
         createContainer(){
-            if(this.app.container) {
-                this.container = new this.app.container();
-                this.container.render(this.app.DOMSelector||"app");
+            if(this.app.containerView) {
+                this.container = new this.app.containerView();
+                this.container.render(this.app.DOMSelector);
             }
             AdharaRouter.register(this.app.routes);
             AdharaRouter.listen();
