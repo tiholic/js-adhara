@@ -213,6 +213,7 @@ let AdharaRouter = null;
             if(!matchFound){
                 regex = new RegExp(regex);
                 if(regex.test(path)){
+                    matchFound = true;
                     let params = regex.exec(path);
                     params.splice(0,1);
                     if(opts && opts.fn){
@@ -236,7 +237,6 @@ let AdharaRouter = null;
                             }else{
                                 opts.fn.apply(this, params);
                             }
-                            matchFound = true;
                         });
                     }
                 }
