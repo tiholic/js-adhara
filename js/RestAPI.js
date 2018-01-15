@@ -96,7 +96,7 @@ let RestAPI = {};
     };
 
     function formatURL(url){
-        let base = Adhara.app?Adhara.app.base_api_url?Adhara.app.base_api_url:"/":"/";
+        let base = Adhara.app?Adhara.app.apiServerURL:"/";
         if(base.lastIndexOf("/")+1 !== base.length){
             base += "/";
         }
