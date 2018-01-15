@@ -9,7 +9,7 @@ let Adhara = null;
 
         init(app){
             callOnInitListeners();
-            if(app instanceof AdharaApp){
+            if(app){
                 this.app = new app();
                 this.createContainer();
             }else{

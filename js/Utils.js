@@ -222,7 +222,21 @@ let HandlebarsHelpers = {
     'append' : function () {			
         let args = Array.prototype.slice.call(arguments);
         args.pop();
-        return args.join('');
+        return args.map(arg => {
+            if(typeof arg === "object"){
+                return JSON.stringify(arg);
+            }
+            return arg;
+        }).join('');
+    },
+    /**
+     * @function
+     * @static
+     * @description Takes a {String} and converts it to JSON object.
+     * @returns {Object}
+     * */
+    'make_json' : function (str) {
+        return JSON.parse(str);
     },
     /**
      * @function
