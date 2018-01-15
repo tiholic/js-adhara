@@ -34,10 +34,14 @@ class AdharaView{
         throw new Error("Not implemented");
     }
 
+    _getHTML(template){
+        return HandlebarUtils.execute(template||this.template, this);
+    }
+
     render(containerSelector){
         this.container = document.querySelector(containerSelector);
-        this.container.innerHTML = Handlebars.templates[this.template](this.data);
-        this.format(this.container);
+        this.container.innerHTML = this._getHTML();
+        setTimeout(this.format(this.container), 0);
         this.renderSubViews();
     }
 

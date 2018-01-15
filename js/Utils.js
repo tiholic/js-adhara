@@ -646,23 +646,22 @@ function loop(object, cbk, reverseIterate) {
         }
     }
 }
-/*
 
-/!**
+/**
  * @typedef {String} HandlebarTemplate
  * @description handlebar template can be an inline template or a pre compiled template that is created in a HBS file.
- * *!/
+ * */
 
-/!**
+/**
  * @namespace
  * @description
  * HandlebarUtils is a set of utilities related to handlebars
- * *!/
+ * */
 let HandlebarUtils = {};
 (function(){
     let preCompiledCache = {};
 
-    /!**
+    /**
      * @function
      * @static
      * @param {HandlebarTemplate} template_or_template_string - Handlebar template name or template string.
@@ -675,7 +674,7 @@ let HandlebarUtils = {};
      *
      * //using template string
      * HandlebarUtils.execute('Hello {{name}}', {name: "Adhara"});	//returns "Hello Adhara"
-     * *!/
+     * */
     HandlebarUtils.execute = function(template_or_template_string, context, cache){
         //Check if it is a pre compiled hbs template
         let template = Handlebars.templates[template_or_template_string];
@@ -697,4 +696,4 @@ let HandlebarUtils = {};
         //execute with the provided context and return the output content...
         return template(context);
     };
-})();*/
+})();

@@ -4,19 +4,23 @@ class AdharaListView extends AdharaView{
         return 'adhara-list-item';
     }
 
+    get structureTemplate(){
+        return "adhara-list";
+    }
+
     get config(){
         return {
             title: ""
         }
     }
 
+    get data(){
+        return [];
+    }
+
     render(containerSelector){
         this.container = document.querySelector(containerSelector);
-        this.container.innerHTML = Handlebars.templates["adhara-list"]({
-            'config' : this.config,
-            'content_template': this.template,
-            'data' : this.data
-        });
+        this.container.innerHTML = this._getHTML(this.structureTemplate);
         this.format(this.container);
     }
 

@@ -3,7 +3,7 @@
  * TODO : 1. need to take in different table configurations, 2. need a preprocessor for data before drawing table
  */
 
-class AdharaTableView extends AdharaView{
+class AdharaTableView extends AdharaListView{
 
     /**
      * @typedef {Object} ColumnConfig
@@ -40,14 +40,8 @@ class AdharaTableView extends AdharaView{
         }
     }
 
-    get template(){
+    get structureTemplate(){
         return 'table'
-    }
-
-    render(containerSelector){
-        this.container = document.querySelector(containerSelector);
-        this.container.innerHTML = Handlebars.templates[this.template]({'config' : this.config, 'data' : this.data});
-        this.format(this.container);
     }
 
 }
