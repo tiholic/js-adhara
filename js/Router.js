@@ -186,14 +186,14 @@ let AdharaRouter = null;
     
     function callMiddlewares(params, proceed){
         let i=0;
-        function _proceed(){
+        (function _proceed(){
             let middleware_fn = middlewares[i++];
             if(middleware_fn){
                 call_fn(middleware_fn, params, _proceed);
             }else{
                 proceed();
             }
-        }
+        })();
     }
 
     /**
