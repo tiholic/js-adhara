@@ -22,7 +22,7 @@ let Adhara = null;
                 this.container = new this.app.containerView();
                 this.container.render(this.app.DOMSelector);
             }
-            AdharaRouter.register(this.app.routes);
+            AdharaRouter.configure(this.app.routerConfiguration);
             AdharaRouter.listen();
             AdharaRouter.route();
         }

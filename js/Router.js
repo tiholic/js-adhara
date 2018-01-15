@@ -105,7 +105,7 @@ let AdharaRouter = null;
     let listeners = {};
 
     /**
-     * @callback {Function} AdharaRouterMiddleware
+     * @typedef {Function} AdharaRouterMiddleware
      * @param {String} path - path that is being routed to
      * @param {Object} params - url parameters
      * @param {Object} params.query_params - url query parameters
@@ -115,9 +115,9 @@ let AdharaRouter = null;
 
     /**
      * @private
-     * @member {Array<Function>}
+     * @member {Array<AdharaRouterMiddleware>}
      * @description
-     * Stores listeners that will be called on routing.
+     * Stores middlewares that will be called on routing.
      * */
     let middlewares = [];
 
@@ -182,17 +182,13 @@ let AdharaRouter = null;
         }
         return stripSlash(getFullPath()) === stripSlash(new_path);
     }
-
-    function callMiddleware(){
-
-    }
     
     function callMiddlewares(params, proceed){
         let i=0;
         function _proceed(){
             let middleware_fn = middlewares[i++];
             if(middleware_fn){
-                callMiddleware(middleware_fn, params, _proceed);
+                call_fn(middleware_fn, params, _proceed);
             }else{
                 proceed();
             }
@@ -425,6 +421,36 @@ let AdharaRouter = null;
         static register(list){
             for(let conf of list){
                 this.register_one(conf.url, conf.view_name, conf.view);
+            }
+        }
+
+        /**
+         * @typedef {Object} AdharaRouterConfiguration - Adhara router configuration
+         * @property {Array<RouterURLConf>} routes - Route configurations
+         * @property {Object<String, Function>} on_route_listeners - On Route listeners
+         * @property {Array<AdharaRouterMiddleware>} middlewares - Middleware functions
+         * */
+
+        /**
+         * @function
+         * @static
+         * @param {AdharaRouterConfiguration} router_configuration
+         * */
+        static configure(router_configuration){
+            if(router_configuration.routes){
+                Router.register(router_configuration.routes);
+            }
+            if(router_configuration.on_route_listeners){
+                for(let listener_name in router_configuration.on_route_listeners){
+                    if(router_configuration.on_route_listeners.hasOwnProperty(listener_name)){
+                        Router.onRoute(listener_name, router_configuration.on_route_listeners[listener_name]);
+                    }
+                }
+            }
+            if(router_configuration.middlewares){
+                for(let middleware_fn of router_configuration.middlewares){
+                    Router.registerMiddleware(middleware_fn);
+                }
             }
         }
 

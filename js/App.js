@@ -45,10 +45,14 @@ class AdharaApp{
     /**
      * @function
      * @instance
-     * @return {Array<Object>} Adhara style routing config
+     * @return {AdharaRouterConfiguration} Adhara style routing config
      * */
-    get routes(){
-        return [];
+    get routerConfiguration(){
+        return {
+            routes: [],
+            on_route_listeners: {},
+            middlewares: []
+        }
     }
 
     /**
