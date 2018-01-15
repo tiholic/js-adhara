@@ -106,8 +106,9 @@ let AdharaRouter = null;
 
     /**
      * @typedef {Function} AdharaRouterMiddleware
-     * @param {String} path - path that is being routed to
      * @param {Object} params - url parameters
+     * @param {String } params.page_name - name of the page that is being routed to
+     * @param {String} params.path - path that is being routed to
      * @param {Object} params.query_params - url query parameters
      * @param {Object} params.path_params - url path parameters
      * @param {Function} route - Proceed with routing after making necessary checks in middleware
@@ -221,7 +222,7 @@ let AdharaRouter = null;
                         }
                         callMiddlewares({
                             page_name: opts.page_name,
-                            url: getFullUrl(),
+                            path: path,
                             query_params: getQueryParams(),
                             path_params: _pathParams
                         }, () => {
