@@ -24,8 +24,7 @@
             {{#each data as |datum index|}}
                 <tr adhara-datum-row="{{index}}">
                     {{#each ../config.columns as |column value|}}
-                        {{console_log datum column}}
-                        <td adhara-datum-col="{{index}}-{{column}}">
+                        <td adhara-datum-col="{{index}}-{{column.name}}">
                             {{#if column.trust_as_html}}
                                 {{{get datum column.name}}}
                             {{else}}
