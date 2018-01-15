@@ -105,6 +105,23 @@ let AdharaRouter = null;
     let listeners = {};
 
     /**
+     * @callback {Function} AdharaRouterMiddleware
+     * @param {String} path - path that is being routed to
+     * @param {Object} params - url parameters
+     * @param {Object} params.query_params - url query parameters
+     * @param {Object} params.path_params - url path parameters
+     * @param {Function} route - Proceed with routing after making necessary checks in middleware
+     * */
+
+    /**
+     * @private
+     * @member {Array<Function>}
+     * @description
+     * Stores listeners that will be called on routing.
+     * */
+    let middlewares = [];
+
+    /**
      * @function
      * @private
      * @returns {String} Current window URL. IE compatibility provided by Hostory.js (protocol://domain/path?search_query).
@@ -166,6 +183,22 @@ let AdharaRouter = null;
         return stripSlash(getFullPath()) === stripSlash(new_path);
     }
 
+    function callMiddleware(){
+
+    }
+    
+    function callMiddlewares(params, proceed){
+        let i=0;
+        function _proceed(){
+            let middleware_fn = middlewares[i++];
+            if(middleware_fn){
+                callMiddleware(middleware_fn, params, _proceed);
+            }else{
+                proceed();
+            }
+        }
+    }
+
     /**
      * @function
      * @private
@@ -179,26 +212,35 @@ let AdharaRouter = null;
     function matchAndCall(){
         let path = getPathName();
         let matchFound = false;
-        loop(registeredUrlPatterns, function(regex, opts){
+        loop(registeredUrlPatterns, (regex, opts) => {
             if(!matchFound){
                 regex = new RegExp(regex);
                 if(regex.test(path)){
                     let params = regex.exec(path);
                     params.splice(0,1);
                     if(opts && opts.fn){
+                        let _pathParams = {};
                         for(let [index, param] of params.entries()){
-                            pathParams[opts.path_params[index]] = param;
+                            _pathParams[opts.path_params[index]] = param;
                         }
-                        currPageName = opts.page_name;
-                        currentUrl = getFullUrl();
-                        fetchQueryParams();
-                        params.push(queryParams);
-                        if(opts.fn.constructor instanceof AdharaView.constructor){
-                            Adhara.onRoute(opts.fn, params);
-                        }else{
-                            opts.fn.apply(this, params);
-                        }
-                        matchFound = true;
+                        callMiddlewares({
+                            page_name: opts.page_name,
+                            url: getFullUrl(),
+                            query_params: getQueryParams(),
+                            path_params: _pathParams
+                        }, () => {
+                            pathParams = _pathParams;
+                            currPageName = opts.page_name;
+                            currentUrl = getFullUrl();
+                            fetchQueryParams();
+                            params.push(queryParams);
+                            if(opts.fn.constructor instanceof AdharaView.constructor){
+                                Adhara.onRoute(opts.fn, params);
+                            }else{
+                                opts.fn.apply(this, params);
+                            }
+                            matchFound = true;
+                        });
                     }
                 }
             }
@@ -240,19 +282,31 @@ let AdharaRouter = null;
      * @function
      * @private
      * @description
+     * Fetches the search query from current URL and transforms it to query param's object.
+     * @returns {Object<String, String>} The search query will be decoded and returned as an object.
+     * */
+    function getQueryParams(){
+        let qp = {};
+        if(getSearchString()){
+            loop(getSearchString().split('&'), function(i, paramPair){
+                paramPair = paramPair.split('=');
+                qp[decodeURIComponent(paramPair[0])] = decodeURIComponent(paramPair[1]);
+            });
+        }else{
+            qp = {};
+        }
+        return qp;
+    }
+
+    /**
+     * @function
+     * @private
+     * @description
      * Fetches the search query from current URL and transforms it to query param's.
      * The search query will be decoded and stored.
      * */
     function fetchQueryParams(){
-        queryParams = {};
-        if(getSearchString()){
-            loop(getSearchString().split('&'), function(i, paramPair){
-                paramPair = paramPair.split('=');
-                queryParams[decodeURIComponent(paramPair[0])] = decodeURIComponent(paramPair[1]);
-            });
-        }else{
-            queryParams = {};
-        }
+        queryParams = getQueryParams();
     }
 
     /**
@@ -395,6 +449,18 @@ let AdharaRouter = null;
          * */
         static offRouteListener(listener_name){
             listeners[listener_name] = undefined;
+        }
+
+        /**
+         * @function
+         * @static
+         * @param {Function} middleware_fn - middleware function to be used
+         * @description Stores all middleware's and calls then in the order of registration
+         * */
+        static registerMiddleware(middleware_fn){
+            if(typeof middleware_fn === "function"){
+                middlewares.push(middleware_fn);
+            }
         }
 
         /**
