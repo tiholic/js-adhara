@@ -1,11 +1,11 @@
 class AdharaCardView extends AdharaListView{
 
     get template(){
-        return "adhara-card-content";
+        return "adhara-card";
     }
 
-    get structureTemplate(){
-        return "adhara-card";
+    get itemTemplate(){
+        return "adhara-card-content";
     }
 
 }
