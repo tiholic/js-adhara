@@ -14,11 +14,11 @@ let Toast = {};
     };
 
     Toast.error = function(message){
-        Toast.make(message, "error");
+        Toast.make("Error!", message, "error");
     };
 
     Toast.success = function(message){
-        Toast.make(message, "success");
+        Toast.make("Success", message, "success");
     };
 
 })();
