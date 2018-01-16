@@ -12,6 +12,7 @@ class AdharaView{
         this.parentView = parentViewInstance;
         Adhara.instances[this.constructor.name] = this;
         this._data = null;
+        this._error = null;
     }
 
     get data(){
@@ -32,9 +33,18 @@ class AdharaView{
         this.dataChange(new_data);
         this.render();
     }
+    
+    handleDataError(error){
+        this.dataError(error);
+        this.render();
+    }
 
     dataChange(new_data){
         this._data = new_data;
+    }
+
+    dataError(error){
+        this._error = error;
     }
 
     get template(){
