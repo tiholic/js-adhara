@@ -41,7 +41,7 @@ class AdharaTableView extends AdharaListView{
     }
 
     get structureTemplate(){
-        return 'table'
+        return 'adhara-table'
     }
 
 }
