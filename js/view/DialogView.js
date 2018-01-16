@@ -19,12 +19,12 @@ class AdharaDialogView extends AdharaView{
         return "adhara-dialog";
     }
 
-    get contentSelector(){
+    get modalId(){
         return "adhara-dialog-id-"+Date.now();
     }
 
     render(){
-        let template = document.querySelector('#'+this.contentSelector);
+        let template = document.querySelector(this._getParentContainer());
         if(!template){
             template = this._getHTML();
             let wrapper= document.createElement('div');

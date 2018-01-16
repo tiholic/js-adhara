@@ -4,7 +4,7 @@ class AdharaContainerView extends AdharaView{
         return "container";
     }
 
-    get contentSelector(){
+    get contentContainer(){
         return "main";
     }
 
@@ -14,6 +14,10 @@ class AdharaContainerView extends AdharaView{
             detailed_app_name: Adhara.app.detailedName,
             tag_line: Adhara.app.tagLine
         }
+    }
+
+    _getParentContainer(){
+        return Adhara.app.DOMSelector;
     }
 
 }

@@ -20,7 +20,7 @@ let Adhara = null;
         createContainer(){
             if(this.app.containerView) {
                 this.container = new this.app.containerView();
-                this.container.render(this.app.DOMSelector);
+                Adhara.createView(this.container);
             }
             AdharaRouter.configure(this.app.routerConfiguration);
             AdharaRouter.listen();
@@ -31,13 +31,16 @@ let Adhara = null;
 
     Adhara = new AdharaBase();
 
-    Adhara.getView = (view_class) => {
-        return Adhara.instances[view_class.constructor.name] || new view_class();
+    Adhara.getView = (viewClass, parentViewInstance) => {
+        return Adhara.instances[viewClass.constructor.name] || new viewClass(parentViewInstance);
+    };
+
+    Adhara.createView = (adhara_view_instance) => {
+        adhara_view_instance.fetchData();
     };
 
     Adhara.onRoute = (view_class) => {
-        let view = Adhara.getView(view_class);
-        view.render(Adhara.container?Adhara.container.contentSelector:"body");
+        Adhara.createView(Adhara.getView(view_class, Adhara.container));
     };
 
     let on_init_listeners = [];
