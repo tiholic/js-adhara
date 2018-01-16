@@ -2,11 +2,8 @@
  * Created by varun on 21/12/17.
  */
 
+//TODO Enhance
 class AdharaDialogView extends AdharaView{
-
-    constructor(){
-        super();
-    }
 
     get data(){
         return {
@@ -18,20 +15,22 @@ class AdharaDialogView extends AdharaView{
         };
     }
 
+    get template(){
+        return "adhara-dialog";
+    }
+
+    get contentSelector(){
+        return "adhara-dialog-id-"+Date.now();
+    }
+
     render(){
-
         let template = document.querySelector('#'+this.contentSelector);
-
         if(!template){
-            template = Handlebars.templates['popup']({'contentSelector' : this.contentSelector, 'data' : this.data});
-
+            template = this._getHTML();
             let wrapper= document.createElement('div');
             wrapper.innerHTML = template;
-
             document.querySelector('body').appendChild(wrapper);
-
         }
-
         $('#adharaDialog').modal('show');
     }
 

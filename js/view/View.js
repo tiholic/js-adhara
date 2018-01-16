@@ -71,7 +71,7 @@ class AdharaView{
         }
     }
 
-    format(){
+    format(container){
         //Control the DOM elements after rendering
     }
 

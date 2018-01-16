@@ -780,12 +780,17 @@ let AdharaRouter = null;
          * If it has href attribute, preventing default event and proceeding with SdpRouting
          * */
 
+        function getRoutingElement(event){
+            return (event.target.nodeName !== "A")?event.currentTarget:event.target;
+        }
+
         function hasAttribute(elem, attribute_name) {
             return elem.hasAttribute(attribute_name);
         }
 
         jQuery(document).on("click", "a", function(e){
-            if ((AdharaRouter.enableAllAnchors || hasAttribute(e.target, "route"))) {
+            let re = getRoutingElement(e);
+            if ((AdharaRouter.enableAllAnchors || hasAttribute(re, "route")) && hasAttribute(re, "href")) {
                 let url = this.getAttribute('href').trim();
                 if (url.indexOf('javascript') !== -1) {
                     return;
