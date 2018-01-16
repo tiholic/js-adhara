@@ -6,10 +6,6 @@
         {{#if config.add_new}}
             <button style="display: inline-block; float: left;" class="btn btn-sm btn-primary">Add new {{config.title}}</button>
         {{/if}}
-        {{#if config.nav}}
-            <button style="display: inline-block; float: right; margin: 0 2px;" class="btn btn-sm btn-dark prev">prev</button>
-            <button style="display: inline-block; float: left; margin: 0 2px;" class="btn btn-sm btn-info">next</button>
-        {{/if}}
     </div>
     <div class="adhara-table-wrapper">
         <table class="table table-bordered table-hover">
@@ -36,5 +32,11 @@
             {{/each}}
             </tbody>
         </table>
+    </div>
+    <div class="adhara-table-nav pull-right">
+    {{#if config.nav}}
+        <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">previous</button>
+        <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">next</button>
+    {{/if}}
     </div>
 </div>
