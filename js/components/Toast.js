@@ -1,8 +1,31 @@
 let Toast = {};
 (function(){
-    let COLOR_PRIMARY = "color-primary",
-        COLOR_DANGER = "color-primary";
 
+    Toast.make = function(title, content, type){    //type should be "success", "error" or "info"
+        if(Adhara.app){
+            Adhara.app.toast(title, content, type);
+        }else{
+            if(window.ToastHandler){
+                window.ToastHandler[type](content, title);
+            }else{
+                console.log(`No toast handler found. Toast message: type-${type}, title-${title}, content=${content}`);
+            }
+        }
+    };
+
+    Toast.error = function(message){
+        Toast.make(message, "error");
+    };
+
+    Toast.success = function(message){
+        Toast.make(message, "success");
+    };
+
+})();
+
+let AdharaDefaultToaster = {};
+
+(function(){
 
     let notifyQueue = 0;
 
@@ -36,7 +59,7 @@ let Toast = {};
         }, 5000);
     }
 
-    Toast.make = function(title, content, type){    //type should be "success", "error" or "info"
+    AdharaDefaultToaster.make = function(title, content, type){
         let maxNotificationsHeight = window.innerHeight-200;
         let currentNotificationsHeight = 0;
         jQuery.each(jQuery('.notification'), function(){
@@ -52,17 +75,9 @@ let Toast = {};
                 notifyQueue++;
                 notify(title, content, type);
             }else{
-                Toast.make(title, content, type);
+                AdharaDefaultToaster.make(title, content, type);
             }
         }, notifyTimeout);
-    };
-
-    Toast.error = function(message){
-        Toast.make(message, "error");
-    };
-
-    Toast.success = function(message){
-        Toast.make(message, "success");
-    };
+    }
 
 })();

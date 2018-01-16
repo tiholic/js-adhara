@@ -84,4 +84,15 @@ class AdharaApp{
      * */
     get webSocketConfig(){ }
 
+    /**
+     * @function
+     * @instance
+     * @param {String} title - toast message title
+     * @param {String} content - toast message content
+     * @param {String} type - toast message type. can take the values "success"|"error"|"info".
+     * */
+    toast(title, content, type){
+        AdharaDefaultToaster.make(title, content, type);
+    }
+
 }
