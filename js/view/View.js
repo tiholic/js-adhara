@@ -15,6 +15,29 @@ class AdharaView{
         this._error = null;
     }
 
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} template of the view
+     * */
+    get template(){
+        if(AdharaRouter.getCurrentPageName()){
+            return AdharaRouter.getCurrentPageName().replace(/_/g, "-");
+        }else{
+            let className = this.constructor.name.toLowerCase();
+            if(className.endsWith("view")){
+                return className.slice(0, className.length - 4);
+            }else{
+                return className;
+            }
+        }
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {*} View data, that can be consumed by the template.
+     * */
     get data(){
         return this._data || {};
     }
@@ -45,19 +68,6 @@ class AdharaView{
 
     dataError(error){
         this._error = error;
-    }
-
-    get template(){
-        if(AdharaRouter.getCurrentPageName()){
-            return AdharaRouter.getCurrentPageName().replace(/_/g, "-");
-        }else{
-            let className = this.constructor.name.toLowerCase();
-            if(className.endsWith("view")){
-                return className.slice(0, className.length - 4);
-            }else{
-                return className;
-            }
-        }
     }
 
     _getHTML(template){

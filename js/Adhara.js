@@ -32,6 +32,9 @@ let Adhara = null;
     Adhara = new AdharaBase();
 
     Adhara.getView = (viewClass, parentViewInstance) => {
+        if(viewClass instanceof Function){
+            return Adhara.instances[viewClass.name] || new viewClass(parentViewInstance);
+        }
         return Adhara.instances[viewClass.constructor.name] || new viewClass(parentViewInstance);
     };
 

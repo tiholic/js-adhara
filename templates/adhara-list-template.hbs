@@ -1,0 +1,19 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        {{include itemTemplate (make_json (append '{"__header":true, data:' data '}'))}}
+    </tr>
+    </thead>
+    <tbody>
+    {{#each data as |datum index|}}
+        <tr adhara-datum-row="{{index}}">
+            {{#each ../config.columns as |column value|}}
+                {{console_log datum column}}
+                <td adhara-datum-col="{{index}}-{{column}}">
+                    {{include itemTemplate (make_json (append '{"__header":false, data:' data '}'))}}
+                </td>
+            {{/each}}
+        </tr>
+    {{/each}}
+    </tbody>
+</table>

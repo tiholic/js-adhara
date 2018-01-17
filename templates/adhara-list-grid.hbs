@@ -1,0 +1,24 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        {{#each config.columns as |column index|}}
+            <th>{{column.display_name}}</th>
+        {{/each}}
+    </tr>
+    </thead>
+    <tbody>
+    {{#each data as |datum index|}}
+        <tr adhara-datum-row="{{index}}">
+            {{#each ../config.columns as |column value|}}
+                <td adhara-datum-col="{{index}}-{{column.name}}">
+                    {{#if column.trust_as_html}}
+                        {{{get datum column.name}}}
+                    {{else}}
+                        {{get datum column.name}}
+                    {{/if}}
+                </td>
+            {{/each}}
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
