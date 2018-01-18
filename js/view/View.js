@@ -85,7 +85,10 @@ class AdharaView{
     render(){
         let container = document.querySelector(this._getParentContainer());
         container.innerHTML = this._getHTML();
-        setTimeout(this.format(container), 0);
+        setTimeout(()=> {
+            this._format(container);
+            this.format(container);
+        }, 0);
         this.renderSubViews();
     }
 
@@ -117,6 +120,10 @@ class AdharaView{
         for(let sub_view of this.subViews){
             Adhara.createView(Adhara.getView(sub_view, this));
         }
+    }
+
+    _format(container){
+
     }
 
     format(container){

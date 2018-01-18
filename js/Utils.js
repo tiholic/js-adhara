@@ -91,7 +91,7 @@ let HandlebarsHelpers = {
      * //</div>
      * */
     'include' : function(template_name, context){			
-        return new Handlebars.SafeString(Handlebars.templates[template_name](context));
+        return new Handlebars.SafeString(HandlebarUtils.execute(template_name, context));
     },
     /**
      * @function
@@ -678,7 +678,7 @@ let HandlebarUtils = {};
     HandlebarUtils.execute = function(template_or_template_string, context, cache){
         //Check if it is a pre compiled hbs template
         let template = Handlebars.templates[template_or_template_string];
-        if(!template){
+        if(!template && Handlebars.hasOwnProperty("compile")){
             //If template not found in precompiled hbs list => template is a handlebar string template
             // check if cacheable
             if(cache !== false){

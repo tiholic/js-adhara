@@ -1,5 +1,5 @@
-{{#if _header}}
-
-{{else}}
-
-{{/if}}
+<div>
+    {{#loopObject this}}
+        <b>{{key}}</b>: {{value}}<br />
+    {{/loopObject}}
+</div>

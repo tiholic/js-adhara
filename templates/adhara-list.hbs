@@ -1,19 +1,22 @@
 <div id="adharaTable_{{title}}" class="adhara-table-container">
+    {{#if title}}
     <div>
         <h3>{{title}}</h3>
     </div>
-    {{#if add_new}}
-    <div>
-        <button class="btn btn-sm btn-primary">Add new {{config.title}}</button>
-    </div>
+    {{/if}}
+    {{#if addNew}}
+        <div>
+            <button class="btn btn-sm btn-primary">Add new {{title}}</button>
+        </div>
     {{/if}}
     <div class="adhara-list-wrapper">
-        {{include listTemplate}}
+        {{include listTemplate this}}
     </div>
-    <div class="adhara-table-nav pull-right">
-    {{#if config.nav}}
-        <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">previous</button>
-        <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">next</button>
+    {{#if isPaginationRequired}}
+        <div class="adhara-table-nav pull-right">
+            <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">previous</button>
+            <button style="display: inline-block; margin: 0 2px;" class="btn btn-sm btn-link">next</button>
+
+        </div>
     {{/if}}
-    </div>
 </div>

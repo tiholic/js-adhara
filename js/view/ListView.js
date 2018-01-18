@@ -14,6 +14,15 @@ class AdharaListView extends AdharaView{
     }
 
     /**
+     * @function
+     * @getter
+     * @returns {HandlebarTemplate} template of the list header
+     * */
+    get headerTemplate(){
+        throw new Error("override `get headerTemplate`");
+    }
+
+    /**
      * @method
      * @getter
      * @returns {HandlebarTemplate} template of a list item
@@ -36,7 +45,7 @@ class AdharaListView extends AdharaView{
      * @getter
      * @returns {Boolean} whether to enable pagination or not
      * */
-    get isPaginationEnabled(){
+    get isPaginationRequired(){
         return false;
     }
 
