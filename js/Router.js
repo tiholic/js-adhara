@@ -343,6 +343,8 @@ let AdharaRouter = null;
         }
     }
 
+    const STATE_KEY = "__adhara_router__";
+
     class Router{
 
         /**
@@ -540,18 +542,18 @@ let AdharaRouter = null;
             if (isCurrentPath(url)){
                 return false;
             }
-            history.pushState({__router__:true}, parent.document.title, url);
+            history.pushState({[STATE_KEY]:true}, parent.document.title, url);
             //considering the behaviour of immediate state change
             let state = history.state;
             updateHistoryStack();
             pathParams = {};
             if(state !== undefined && state !== ''){
                 // let data = state.data;
-                if(state.__router__ === true || state.data.__router__ === true){
+                if(state[STATE_KEY] === true || state.data[STATE_KEY] === true){
                     this.route();
                 }
             }
-            // History.pushState({__router__:true}, parent.document.title, url);
+            // History.pushState({[STATE_KEY]:true}, parent.document.title, url);
             return true;
         }
 
@@ -578,8 +580,8 @@ let AdharaRouter = null;
          * */
         static overrideURL(url){
             url = this.transformURL(url);
-            history.replaceState({__router__:true}, parent.document.title, url);
-            // History.replaceState({__router__:true}, parent.document.title, url);
+            history.replaceState({[STATE_KEY]:true}, parent.document.title, url);
+            // History.replaceState({[STATE_KEY]:true}, parent.document.title, url);
         }
 
         /**
@@ -737,13 +739,18 @@ let AdharaRouter = null;
      * @description
      * setting current page name to undefined on moving to some other page that is not registered with router.
      * */
-    window.onpopstate = () => {
-        if(currPageName){
+    window.onpopstate = (e) => {
+        // if(e.state[STATE_KEY]){
+        AdharaRouter.route();
+        // }else{
+        //     currPageName = null;
+        // }
+        /*if(currPageName){
             let url_pattern = Router.getURLPatternByPageName(currPageName);
             if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
                 currPageName = undefined;
             }
-        }
+        }*/
     };
 
     /**

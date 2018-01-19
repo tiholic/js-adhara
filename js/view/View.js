@@ -82,8 +82,12 @@ class AdharaView{
         return container[this.constructor.name];
     }
 
+    getParentContainerElement(){
+        return document.querySelector(this._getParentContainer())
+    }
+
     render(){
-        let container = document.querySelector(this._getParentContainer());
+        let container = this.getParentContainerElement();
         container.innerHTML = this._getHTML();
         setTimeout(()=> {
             this._format(container);
