@@ -147,7 +147,7 @@ let AdharaRouter = null;
      * @returns {String} URL Path (path).
      * */
     function getPathName(){
-        return AdharaRouter.transformURL(getBaseUrl().split('://')[1].substring(window.location.host.length));
+        return AdharaRouter.transformURL(window.location.pathname);
     }
 
     /**
@@ -156,7 +156,8 @@ let AdharaRouter = null;
      * @returns {String} URL Path with search query (/path?search_query).
      * */
     function getFullPath(){
-        return "/"+getFullUrl().split('://')[1].substring(window.location.host.length+1);
+        return window.location.pathname+window.location.search+window.location.hash;
+        // return "/"+getFullUrl().split('://')[1].substring(window.location.host.length+1);
     }
 
     /**
@@ -165,7 +166,16 @@ let AdharaRouter = null;
      * @returns {String} Search query (search_query).
      * */
     function getSearchString(){
-        return getFullUrl().split('?')[1];
+        return window.location.search.substring(1);
+    }
+
+    /**
+     * @function
+     * @private
+     * @returns {String} Hash (text after `#` from the url).
+     * */
+    function getHash(){
+        return window.location.hash.substring(1);
     }
 
     /**
@@ -529,6 +539,15 @@ let AdharaRouter = null;
          * */
         static getCurrentURL(){
             getFullPath();
+        }
+
+        /**
+         * @function
+         * @static
+         * @returns {String} Current URL's Hash.
+         * */
+        static getCurrentHash(){
+            return getHash();
         }
 
         /**
