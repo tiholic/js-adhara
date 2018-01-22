@@ -40,7 +40,7 @@ let RestAPI = {};
         }
         if(s === "success") {
             if (x.getResponseHeader('Content-Disposition')) {
-                return call_fn(fns, d, s, x);
+                return call_fn(fns, d, x);
             } else {
                 if(typeof d === "string"){
                     d = JSON.parse(d);
@@ -49,21 +49,21 @@ let RestAPI = {};
                     if (successMessage && successMessage !== "") {
                         Toast.success(successMessage);
                     }
-                    return call_fn(fns, d, s, x);
+                    return call_fn(fns, d, x);
                 }
             }
         }
         if(toastFailure !== false) {
-            Toast.error(d, s, x);
+            Toast.error(d, x);
         }
-        call_fn(fne, d, s, x);
+        call_fn(fne, d, x);
     };
 
     RestAPI.handle_api_failure = function(fne, x, s, e){  //xhr, status, error
         if( x.readyState === 0 && x.status === 0 && e === ""){
             e = "Unable to connect to server";
         }
-        call_fn(fne, e, s, x);
+        call_fn(fne, e, x);
         // if(x.responseText){
         //     return Toast.error(e+"\n"+x.responseText);
         // }

@@ -44,8 +44,8 @@ class AdharaFormView extends AdharaView{
                 dob: {url: form.action.split(window.location.host)[1]},
                 form: form,
                 processor: {
-                    success: this._onSuccessProcessor,
-                    error: this._onErrorProcessor
+                    success: (context, data)=>this._onSuccessProcessor,
+                    error: (context, data)=>this._onErrorProcessor
                 }
             }, apiData);
         /*RestAPI[form.getAttribute('api-method')]({

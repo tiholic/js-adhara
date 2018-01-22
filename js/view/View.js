@@ -13,6 +13,38 @@ class AdharaView{
         Adhara.instances[this.constructor.name] = this;
         this._data = null;
         this._error = null;
+        this._event_listeners = {};
+        console.log(this.events);
+        this._registerEvents(["ViewRendered"])
+    }
+
+    get events(){
+        return ["a", "b"];
+    }
+
+    /**
+     * @function
+     * @protected
+     * @param {Array<String>} event_names - list of events that are to be enabled on the current View instance.
+     * @description registers the event names and creates event registration functions.
+     * @example
+     * _registerEvents(["Render", "Format"]);
+     * //This will create 2 functions onRender and onFormat runtime to allow registration of events
+     * */
+    _registerEvents(event_names){
+        for(let event_name of event_names){
+            this._event_listeners[event_name] = [];
+            this["on"+event_name] = handler => {
+                this._event_listeners[event_name].push(handler);
+            }
+        }
+    }
+
+    trigger(event_name, ...data){
+        console.log(event_name, data);
+        for(let event_handler of this._event_listeners[event_name]){
+            event_handler(data);
+        }
     }
 
     /**
@@ -94,6 +126,7 @@ class AdharaView{
             this.format(container);
         }, 0);
         this.renderSubViews();
+        this.trigger("ViewRendered");
     }
 
     /**

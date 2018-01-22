@@ -18,13 +18,13 @@ let Adhara = null;
         }
 
         createContainer(){
-            if(this.app.containerView) {
-                this.container = new this.app.containerView();
-                Adhara.createView(this.container);
-            }
             AdharaRouter.configure(this.app.routerConfiguration);
             AdharaRouter.listen();
-            AdharaRouter.route();
+            if(this.app.containerView) {
+                this.container = new this.app.containerView();
+                this.container.onViewRendered(AdharaRouter.route);
+                Adhara.createView(this.container);
+            }
         }
 
     }
