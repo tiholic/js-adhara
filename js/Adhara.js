@@ -11,9 +11,30 @@ let Adhara = null;
             callOnInitListeners();
             if(app){
                 this.app = new app();
+                this.createShortcuts();
+                this.performSystemChecks();
                 this.createContainer();
             }else{
                 AdharaRouter.route();
+            }
+        }
+
+        createShortcuts(){
+            //Creating a view_name vs context_name map
+            this.view_context = {};
+            loop(this.app.config, (context_name, configuration)=>{
+                if(configuration.hasOwnProperty("view") && AdharaView.isPrototypeOf(configuration.view)){
+                    this.view_context[configuration.view.name] = context_name;
+                }
+            });
+        }
+
+        performSystemChecks(){
+            // verify the controller for if it has support for all the API methods (for ease of Dev)
+            for(let i = 0; i < Adhara.app.allowedHttpMethods.length; i++){
+                if(typeof Controller[Adhara.app.allowedHttpMethods[i] + "Data"] !== 'function'){
+                    throw new Error(Adhara.app.allowedHttpMethods[i] + " api method is not registered with the controller!");
+                }
             }
         }
 
@@ -24,6 +45,8 @@ let Adhara = null;
                 this.container = new this.app.containerView();
                 this.container.onViewRendered(AdharaRouter.route);
                 Adhara.createView(this.container);
+            }else{
+              AdharaRouter.route();
             }
         }
 

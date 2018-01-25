@@ -41,7 +41,7 @@ class AdharaFormView extends AdharaView{
         return Controller.call(
             form.getAttribute('api-method') || "post",
             {
-                dob: {url: form.action.split(window.location.host)[1]},
+                data_config: {url: form.action.split(window.location.host)[1]},
                 form: form,
                 processor: {
                     success: (context, data)=>this._onSuccessProcessor,

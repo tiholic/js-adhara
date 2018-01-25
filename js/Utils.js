@@ -241,6 +241,19 @@ let HandlebarsHelpers = {
     /**
      * @function
      * @static
+     * @description Takes a {String} and converts it to JSON object.
+     * @returns {Object}
+     * */
+    'make_context' : function () {
+        let context = {};
+        for(let i=0; i<arguments.length-1; i+=2){
+            context[arguments[i]] = arguments[i+1];
+        }
+        return context;
+    },
+    /**
+     * @function
+     * @static
      * @param {Function} fn
      * @description Takes numerous and calls the fn with arguments from 2nd position since 1st argument is fn itself.
      * @returns {String|Number|Boolean|Object|Array} content returned by fn

@@ -14,12 +14,22 @@ class AdharaView{
         this._data = null;
         this._error = null;
         this._event_listeners = {};
-        console.log(this.events);
-        this._registerEvents(["ViewRendered"])
+        this._registerEvents(["ViewRendered"]);
+        this._registerEvents(this.events);
     }
 
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Array<String>} return list of custom event names in PascalCase...
+     * @description event listener registration functions will be created dynamically by prepending "on" th the event name
+     * @example
+     * say get events() returns this array: ["Render", "Format"]
+     * listener functions these events can be then registered using `onRender(listener)` and `onFormat(listener)`
+     * */
     get events(){
-        return ["a", "b"];
+        return [];
     }
 
     /**
@@ -41,7 +51,6 @@ class AdharaView{
     }
 
     trigger(event_name, ...data){
-        console.log(event_name, data);
         for(let event_handler of this._event_listeners[event_name]){
             event_handler(data);
         }
@@ -66,40 +75,80 @@ class AdharaView{
     }
 
     /**
-     * @method
-     * @getter
-     * @returns {*} View data, that can be consumed by the template.
-     * */
-    get data(){
-        return this._data || {};
-    }
-
-    /**
      * @function
      * @instance
      * @description hook to make API calls, data change event will be triggered on successful API call.
      * By default no API call will be made and dataChange method will be called right away.
      * */
     fetchData(){
-        this.handleDataChange();
+        let entity_name = Adhara.view_context[this.constructor.name];
+        if(entity_name){
+            let config = Adhara.app.getEntityConfig(entity_name);
+            if(dataInterface.getHTTPMethod(config.default_query_type)==="get"){
+                Controller.call(config.default_query_type);
+            }else{
+                this.handleDataChange();
+            }
+        }else{
+            this.handleDataChange();
+        }
     }
 
+    /**
+     * @function
+     * @instance
+     * @param {DataBlob|Array<DataBlob>} new_data - Data in the form of DataBlob instance to be updated in view
+     * */
     handleDataChange(new_data){
         this.dataChange(new_data);
         this.render();
     }
-    
+
+    /**
+     * @function
+     * @instance
+     * @param {*} error - Error to be updated in view
+     * */
     handleDataError(error){
         this.dataError(error);
         this.render();
     }
-
+    
+    /**
+     * @function
+     * @instance
+     * @param {DataBlob} new_data - Data in the form of DataBlob instance to be set in view
+     * */
     dataChange(new_data){
         this._data = new_data;
+        this._error = null;
     }
 
+    /**
+     * @function
+     * @instance
+     * @param {*} error - Error to be set in view
+     * */
     dataError(error){
         this._error = error;
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {*} View errors, that can be consumed by the template.
+     * */
+    get errors(){
+        return this._error;
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {*} View data, that can be consumed by the template.
+     * */
+    get data(){
+        return this._data;
     }
 
     _getHTML(template){
@@ -111,7 +160,7 @@ class AdharaView{
         if(typeof container === "string"){
             return container;
         }
-        return container[this.constructor.name];
+        return container[this.constructor.name]||container["*"];
     }
 
     getParentContainerElement(){

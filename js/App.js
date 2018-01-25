@@ -6,7 +6,7 @@ class AdharaApp{
      * @return {String} App name
      * */
     get name(){
-        return "Coin Connect"
+        return "Adhara App"
     }
 
     /**
@@ -16,8 +16,8 @@ class AdharaApp{
      * */
     get detailedName(){
         return {
-            first: "Coin",
-            last: "Connect"
+            first: "Adhara",
+            last: "App"
         }
     }
 
@@ -40,7 +40,40 @@ class AdharaApp{
      * @instance
      * @return {Object} Adhara style app config
      * */
-    get config(){ }
+    get config(){ return {}; }
+
+    /**
+     * @function
+     * @instance
+     * @return {Object} Adhara style entity config
+     * */
+    getEntityConfig(context_name){
+        let context = this.config[context_name];
+        return {
+            data_config: {
+                url: context.data_config.url,
+                allowed_query_types: context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[],
+                socket_tag: context.data_config.socket_tag,
+                reuse: context.data_config.reuse
+            },
+            blob: context.blob,
+            view: context.view,
+            processor: context.processor
+        }
+    }
+
+    /**
+     * @function
+     * @instance
+     * @returns {Array<String>} list of http methods to be allowed by the application.
+     * @description This getter can be configured to return allowed methods based on the current network state.
+     * Say if offline, it can be configured to just return `["get"]` method which will restrict DataInterface from making
+     * other service API calls such as "post", "delete", etc...
+     * */
+    get allowedHttpMethods() {
+        return ['get', 'post', 'put', 'delete'];  // all available API methods
+        // offline mode will switch a few of these off (post, put and delete)
+    }
 
     /**
      * @function
