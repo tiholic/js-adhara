@@ -211,12 +211,18 @@ class AdharaView{
     _format(container){
         let onClickElements = container.querySelectorAll("[data-onclick]");
         for(let onClickElement of onClickElements){
-            onClickElement.addEventListener("click", this[onClickElement.dataset.onclick]);
+            onClickElement.addEventListener("click", event => {
+                return this[onClickElement.dataset.onclick](event);
+            });
         }
     }
 
     format(container){
         //Control the DOM elements after rendering
+    }
+
+    refresh(){
+        Adhara.createView(this);
     }
 
 }

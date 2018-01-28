@@ -1,10 +1,10 @@
 class AdharaFormView extends AdharaView{
 
-    onSuccess(data, form){
+    onSuccess(data){
         //Override this to handle success event...
     }
 
-    onError(error, form){
+    onError(error){
         //Override this to handle error event...
     }
 
@@ -14,6 +14,10 @@ class AdharaFormView extends AdharaView{
 
     _onErrorProcessor(context, error){
         this.onError(error);
+    }
+
+    getFormElement(){
+        return this.getParentContainerElement().querySelector("form");
     }
 
     _handleForm(form){
@@ -44,8 +48,14 @@ class AdharaFormView extends AdharaView{
                 data_config: {url: form.action.split(window.location.host)[1]},
                 form: form,
                 processor: {
-                    success: (context, data)=>this._onSuccessProcessor,
-                    error: (context, data)=>this._onErrorProcessor
+                    success: (context, data)=>{
+                        this._onSuccessProcessor(context, data);
+                        form.submitting = false;
+                    },
+                    error: (context, error)=>{
+                        this._onErrorProcessor(context, error);
+                        form.submitting = false;
+                    }
                 }
             }, apiData);
         /*RestAPI[form.getAttribute('api-method')]({
@@ -65,17 +75,18 @@ class AdharaFormView extends AdharaView{
         });*/
     }
 
-    _format(element){
-        element.querySelector("form").addEventListener("submit", (event) => {
+    _format(container){
+        container.querySelector("form").addEventListener("submit", (event) => {
             event.preventDefault();
             this._handleForm(event.target);
         });
-        jQuery(element).on('success', 'form', response => {
+        jQuery(container).on('success', 'form', response => {
             this.onSuccess();
         });
-        jQuery(element).on('failure', 'form', (e,message) => {
+        jQuery(container).on('failure', 'form', (e,message) => {
             this.onError();
         });
+        super._format(container);
     }
 
 }
