@@ -121,20 +121,20 @@ let RestAPI = {};
     }
 
     function ajax(o) {
-        if(o.data instanceof Object){
+        if(o.type !== "get" && o.data instanceof Object){
             if(!Object.keys(o.data).length){
                 delete o.data;
             } else {
                 o.data = JSON.stringify(o.data);
             }
         }
-        if(o.type === "get" || o.type === "patch" || o.type === "post") {
+        /*if(o.type === "get" || o.type === "patch" || o.type === "post") {
             if (o.type === "get") {
-                if (o.data) {
+                /!*if (o.data) {
                     o.data = {data: o.data};
-                }
+                }*!/
             }
-        }
+        }*/
         o.headers['Content-Type'] = 'application/json';
         jQuery.ajax(o);
     }

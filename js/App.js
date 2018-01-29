@@ -49,10 +49,12 @@ class AdharaApp{
      * */
     getEntityConfig(context_name){
         let context = this.config[context_name];
+        let allowed_query_types = context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[];
         return {
             data_config: {
                 url: context.data_config.url,
-                allowed_query_types: context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[],
+                allowed_query_types: allowed_query_types,
+                default_query_type: context.data_config.default_query_type || allowed_query_types[0],
                 socket_tag: context.data_config.socket_tag,
                 reuse: context.data_config.reuse
             },

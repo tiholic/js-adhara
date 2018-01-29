@@ -74,6 +74,11 @@ class AdharaView{
         }
     }
 
+    get entityConfig(){
+        let entity_name = Adhara.view_context[this.constructor.name];
+        return entity_name?Adhara.app.getEntityConfig(entity_name):null;
+    }
+
     /**
      * @function
      * @instance
@@ -81,11 +86,10 @@ class AdharaView{
      * By default no API call will be made and dataChange method will be called right away.
      * */
     fetchData(){
-        let entity_name = Adhara.view_context[this.constructor.name];
-        if(entity_name){
-            let config = Adhara.app.getEntityConfig(entity_name);
-            if(dataInterface.getHTTPMethod(config.default_query_type)==="get"){
-                Controller.call(config.default_query_type);
+        let config = this.entityConfig;
+        if(config){
+            if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
+                Controller.control(config.data_config.default_query_type, config, config.data);
             }else{
                 this.handleDataChange();
             }
@@ -97,7 +101,7 @@ class AdharaView{
     /**
      * @function
      * @instance
-     * @param {DataBlob|Array<DataBlob>} new_data - Data in the form of DataBlob instance to be updated in view
+     * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){
         this.dataChange(new_data);

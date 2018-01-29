@@ -42,7 +42,7 @@ class AdharaFormView extends AdharaView{
             apiData = call_fn(format_fn, apiData);
         }
         if(apiData===false){return;}
-        return Controller.call(
+        return Controller.control(
             form.getAttribute('api-method') || "post",
             {
                 data_config: {url: form.action.split(window.location.host)[1]},
