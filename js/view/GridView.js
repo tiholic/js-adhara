@@ -9,4 +9,8 @@ class AdharaGridView extends AdharaListView{
         return 'adhara-list-grid';
     }
 
+    get tableClass(){
+        return "table-bordered table-hover";
+    }
+
 }

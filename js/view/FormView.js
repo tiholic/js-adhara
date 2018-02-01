@@ -1,34 +1,99 @@
 class AdharaFormView extends AdharaView{
 
+    /**
+     * @getter
+     * @returns {String|null} action, URL to be called to post data to.
+     * */
+    get action(){
+        return this.formElement.action.split(window.location.host)[1];
+    }
+
+    get method(){
+        return this.formElement.getAttribute('api-method') || "post";
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Boolean} whether to clear form on successful submission or not
+     * */
+    get clearFormOnSubmit(){
+        return this.formElement.getAttribute('form-clear')==="true";
+    }
+
+    /**
+     * @function
+     * @instance
+     * @param {Object} data - Response Object
+     * @description This method will be called on forms's POST/PUT call success
+     * */
     onSuccess(data){
         //Override this to handle success event...
     }
 
+    /**
+     * @function
+     * @instance
+     * @param {Object} error - Error Response Object
+     * @description This method will be called on forms's POST/PUT failure
+     * */
     onError(error){
-        //Override this to handle error event...
+        Toast.error(error);
     }
 
-    _onSuccessProcessor(context, data){
-        this.onSuccess(data, context.form);
+    /**
+     * @function
+     * @instance
+     * @param {Object} data - Form data
+     * @returns {Boolean} Whether the data is valid or not
+     * */
+    validate(data){
+        let validate_fn = this.formElement.getAttribute('validate-data');
+        if(validate_fn) {
+            return !!call_fn(validate_fn, data);
+        }
+        return true;
     }
 
-    _onErrorProcessor(context, error){
-        this.onError(error);
+    /**
+     * @function
+     * @instance
+     * @param {Object} data - Form data
+     * @returns {Object} Modified/Formatted data
+     * */
+    formatData(data){
+        let format_fn = this.formElement.getAttribute('format-data');
+        if(format_fn) {
+            data = call_fn(format_fn, data);
+        }
+        return data;
     }
 
-    getFormElement(){
-        return this.getParentContainerElement().querySelector("form");
+    /**
+     * @getter
+     * @instance
+     * @returns {HTMLFormElement} HTML node which represents the Form element
+     * */
+    get formElement(){
+        if(!this._formElement || !document.body.contains(this._formElement)){
+            this._formElement = this.getParentContainerElement().querySelector("form");
+        }
+        return this._formElement;
     }
 
-    _handleForm(form){
+    /**
+     * @getter
+     * @private
+     * @description handle making API call on behalf of the form
+     * */
+    _handleForm(){
+        let form = this.formElement;
         if(form.submitting){
             return;
-        }else{
-            form.submitting = true;
         }
-        let hasFiles = !!form.querySelector('input[type="file"]');
+        form.submitting = true;
         let apiData;
-        if(hasFiles){
+        if(!!form.querySelector('input[type="file"]')){ // ~ if(hasFiles){
             apiData = new FormData(form);
         }else{
             let formData = jQuery(form).serializeArray();
@@ -37,56 +102,43 @@ class AdharaFormView extends AdharaView{
                 apiData[fieldData.name] = fieldData.value;
             });
         }
-        let format_fn = form.getAttribute('format-data');
-        if(format_fn){
-            apiData = call_fn(format_fn, apiData);
+        if(!this.validate(apiData)){
+            return;
         }
-        if(apiData===false){return;}
+        apiData = this.formatData(apiData);
         return Controller.control(
-            form.getAttribute('api-method') || "post",
+            this.method,
             {
-                data_config: {url: form.action.split(window.location.host)[1]},
+                data_config: {
+                    url: this.action
+                },
                 form: form,
                 processor: {
-                    success: (context, data)=>{
-                        this._onSuccessProcessor(context, data);
+                    success: (query_type, entity_config, response, response_code, pass_over)=>{
+                        if(this.clearFormOnSubmit) {
+                            form.reset();
+                        }
+                        this.onSuccess(response);
                         form.submitting = false;
                     },
-                    error: (context, error)=>{
-                        this._onErrorProcessor(context, error);
+                    error: (query_type, entity_config, error, response_code, pass_over)=>{
+                        this.onError(error);
                         form.submitting = false;
                     }
                 }
             }, apiData);
-        /*RestAPI[form.getAttribute('api-method')]({
-            url: form.action.split(window.location.host)[1],
-            data: apiData,
-            successMessage: form.getAttribute('success-message'),
-            handleError: form.getAttribute('handle-error')!=="false",
-            success: function(data){
-                if(form.getAttribute('form-clear')==="true") {
-                    form.reset();
-                }
-                jQuery(form).trigger('success', data);
-            },
-            failure: function(message){
-                jQuery(form).trigger('failure', message);
-            }
-        });*/
     }
 
     _format(container){
-        container.querySelector("form").addEventListener("submit", (event) => {
+        this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
-            this._handleForm(event.target);
-        });
-        jQuery(container).on('success', 'form', response => {
-            this.onSuccess();
-        });
-        jQuery(container).on('failure', 'form', (e,message) => {
-            this.onError();
+            this.submit();
         });
         super._format(container);
+    }
+
+    submit(){
+        this._handleForm(this.formElement);
     }
 
 }

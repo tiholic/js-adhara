@@ -55,6 +55,9 @@ let Adhara = null;
     Adhara = new AdharaBase();
 
     Adhara.getView = (viewClass, parentViewInstance) => {
+        if(!viewClass){
+            throw new Error("invalid view class");
+        }
         if(viewClass instanceof Function){
             return Adhara.instances[viewClass.name] || new viewClass(parentViewInstance);
         }

@@ -56,9 +56,9 @@ class AdharaApp{
                 allowed_query_types: allowed_query_types,
                 default_query_type: context.data_config.default_query_type || allowed_query_types[0],
                 socket_tag: context.data_config.socket_tag,
-                reuse: context.data_config.reuse
+                reuse: context.data_config.reuse,
+                blob: context.data_config.blob
             },
-            blob: context.blob,
             view: context.view,
             processor: context.processor
         }

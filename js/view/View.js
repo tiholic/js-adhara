@@ -173,6 +173,9 @@ class AdharaView{
 
     render(){
         let container = this.getParentContainerElement();
+        if(!container){
+            return;
+        }
         container.innerHTML = this._getHTML();
         setTimeout(()=> {
             this._format(container);
