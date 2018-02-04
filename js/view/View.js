@@ -9,7 +9,7 @@ class AdharaView{
      * @param {AdharaView} parentViewInstance - parent view instance that is to be passed to render a view inside another.
      * */
     constructor(parentViewInstance){
-        this.parentView = parentViewInstance;
+        this._parentView = parentViewInstance;
         Adhara.instances[this.constructor.name] = this;
         this._data = null;
         this._error = null;
@@ -157,6 +157,10 @@ class AdharaView{
 
     _getHTML(template){
         return HandlebarUtils.execute(template||this.template, this);
+    }
+
+    get parentView(){
+        return this._parentView || Adhara.getView(Adhara.app.containerView);
     }
 
     _getParentContainer(){

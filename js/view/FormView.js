@@ -5,11 +5,35 @@ class AdharaFormView extends AdharaView{
      * @returns {String|null} action, URL to be called to post data to.
      * */
     get action(){
-        return this.formElement.action.split(window.location.host)[1];
+        return this.formElement?( this.formElement.action.split(window.location.host)[1] ): "";
     }
 
     get method(){
-        return this.formElement.getAttribute('api-method') || "post";
+        return this.formElement?( this.formElement.getAttribute('api-method') || "post" ): "post";
+    }
+
+    get entityConfig(){
+        let form = this.formElement;
+        return {
+            data_config: {
+                url: this.action,
+                allowed_query_types: [this.method],
+                default_query_type: this.method
+            },
+            processor: {
+                success: (query_type, entity_config, response, response_code, pass_over)=>{
+                    if(this.clearFormOnSuccess) {
+                        form.reset();
+                    }
+                    this.onSuccess(response);
+                    form.submitting = false;
+                },
+                error: (query_type, entity_config, error, response_code, pass_over)=>{
+                    this.onError(error);
+                    form.submitting = false;
+                }
+            }
+        };
     }
 
     /**
@@ -17,7 +41,7 @@ class AdharaFormView extends AdharaView{
      * @instance
      * @returns {Boolean} whether to clear form on successful submission or not
      * */
-    get clearFormOnSubmit(){
+    get clearFormOnSuccess(){
         return this.formElement.getAttribute('form-clear')==="true";
     }
 
@@ -28,7 +52,7 @@ class AdharaFormView extends AdharaView{
      * @description This method will be called on forms's POST/PUT call success
      * */
     onSuccess(data){
-        //Override this to handle success event...
+        Toast.success("Success");
     }
 
     /**
@@ -44,6 +68,15 @@ class AdharaFormView extends AdharaView{
     /**
      * @function
      * @instance
+     * @param {Error} error - Error thrown from validator
+     * */
+    onValidationError(error){
+        Toast.error(error.message);
+    }
+
+    /**
+     * @function
+     * @instance
      * @param {Object} data - Form data
      * @returns {Boolean} Whether the data is valid or not
      * */
@@ -52,7 +85,6 @@ class AdharaFormView extends AdharaView{
         if(validate_fn) {
             return !!call_fn(validate_fn, data);
         }
-        return true;
     }
 
     /**
@@ -83,6 +115,15 @@ class AdharaFormView extends AdharaView{
 
     /**
      * @getter
+     * @instance
+     * @description whether to handle file uploads or not!
+     * */
+    get handleFileUploads(){
+        return true;
+    }
+
+    /**
+     * @getter
      * @private
      * @description handle making API call on behalf of the form
      * */
@@ -93,7 +134,7 @@ class AdharaFormView extends AdharaView{
         }
         form.submitting = true;
         let apiData;
-        if(!!form.querySelector('input[type="file"]')){ // ~ if(hasFiles){
+        if(this.handleFileUploads && !!form.querySelector('input[type="file"]')){ // ~ if(hasFiles){
             apiData = new FormData(form);
         }else{
             let formData = jQuery(form).serializeArray();
@@ -102,31 +143,13 @@ class AdharaFormView extends AdharaView{
                 apiData[fieldData.name] = fieldData.value;
             });
         }
-        if(!this.validate(apiData)){
-            return;
+        try{
+            this.validate(apiData)
+        }catch(e){
+            this.onValidationError(e);
         }
         apiData = this.formatData(apiData);
-        return Controller.control(
-            this.method,
-            {
-                data_config: {
-                    url: this.action
-                },
-                form: form,
-                processor: {
-                    success: (query_type, entity_config, response, response_code, pass_over)=>{
-                        if(this.clearFormOnSubmit) {
-                            form.reset();
-                        }
-                        this.onSuccess(response);
-                        form.submitting = false;
-                    },
-                    error: (query_type, entity_config, error, response_code, pass_over)=>{
-                        this.onError(error);
-                        form.submitting = false;
-                    }
-                }
-            }, apiData);
+        return Controller.control(this.method, this.entityConfig, apiData);
     }
 
     _format(container){
