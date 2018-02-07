@@ -4,6 +4,10 @@ class AdharaCardView extends AdharaListView{
         return "adhara-card";
     }
 
+    get containerClass(){
+        return "";
+    }
+
     get itemTemplate(){
         return "adhara-card-content";
     }

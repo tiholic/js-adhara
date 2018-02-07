@@ -12,7 +12,7 @@ class AdharaFormView extends AdharaView{
         return this.formElement?( this.formElement.getAttribute('api-method') || "post" ): "post";
     }
 
-    get entityConfig(){
+    get formEntityConfig(){
         let form = this.formElement;
         return {
             data_config: {
@@ -26,11 +26,11 @@ class AdharaFormView extends AdharaView{
                         form.reset();
                     }
                     this.onSuccess(response);
-                    form.submitting = false;
+                    this.updateFormState(false);
                 },
                 error: (query_type, entity_config, error, response_code, pass_over)=>{
                     this.onError(error);
-                    form.submitting = false;
+                    this.updateFormState(false);
                 }
             }
         };
@@ -122,6 +122,28 @@ class AdharaFormView extends AdharaView{
         return true;
     }
 
+    updateFormState(submitting){
+        this.formElement.submitting = submitting;
+        this.handleSubmitButton();
+    }
+
+    get submitButton(){
+        return this.formElement.querySelector('button[type="submit"]');
+    }
+
+    handleSubmitButton(){
+        let submit_button = this.submitButton;
+        if(this.formElement.submitting){
+            submit_button.dataset.tosubmit = submit_button.innerHTML;
+            submit_button.innerHTML = submit_button.dataset.inprogress || submit_button.dataset.tosubmit;
+            submit_button.disabled = true;
+        }else{
+            submit_button.dataset.inprogress = submit_button.innerHTML;
+            submit_button.innerHTML = submit_button.dataset.tosubmit;
+            submit_button.disabled = false;
+        }
+    }
+
     /**
      * @getter
      * @private
@@ -132,7 +154,7 @@ class AdharaFormView extends AdharaView{
         if(form.submitting){
             return;
         }
-        form.submitting = true;
+        this.updateFormState(true);
         let apiData;
         if(this.handleFileUploads && !!form.querySelector('input[type="file"]')){ // ~ if(hasFiles){
             apiData = new FormData(form);
@@ -149,7 +171,7 @@ class AdharaFormView extends AdharaView{
             this.onValidationError(e);
         }
         apiData = this.formatData(apiData);
-        return Controller.control(this.method, this.entityConfig, apiData);
+        return Controller.control(this.method, this.formEntityConfig, apiData);
     }
 
     _format(container){

@@ -3,6 +3,18 @@ class AdharaApp{
     /**
      * @function
      * @instance
+     * @return {Boolean} Whether the app is being accessed in development mode or in production mode
+     * */
+    get debug(){
+        return (
+            ["localhost", "127.0.0.1", "0.0.0.0"].indexOf(window.location.hostname)!==-1
+            || window.location.hostname.indexOf("192.168.")!==-1
+        );
+    }
+
+    /**
+     * @function
+     * @instance
      * @return {String} App name
      * */
     get name(){
@@ -50,17 +62,47 @@ class AdharaApp{
     getEntityConfig(context_name){
         let context = this.config[context_name];
         let allowed_query_types = context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[];
-        return {
-            data_config: {
+        let data_config;
+        if(context.data_config.hasOwnProperty("batch_data_override")){
+            data_config = {
+                batch_data_override: context.data_config.batch_data_override.map(batch_data_config => {
+                    return {
+                        url: batch_data_config.url,
+                        query_type: batch_data_config.query_type,
+                        blob: batch_data_config.blob
+                    }
+                })
+            }
+        }else{
+            data_config = {
                 url: context.data_config.url,
-                allowed_query_types: allowed_query_types,
+                    allowed_query_types: allowed_query_types,
                 default_query_type: context.data_config.default_query_type || allowed_query_types[0],
                 socket_tag: context.data_config.socket_tag,
                 reuse: context.data_config.reuse,
                 blob: context.data_config.blob
-            },
+            }
+        }
+        return {
+            data_config,
             view: context.view,
             processor: context.processor
+        }
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object} Custom global view configurations
+     * */
+    get customViewConfig(){
+        return {
+            fetching_data: {
+                AdharaListView: "Fetching Data..."
+            },
+            no_data: {
+                AdharaListView: "No Data Available"
+            }
         }
     }
 

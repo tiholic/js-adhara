@@ -50,6 +50,19 @@ let Adhara = null;
             }
         }
 
+        get viewHierarchy(){
+            return [
+                AdharaContainerView,
+                AdharaDialogView,
+                AdharaTemplateView,
+                AdharaCardView,
+                AdharaGridView,
+                AdharaListView,
+                AdharaFormView,
+                AdharaView
+            ]
+        }
+
     }
 
     Adhara = new AdharaBase();

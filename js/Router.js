@@ -535,10 +535,10 @@ let AdharaRouter = null;
         /**
          * @function
          * @static
-         * @returns Current URL.
+         * @returns {String} Current URL.
          * */
         static getCurrentURL(){
-            getFullPath();
+            return getFullPath();
         }
 
         /**

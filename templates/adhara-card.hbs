@@ -1,6 +1,8 @@
-<h3 class="adhara-card-title">{{config.title}}</h3>
-{{#each data as |datum index|}}
-    <div class="card-md animated">
-        {{include ../itemTemplate datum}}
-    </div>
-{{/each}}
+<div class="{{containerClass}}">
+    <h3 class="adhara-card-title">{{config.title}}</h3>
+    {{#each data as |datum index|}}
+        <div class="card-md animated">
+            {{include ../itemTemplate datum}}
+        </div>
+    {{/each}}
+</div>

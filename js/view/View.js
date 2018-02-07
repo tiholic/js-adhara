@@ -12,9 +12,10 @@ class AdharaView{
         this._parentView = parentViewInstance;
         Adhara.instances[this.constructor.name] = this;
         this._data = null;
+        this._state = {};
         this._error = null;
         this._event_listeners = {};
-        this._registerEvents(["ViewRendered"]);
+        this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted"]);
         this._registerEvents(this.events);
     }
 
@@ -74,9 +75,46 @@ class AdharaView{
         }
     }
 
+    getCustomTemplate(type){
+        for(let ViewClass of Adhara.viewHierarchy){
+            if(ViewClass.isPrototypeOf(this.constructor)){
+                if(Adhara.app.customViewConfig[type][ViewClass.name]){
+                    return Adhara.app.customViewConfig[type][ViewClass.name];
+                }
+            }
+        }
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} structure to be rendered when data is being fetched
+     * */
+    get fetchingDataTemplate(){
+        return this.getCustomTemplate("fetching_data") || "";
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} structure to be rendered when there is no data available
+     * */
+    get noDataTemplate(){
+        return this.getCustomTemplate("no_data") || "";
+    }
+
     get entityConfig(){
         let entity_name = Adhara.view_context[this.constructor.name];
         return entity_name?Adhara.app.getEntityConfig(entity_name):null;
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object} state object of the current View
+     * */
+    get state(){
+        return this._state;
     }
 
     /**
@@ -86,16 +124,19 @@ class AdharaView{
      * By default no API call will be made and dataChange method will be called right away.
      * */
     fetchData(){
+        this._state.fetching_data = true;
+        this.render();
         let config = this.entityConfig;
         if(config){
-            if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
-                Controller.control(config.data_config.default_query_type, config, config.data);
-            }else{
-                this.handleDataChange();
+            if(config.data_config.hasOwnProperty("batch_data_override")){
+                return Controller.control(undefined, config);
             }
-        }else{
-            this.handleDataChange();
+            if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
+                return Controller.control(config.data_config.default_query_type, config, config.data);
+            }
+            return this.handleDataChange();
         }
+        this.handleDataChange();
     }
 
     /**
@@ -104,6 +145,7 @@ class AdharaView{
      * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){
+        this._state.fetching_data = false;
         this.dataChange(new_data);
         this.render();
     }
@@ -156,7 +198,10 @@ class AdharaView{
     }
 
     _getHTML(template){
-        return HandlebarUtils.execute(template||this.template, this);
+        return HandlebarUtils.execute(
+            template || ( this.state.fetching_data?this.fetchingDataTemplate:this.template ),
+            this
+        );
     }
 
     get parentView(){
@@ -178,15 +223,19 @@ class AdharaView{
     render(){
         let container = this.getParentContainerElement();
         if(!container){
+            console.warn("No container defined/available", this.constructor.name);
             return;
         }
         container.innerHTML = this._getHTML();
+        if(this.state.fetching_data){ return; }
+        this.trigger("ViewRendered");
         setTimeout(()=> {
             this._format(container);
             this.format(container);
+            this.trigger("ViewFormatted");
         }, 0);
         this.renderSubViews();
-        this.trigger("ViewRendered");
+        this.trigger("SubViewsRendered");
     }
 
     /**

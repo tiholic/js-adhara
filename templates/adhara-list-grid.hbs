@@ -2,7 +2,7 @@
     <thead>
     <tr>
         {{#each columns as |column index|}}
-            <th>{{column.display_name}}</th>
+            <th {{#if column.width}}width="{{column.width}}"{{/if}}>{{column.display_name}}</th>
         {{/each}}
     </tr>
     </thead>

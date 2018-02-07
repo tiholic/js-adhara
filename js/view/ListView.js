@@ -84,8 +84,4 @@ class AdharaListView extends AdharaView{
         return false;
     }
 
-    get data(){
-        return [];
-    }
-
 }

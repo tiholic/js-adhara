@@ -293,9 +293,6 @@ let HandlebarsHelpers = {
             str_buf += options.fn(i);
         }
         return str_buf;
-    },
-    'console_log': function(){
-        console.log(Array.prototype.slice.call(arguments).slice(0, -1));
     }
 };
 
