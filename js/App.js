@@ -69,6 +69,7 @@ class AdharaApp{
                     return {
                         url: batch_data_config.url,
                         query_type: batch_data_config.query_type,
+                        identifier: batch_data_config.identifier,
                         blob: batch_data_config.blob
                     }
                 })
@@ -76,7 +77,7 @@ class AdharaApp{
         }else{
             data_config = {
                 url: context.data_config.url,
-                    allowed_query_types: allowed_query_types,
+                allowed_query_types: allowed_query_types,
                 default_query_type: context.data_config.default_query_type || allowed_query_types[0],
                 socket_tag: context.data_config.socket_tag,
                 reuse: context.data_config.reuse,

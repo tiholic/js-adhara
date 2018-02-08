@@ -2,6 +2,7 @@
   border-radius: 3px;
   padding: 1em;
   display: inline-block;
+  width: 100%;
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
@@ -27,6 +28,7 @@
   border-radius: 3px;
   padding: 1em;
   display: inline-block;
+  width: 100%;
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14);
@@ -34,9 +36,8 @@
   -moz-transition: 0.2s;
   -ms-transition: 0.2s;
   -o-transition: 0.2s;
-  margin: 1.5%;
-  width: 30%;
   min-height: 100px;
+  margin-bottom: 1em;
 }
 .card-md:hover {
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);

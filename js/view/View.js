@@ -2,13 +2,14 @@
  * @class
  * @classdesc a base class that is to be extended by all the view classes
  * */
-class AdharaView{
+class AdharaView extends AdharaController{
 
     /**
      * @constructor
      * @param {AdharaView} parentViewInstance - parent view instance that is to be passed to render a view inside another.
      * */
     constructor(parentViewInstance){
+        super();
         this._parentView = parentViewInstance;
         Adhara.instances[this.constructor.name] = this;
         this._data = null;
@@ -125,14 +126,15 @@ class AdharaView{
      * */
     fetchData(){
         this._state.fetching_data = true;
-        this.render();
         let config = this.entityConfig;
         if(config){
             if(config.data_config.hasOwnProperty("batch_data_override")){
-                return Controller.control(undefined, config);
+                this.render();
+                return this.control(undefined, config);
             }
             if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
-                return Controller.control(config.data_config.default_query_type, config, config.data);
+                this.render();
+                return this.control(config.data_config.default_query_type, config, config.data);
             }
             return this.handleDataChange();
         }
@@ -145,8 +147,8 @@ class AdharaView{
      * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){
-        this._state.fetching_data = false;
         this.dataChange(new_data);
+        this._state.fetching_data = false;
         this.render();
     }
 
@@ -157,13 +159,39 @@ class AdharaView{
      * */
     handleDataError(error){
         this.dataError(error);
+        this._state.fetching_data = false;
+        this.render();
+    }
+
+    /**
+     * @function
+     * @instance
+     * @param {Object<String, Object<String, DataBlob|*>>} map - Data/Error to be updated in view. Map of {String} identifier vs {Object<success:response|error:error>}
+     * */
+    handleBatchData(map){
+        let errors = {};
+        let success = {};
+        for(let identifier in map){
+            if(map.hasOwnProperty(identifier)){
+                if(map[identifier].hasOwnProperty("error")){
+                    errors[identifier] = map[identifier].error;
+                }else{
+                    success[identifier] = map[identifier].success;
+                }
+            }
+        }
+        this.dataChange(success);
+        if(Object.keys(errors).length){
+            this.dataError(errors);
+        }
+        this._state.fetching_data = false;
         this.render();
     }
     
     /**
      * @function
      * @instance
-     * @param {DataBlob} new_data - Data in the form of DataBlob instance to be set in view
+     * @param {DataBlob|*} new_data - Data in the form of DataBlob instance to be set in view
      * */
     dataChange(new_data){
         this._data = new_data;
@@ -218,6 +246,10 @@ class AdharaView{
 
     getParentContainerElement(){
         return document.querySelector(this._getParentContainer())
+    }
+
+    _render(){
+
     }
 
     render(){

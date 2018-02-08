@@ -1,8 +1,9 @@
-<div class="{{containerClass}}">
-    <h3 class="adhara-card-title">{{config.title}}</h3>
+<div class="{{containerClass}} row">
     {{#each data as |datum index|}}
-        <div class="card-md animated">
+        <div class="{{../cardSizeClass}}">
+            <div class="card-md animated card-content-wrapper">
             {{include ../itemTemplate datum}}
+            </div>
         </div>
     {{/each}}
 </div>
