@@ -70,6 +70,7 @@ class AdharaApp{
                         url: batch_data_config.url,
                         query_type: batch_data_config.query_type,
                         identifier: batch_data_config.identifier,
+                        reuse: batch_data_config.reuse,
                         blob: batch_data_config.blob
                     }
                 })

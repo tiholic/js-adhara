@@ -48,7 +48,10 @@ class AdharaView extends AdharaController{
             this._event_listeners[event_name] = [];
             this["on"+event_name] = handler => {
                 this._event_listeners[event_name].push(handler);
-            }
+            };
+            this["off"+event_name] = handler => {
+                this._event_listeners[event_name].splice(this._event_listeners[event_name].indexOf(handler), 1);
+            };
         }
     }
 
@@ -118,6 +121,15 @@ class AdharaView extends AdharaController{
         return this._state;
     }
 
+    create(){
+        Adhara.addToActiveViews(this);
+        this.fetchData();
+    }
+
+    isActive(){
+        return Adhara.isActiveView(this);
+    }
+
     /**
      * @function
      * @instance
@@ -147,6 +159,7 @@ class AdharaView extends AdharaController{
      * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){
+        if(!this.isActive()){return;}
         this.dataChange(new_data);
         this._state.fetching_data = false;
         this.render();
@@ -158,6 +171,7 @@ class AdharaView extends AdharaController{
      * @param {*} error - Error to be updated in view
      * */
     handleDataError(error){
+        if(!this.isActive()){return;}
         this.dataError(error);
         this._state.fetching_data = false;
         this.render();
@@ -169,6 +183,7 @@ class AdharaView extends AdharaController{
      * @param {Object<String, Object<String, DataBlob|*>>} map - Data/Error to be updated in view. Map of {String} identifier vs {Object<success:response|error:error>}
      * */
     handleBatchData(map){
+        if(!this.isActive()){return;}
         let errors = {};
         let success = {};
         for(let identifier in map){

@@ -25,12 +25,12 @@ class AdharaFormView extends AdharaView{
                     if(this.clearFormOnSuccess) {
                         form.reset();
                     }
-                    this.onSuccess(response);
                     this.updateFormState(false);
+                    this.onSuccess(response);
                 },
                 error: (query_type, entity_config, error, response_code, pass_over)=>{
-                    this.onError(error);
                     this.updateFormState(false);
+                    this.onError(error);
                 }
             }
         };

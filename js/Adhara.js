@@ -9,6 +9,7 @@ let Adhara = null;
 
         init(app){
             callOnInitListeners();
+            this.active_views = [];
             if(app){
                 this.app = new app();
                 this.createShortcuts();
@@ -30,12 +31,12 @@ let Adhara = null;
         }
 
         performSystemChecks(){
-            // verify the controller for if it has support for all the API methods (for ease of Dev)
+            /*// verify the controller for if it has support for all the API methods (for ease of Dev)
             for(let i = 0; i < Adhara.app.allowedHttpMethods.length; i++){
                 if(typeof Controller[Adhara.app.allowedHttpMethods[i] + "Data"] !== 'function'){
                     throw new Error(Adhara.app.allowedHttpMethods[i] + " api method is not registered with the controller!");
                 }
-            }
+            }*/
         }
 
         createContainer(){
@@ -63,6 +64,18 @@ let Adhara = null;
             ]
         }
 
+        addToActiveViews(viewInstance){
+            this.active_views.push(viewInstance);
+        }
+
+        isActiveView(viewInstance){
+            return this.active_views.indexOf(viewInstance)!==-1;
+        }
+
+        clearActiveViews(){
+            this.active_views = [];
+        }
+
     }
 
     Adhara = new AdharaBase();
@@ -78,10 +91,11 @@ let Adhara = null;
     };
 
     Adhara.createView = (adhara_view_instance) => {
-        adhara_view_instance.fetchData();
+        adhara_view_instance.create();
     };
 
     Adhara.onRoute = (view_class) => {
+        Adhara.clearActiveViews();
         Adhara.createView(Adhara.getView(view_class, Adhara.container));
     };
 
