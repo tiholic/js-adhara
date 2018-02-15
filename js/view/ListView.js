@@ -135,6 +135,7 @@ class AdharaListView extends AdharaView{
      * @returns {Boolean} if the current page is the last page
      * */
     get isLastPage(){
+        //TODO assuming this.data is the only has the data for the current page
         if(this.data.length < this.rowCount){
             return true;
         }
