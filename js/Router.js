@@ -90,11 +90,11 @@ let AdharaRouter = null;
 
     /**
      * @private
-     * @member {String|undefined}
+     * @member {RouterURLConf}
      * @description
-     * Stores current page name of the match found from registered URL patterns.
+     * Stores route which matches with the current URL against registered URL patterns.
      * */
-    let currPageName = undefined;
+    let currentRoute = undefined;
 
     /**
      * @private
@@ -238,7 +238,7 @@ let AdharaRouter = null;
                             path_params: _pathParams
                         }, () => {
                             pathParams = _pathParams;
-                            currPageName = opts.page_name;
+                            currentRoute = opts;
                             currentUrl = getFullUrl();
                             fetchQueryParams();
                             params.push(queryParams);
@@ -526,10 +526,19 @@ let AdharaRouter = null;
         /**
          * @function
          * @static
+         * @returns {RouterURLConf} Current view name.
+         * */
+        static getCurrentRoute(){
+            return currentRoute;
+        }
+
+        /**
+         * @function
+         * @static
          * @returns {String} Current view name.
          * */
         static getCurrentPageName(){
-            return currPageName;
+            return AdharaRouter.getCurrentRoute().view_name;
         }
 
         /**
@@ -762,12 +771,12 @@ let AdharaRouter = null;
         // if(e.state[STATE_KEY]){
         AdharaRouter.route();
         // }else{
-        //     currPageName = null;
+        //     currentRoute = null;
         // }
-        /*if(currPageName){
-            let url_pattern = Router.getURLPatternByPageName(currPageName);
+        /*if(currentRoute){
+            let url_pattern = Router.getURLPatternByPageName(currentRoute.view_name);
             if(!(url_pattern && new RegExp(url_pattern).test(getPathName()))){
-                currPageName = undefined;
+                currentRoute = undefined;
             }
         }*/
     };

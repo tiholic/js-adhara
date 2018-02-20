@@ -18,8 +18,17 @@ class AdharaView extends AdharaController{
         this._event_listeners = {};
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted"]);
         this._registerEvents(this.events);
+        this.onInit();
     }
 
+    /**
+     * @function
+     * @instance
+     * @description Anything that needs to be done right after initializing the view.
+     * */
+    onInit(){
+        //Override this method to do any miscellaneous operations/assignments right after initializing the View
+    }
 
     /**
      * @getter
@@ -107,9 +116,23 @@ class AdharaView extends AdharaController{
         return this.getCustomTemplate("no_data") || "";
     }
 
+    /**
+     * @function
+     * @instance
+     * @returns Adhara style entity config for entity mapped with this view
+     * */
     get entityConfig(){
         let entity_name = Adhara.view_context[this.constructor.name];
         return entity_name?Adhara.app.getEntityConfig(entity_name):null;
+    }
+
+    /**
+     * @function
+     * @instance
+     * @returns Add dynamic input data to API calls made to server
+     * */
+    get payload(){
+        return null;
     }
 
     /**
@@ -146,7 +169,7 @@ class AdharaView extends AdharaController{
             }
             if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
                 this.render();
-                return this.control(config.data_config.default_query_type, config, config.data);
+                return this.control(config.data_config.default_query_type, config, this.payload);
             }
             return this.handleDataChange();
         }
@@ -319,7 +342,12 @@ class AdharaView extends AdharaController{
         let onClickElements = container.querySelectorAll("[data-onclick]");
         for(let onClickElement of onClickElements){
             onClickElement.addEventListener("click", event => {
-                return this[onClickElement.dataset.onclick](event);
+                let data = onClickElement.dataset;
+                if(this[data.onclick]){
+                    this[data.onclick](event, data, this);
+                }else{
+                    getValueFromJSON(window, data.onclick)(event, data, this);
+                }
             });
         }
     }

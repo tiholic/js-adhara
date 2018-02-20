@@ -168,7 +168,7 @@ class AdharaFormView extends AdharaView{
         try{
             this.validate(apiData)
         }catch(e){
-            this.onValidationError(e);
+            return this.onValidationError(e);
         }
         apiData = this.formatData(apiData);
         return this.control(this.method, this.formEntityConfig, apiData);
