@@ -178,7 +178,7 @@ class AdharaView extends AdharaController{
 
     /**
      * @function
-     * @instance
+     * @private
      * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){
@@ -190,7 +190,7 @@ class AdharaView extends AdharaController{
 
     /**
      * @function
-     * @instance
+     * @private
      * @param {*} error - Error to be updated in view
      * */
     handleDataError(error){
@@ -202,7 +202,7 @@ class AdharaView extends AdharaController{
 
     /**
      * @function
-     * @instance
+     * @private
      * @param {Object<String, Object<String, DataBlob|*>>} map - Data/Error to be updated in view. Map of {String} identifier vs {Object<success:response|error:error>}
      * */
     handleBatchData(map){
@@ -299,8 +299,8 @@ class AdharaView extends AdharaController{
         container.innerHTML = this._getHTML();
         if(this.state.fetching_data){ return; }
         this.trigger("ViewRendered");
+        this._format(container);
         setTimeout(()=> {
-            this._format(container);
             this.format(container);
             this.trigger("ViewFormatted");
         }, 0);
