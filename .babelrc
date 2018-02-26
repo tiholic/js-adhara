@@ -5,7 +5,8 @@
     "stage-0"
   ],
   "plugins": [
-    "transform-regenerator"
+    "transform-regenerator"/*,
+    "transform-es2015-modules-amd"*/
   ],
   "env": {
     "production": {

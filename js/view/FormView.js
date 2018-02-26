@@ -114,6 +114,35 @@ class AdharaFormView extends AdharaView{
     }
 
     /**
+     * @funciton
+     * @instance
+     * @returns {*} Field data
+     * */
+    getFieldValue(field_name){
+        let field = this.formElement[field_name];
+        if(field.type==="number"){
+            return +field.value;
+        }else if(field.type==="checkbox"){
+            return field.checked;
+        }
+        return field.value;
+    }
+
+    /**
+     * @funciton
+     * @instance
+     * @returns {*} Field data
+     * */
+    setFieldValue(field_name, value){
+        let field = this.formElement[field_name];
+        if(field.type==="checkbox"){
+            field.checked = true;
+        }else{
+            field.value = value;
+        }
+    }
+
+    /**
      * @getter
      * @instance
      * @description whether to handle file uploads or not!

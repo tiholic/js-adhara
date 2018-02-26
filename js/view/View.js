@@ -91,11 +91,20 @@ class AdharaView extends AdharaController{
     getCustomTemplate(type){
         for(let ViewClass of Adhara.viewHierarchy){
             if(ViewClass.isPrototypeOf(this.constructor)){
-                if(Adhara.app.customViewConfig[type][ViewClass.name]){
+                if(Adhara.app.customViewConfig[type] && Adhara.app.customViewConfig[type][ViewClass.name]){
                     return Adhara.app.customViewConfig[type][ViewClass.name];
                 }
             }
         }
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} template of the view
+     * */
+    get errorTemplate(){
+        return this.getCustomTemplate("error") || null;
     }
 
     /**
@@ -119,6 +128,15 @@ class AdharaView extends AdharaController{
     /**
      * @function
      * @instance
+     * @description Helper method to get required template. Error template or success template.
+     * */
+    getTemplate(){
+        return this.state.fetching_data?this.fetchingDataTemplate:(this.errors?(this.errorTemplate||this.template):this.template);
+    }
+
+    /**
+     * @function
+     * @instance
      * @returns Adhara style entity config for entity mapped with this view
      * */
     get entityConfig(){
@@ -127,12 +145,22 @@ class AdharaView extends AdharaController{
     }
 
     /**
-     * @function
+     * @getter
      * @instance
      * @returns Add dynamic input data to API calls made to server
      * */
     get payload(){
         return null;
+    }
+
+    /**
+     * @function
+     * @instance
+     * @returns Add dynamic input data to API calls made to server
+     * @description intermediate function that can be overridden by other generic views
+     * */
+    getPayload(){
+        return this.payload;
     }
 
     /**
@@ -169,7 +197,7 @@ class AdharaView extends AdharaController{
             }
             if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
                 this.render();
-                return this.control(config.data_config.default_query_type, config, this.payload);
+                return this.control(config.data_config.default_query_type, config, this.getPayload());
             }
             return this.handleDataChange();
         }
@@ -218,7 +246,9 @@ class AdharaView extends AdharaController{
                 }
             }
         }
-        this.dataChange(success);
+        if(Object.keys(success).length){
+            this.dataChange(success);
+        }
         if(Object.keys(errors).length){
             this.dataError(errors);
         }
@@ -265,7 +295,7 @@ class AdharaView extends AdharaController{
 
     _getHTML(template){
         return HandlebarUtils.execute(
-            template || ( this.state.fetching_data?this.fetchingDataTemplate:this.template ),
+            template || this.getTemplate(),
             this
         );
     }
@@ -339,16 +369,24 @@ class AdharaView extends AdharaController{
     }
 
     _format(container){
-        let onClickElements = container.querySelectorAll("[data-onclick]");
-        for(let onClickElement of onClickElements){
-            onClickElement.addEventListener("click", event => {
-                let data = onClickElement.dataset;
-                if(this[data.onclick]){
-                    this[data.onclick](event, data, this);
-                }else{
-                    getValueFromJSON(window, data.onclick)(event, data, this);
-                }
-            });
+        for(let action of ["click", "change"]){
+            let onActionElements = container.querySelectorAll(`[data-on${action}]`);
+            for(let actionElement of onActionElements){
+                actionElement.addEventListener(action, event => {
+                    let data = actionElement.dataset;
+                    let action_key = `on${action}`;
+                    if(this[data[action_key]]){
+                        this[data[action_key]](event, data, this);
+                    }else{
+                        let fn = getValueFromJSON(window, data[action_key]);
+                        if(fn) {
+                            fn(event, data, this);
+                        }else{
+                            throw new Error(`Invalid function: ${data[action_key]}`);
+                        }
+                    }
+                });
+            }
         }
     }
 

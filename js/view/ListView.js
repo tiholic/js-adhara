@@ -1,7 +1,8 @@
 class AdharaListView extends AdharaView{
 
-    onInit(){
-        this._page_number = 0;
+    constructor(parentViewInstance){
+        super(parentViewInstance);
+        this._page_number = 1;
     }
 
     get template(){
@@ -112,7 +113,7 @@ class AdharaListView extends AdharaView{
      * @returns {Boolean} if the current page is the first page
      * */
     get isFirstPage(){
-        return !this._page_number;
+        return this._page_number===1;
     }
 
     /**
@@ -131,7 +132,7 @@ class AdharaListView extends AdharaView{
      * @description listens to the previous page request, and triggers the Page Change Listener
      * */
     onPreviousPage(){
-        this._page_number = this.pageNumber - this.rowCount;
+        this._page_number = this.pageNumber - 1;
         this.pageChange();
     }
 
@@ -141,7 +142,7 @@ class AdharaListView extends AdharaView{
      * @description listens to the next page request, and triggers the Page Change Listener
      * */
     onNextPage(){
-        this._page_number = this.pageNumber + this.rowCount;
+        this._page_number = this.pageNumber + 1;
         this.pageChange();
     }
 
@@ -151,11 +152,11 @@ class AdharaListView extends AdharaView{
      * @description will be called on page change
      * */
     pageChange(){
-        //Override if required
+        this.fetchData();
     }
 
-    get payload(){
-        return AdharaListView.getPagePayload(this.pageNumber);
+    getPayload(){
+        return Object.assign({}, this.payload, AdharaListView.getPagePayload(this.pageNumber));
     }
 
 }

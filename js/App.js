@@ -5,7 +5,7 @@ class AdharaApp{
      * @instance
      * @return {Boolean} Whether the app is being accessed in development mode or in production mode
      * */
-    get debug(){
+    get is_debug_mode(){
         return (
             ["localhost", "127.0.0.1", "0.0.0.0"].indexOf(window.location.hostname)!==-1
             || window.location.hostname.indexOf("192.168.")!==-1
