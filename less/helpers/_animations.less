@@ -1,0 +1,53 @@
+.keyframes(@name; @arguments) {
+  @-moz-keyframes @name { @arguments(); }
+  @-webkit-keyframes @name { @arguments(); }
+  @keyframes @name { @arguments(); }
+}
+
+.animation(@arguments) {
+  -webkit-animation: @arguments;
+  -moz-animation: @arguments;
+  animation: @arguments;
+}
+
+.fade-in-key-frames{
+  .keyframes(fade-in;{
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  });
+}
+
+.rotate-key-frames{
+  .keyframes(rotate;{
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(359deg); }
+  });
+}
+
+.fade-in-rotate-key-frames{
+  .keyframes(fade-in-rotate;{
+    0% { -webkit-transform: rotate(0deg); opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { -webkit-transform: rotate(359deg); opacity: 1; }
+  });
+}
+
+.fade-in-animation {
+  .fade-in-key-frames;
+  .animation(fade-in 2s ease infinite alternate);
+}
+
+.rotate-animation {
+  .rotate-key-frames;
+  .animation(rotate 1s linear infinite);
+}
+
+.fade-in-rotate-animation {
+  .fade-in-rotate-key-frames;
+  .animation(fade-in-rotate 1s linear infinite);
+}
+
+.animate(@name:all, @duration:300ms, @delay:0s, @function:ease){
+  transition: @name @duration @function;
+  transition-delay: @delay;
+}
