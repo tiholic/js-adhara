@@ -101,7 +101,7 @@ let HandlebarsHelpers = {
      * @param {Number} param2 - right operand / rvalue
      * @returns {Number} - result after operation between param1 and param2 with operation
      * */
-    'math' : function(param1, operation, param2){ 	// No I18N
+    'math' : function(param1, operation, param2){
         let lvalue = parseFloat(String(param1));
         let rvalue = parseFloat(String(param2));
         return {
@@ -124,11 +124,10 @@ let HandlebarsHelpers = {
      * // app.key.operation = "App Operation {0} by {1}"
      * {{i18N 'app.key.operation' 'operationName' 'operatedBy'}}	//returns "App Operation operationName by operatedBy"
      * */
-    'i18N' : function (i18nKey) { //~ (i18nKey, ...subs)  // No I18N
+    'i18n' : function (i18nKey) { //~ (i18nKey, ...subs)
         let subs = Array.prototype.slice.call(arguments);
         subs = subs.splice(1, subs.length-2);
-        //TODO add internationalize module
-        return getMessageForKey(i18nKey, subs);
+        return Adhara.i18n.get(i18nKey, subs);
     },
     /**
      * @function
@@ -204,6 +203,9 @@ let HandlebarsHelpers = {
      * @returns {String|Number|Boolean|Object|Array} - Value of the global letiable.
      * */
     'global' : function(global_letiable){
+        if(global_letiable.startsWith("Adhara.")){
+            return getValueFromJSON(Adhara, global_letiable.substring("Adhara.".length));
+        }
         return getValueFromJSON(window, global_letiable);
     },
     'loop' : function(looper, options){
@@ -335,7 +337,7 @@ function handleForm(form){
     });
 }
 
-Adhara.onInit(()=>{
+function registerAdharaUtils(){
     //Register handlebar helpers
     Handlebars.registerHelper(HandlebarsHelpers);
     //Form listeners
@@ -347,7 +349,7 @@ Adhara.onInit(()=>{
     jQuery(document).on('success', 'form.dialog-form', function (/*e, d*/) {
         this.close.click();
     });
-});
+}
 
 
 /**
@@ -707,3 +709,45 @@ let HandlebarUtils = {};
         return template(context);
     };
 })();
+
+class Internationalize{
+
+    /**
+     * @constructor
+     * @param {Object<String, String>} key_map - i18n key map
+     * */
+    constructor(key_map){
+        this.key_map = key_map;
+    }
+
+    /**
+     * @instance
+     * @function
+     * @param {String} key - key
+     * @param {Array<String>} subs - substitutes
+     * @param {String} default_value - will be returned if key is not availalbe in the keymap
+     * */
+    getValue(key, subs, default_value){
+        let value = getValueFromJSON(this.key_map, key);
+        if(!value){
+            return default_value;
+        }
+        if(subs && subs.length){
+            loop(subs, function(sub, idx) {
+                value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), (sub.indexOf('.')!==-1)?this.get(sub):sub );
+            });
+        }
+        return value;
+    }
+
+    /**
+     * @instance
+     * @function
+     * @param {String} key - key
+     * @param {Array<String>} subs - substitutes
+     * */
+    get(key, subs){
+        return this.getValue(key, subs, key);
+    }
+
+}

@@ -11,6 +11,7 @@ let Adhara = null;
             callOnInitListeners();
             this.always_active_views = [];
             this.active_views = [];
+            this.container = null;
             if(app){
                 this.app = new app();
                 this.createShortcuts();
@@ -104,9 +105,15 @@ let Adhara = null;
         Adhara.createView(Adhara.getView(view_class, Adhara.container));
     };
 
-    let on_init_listeners = [];
+    let on_init_listeners = [
+        registerAdharaUtils
+    ];
     Adhara.onInit = (fn) => {
         on_init_listeners.push(fn);
+    };
+
+    Adhara.lightReload = ()=>{
+        Adhara.container?Adhara.container.refresh():AdharaRouter.route();
     };
 
     function callOnInitListeners(){
@@ -116,5 +123,7 @@ let Adhara = null;
     }
 
     Adhara.instances = {};
+
+    Adhara.i18n = new Internationalize(Adhara.app.i18n_key_map);
 
 })();

@@ -174,4 +174,11 @@ class AdharaApp{
         AdharaDefaultToaster.make(title, content, type);
     }
 
+    get i18n_key_map(){
+        return {
+            "i18n.adhara.list.previous": "Previous",
+            "i18n.adhara.list.next": "Next",
+        };
+    }
+
 }

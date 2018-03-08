@@ -15,14 +15,16 @@
         </div>
     {{else}}
         {{#if data}}
-            <div class="adhara-list-wrapper">
+            <div class="adhara-list-wrapper row">
                 {{include listTemplate this}}
             </div>
             {{#if isPaginationRequired}}
-                <div class="adhara-table-nav float-right btn-group" role="group">
-                    <button style="display: inline-block; margin: 0 2px;" {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link" data-onclick="onPreviousPage">previous</button>
-                    <button style="display: inline-block; margin: 0 2px;" {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link" data-onclick="onNextPage">next</button>
+            <div class="row flex-row-reverse">
+                <div class="btn-group" role="group">
+                    <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n '"i18n.adhara.list.previous"'}}</button>
+                    <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n '"i18n.adhara.list.next"'}}</button>
                 </div>
+            </div>
             {{/if}}
         {{else}}
             <div class="adhara-list-wrapper">
