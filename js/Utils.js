@@ -337,7 +337,47 @@ function handleForm(form){
     });
 }
 
+function registerConfigUtils(){
+    Adhara.configUtils = {
+        getViewInstance(entity_config){
+            try{
+                return Adhara.getView(entity_config.view);
+            }catch (e){
+                return false;
+            }
+        },
+        getProcessor(entity_config){
+            return entity_config.processor || Processor.fallback;
+        },
+        getDataConfig(entity_config){
+            return entity_config.data_config;
+        },
+        getBlobClass(entity_config){
+            return entity_config.data_config.blob || entity_config.blob || DataBlob;
+        },
+        getByDataConfig(data_config){
+            let res = [];
+            let app_config = Adhara.app.config;
+            for(let entity_name in app_config){
+                if(app_config.hasOwnProperty(entity_name)){
+                    let entity_config = app_config[entity_name];
+                    if(
+                        ( data_config.url === Adhara.configUtils.getDataConfig(entity_config).url
+                            && data_config.blob === Adhara.configUtils.getBlobClass(entity_config) )
+                        || JSON.stringify(data_config) === JSON.stringify(entity_config.data_config)
+                    ){
+                        res.push(entity_config);
+                    }
+                }
+            }
+            return res;
+        }
+    };
+}
+
 function registerAdharaUtils(){
+    //config utils
+    registerConfigUtils();
     //Register handlebar helpers
     Handlebars.registerHelper(HandlebarsHelpers);
     //Form listeners

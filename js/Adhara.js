@@ -14,9 +14,13 @@ let Adhara = null;
             this.container = null;
             if(app){
                 this.app = new app();
+                this.i18n = new Internationalize(Adhara.app.i18n_key_map);
                 this.createShortcuts();
                 this.performSystemChecks();
                 this.createContainer();
+                if(this.app.webSocketConfig){
+                    WebSocket.listen(this.app.webSocketConfig);
+                }
             }else{
                 AdharaRouter.route();
             }
@@ -86,20 +90,31 @@ let Adhara = null;
 
     Adhara = new AdharaBase();
 
+    //View class handling
+    let view_instances = {};
+
+    //Single ton views
+    Adhara.addViewToInstances = (instance) => {
+        view_instances[instance.constructor.name] = instance;
+    };
+
+    //Query singleton views
     Adhara.getView = (viewClass, parentViewInstance) => {
         if(!viewClass){
             throw new Error("invalid view class");
         }
         if(viewClass instanceof Function){
-            return Adhara.instances[viewClass.name] || new viewClass(parentViewInstance);
+            return view_instances[viewClass.name] || new viewClass(parentViewInstance);
         }
-        return Adhara.instances[viewClass.constructor.name] || new viewClass(parentViewInstance);
+        return view_instances[viewClass.constructor.name] || new viewClass(parentViewInstance);
     };
 
+    //Create a view instance
     Adhara.createView = (adhara_view_instance) => {
         adhara_view_instance.create();
     };
 
+    //On route listener
     Adhara.onRoute = (view_class) => {
         Adhara.clearActiveViews();
         Adhara.createView(Adhara.getView(view_class, Adhara.container));
@@ -108,6 +123,7 @@ let Adhara = null;
     let on_init_listeners = [
         registerAdharaUtils
     ];
+
     Adhara.onInit = (fn) => {
         on_init_listeners.push(fn);
     };
@@ -115,15 +131,11 @@ let Adhara = null;
     Adhara.lightReload = ()=>{
         Adhara.container?Adhara.container.refresh():AdharaRouter.route();
     };
-
+    
     function callOnInitListeners(){
         for(let on_init_listener of on_init_listeners){
             on_init_listener();
         }
     }
-
-    Adhara.instances = {};
-
-    Adhara.i18n = new Internationalize(Adhara.app.i18n_key_map);
 
 })();

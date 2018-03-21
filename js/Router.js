@@ -107,7 +107,7 @@ let AdharaRouter = null;
     /**
      * @typedef {Function} AdharaRouterMiddleware
      * @param {Object} params - url parameters
-     * @param {String } params.page_name - name of the page that is being routed to
+     * @param {String } params.view_name - name of the page that is being routed to
      * @param {String} params.path - path that is being routed to
      * @param {Object} params.query_params - url query parameters
      * @param {Object} params.path_params - url path parameters
@@ -213,7 +213,7 @@ let AdharaRouter = null;
      * Routes to the current URL.
      * Looks up in the registered URL patterns for a match to current URL.
      * If match found, view function will be called with regex path matches in the matched order and query param's as the last argument.
-     * Current page name will be set to the page name configured against view URL.
+     * Current view name will be set to the view name configured against view URL.
      * @returns {Boolean} Whether any view function is found or not.
      * */
     function matchAndCall(){
@@ -231,16 +231,19 @@ let AdharaRouter = null;
                         for(let [index, param] of params.entries()){
                             _pathParams[opts.path_params[index]] = param;
                         }
+
+                        //Setting current routing params...
+                        pathParams = _pathParams;
+                        currentRoute = opts;
+                        currentUrl = getFullUrl();
+                        fetchQueryParams();
+
                         callMiddlewares({
-                            page_name: opts.page_name,
+                            view_name: opts.view_name,
                             path: path,
                             query_params: getQueryParams(),
                             path_params: _pathParams
                         }, () => {
-                            pathParams = _pathParams;
-                            currentRoute = opts;
-                            currentUrl = getFullUrl();
-                            fetchQueryParams();
                             params.push(queryParams);
                             if(opts.fn.constructor instanceof AdharaView.constructor){
                                 Adhara.onRoute(opts.fn, params);
@@ -382,10 +385,10 @@ let AdharaRouter = null;
          * @function
          * @static
          * @param {String} pattern - URL Pattern that is to be registered.
-         * @param {String} page_name - Name of the view that is mapped to this URL.
+         * @param {String} view_name - Name of the view that is mapped to this URL.
          * @param {ViewFunction|Adhara} fn - View function that will be called when the pattern matches window URL.
          * */
-        static register_one(pattern, page_name, fn){
+        static register_one(pattern, view_name, fn){
             let path_params = [];
             let regex = /{{([a-zA-Z]*)}}/g;
             let match = regex.exec(pattern);
@@ -397,11 +400,7 @@ let AdharaRouter = null;
 
             pattern = "^"+this.transformURL(pattern.substring(1));
             pattern = pattern.replace(/[?]/g, '\\?');   //Converting ? to \? as RegExp(pattern) dosen't handle that
-            registeredUrlPatterns[pattern] = {
-                page_name: page_name,
-                fn: fn,
-                path_params: path_params
-            };
+            registeredUrlPatterns[pattern] = { view_name, fn, path_params };
         }
 
         /**
@@ -509,7 +508,7 @@ let AdharaRouter = null;
          * Routes to the current URL.
          * Looks up in the registered URL patterns for a match to current URL.
          * If match found, view function will be called with regex path matches in the matched order and query param's as the last argument.
-         * Current page name will be set to the page name configured against view URL.
+         * Current view name will be set to the view name configured against view URL.
          * */
         static route(){
             if(!settingURL){
@@ -743,13 +742,13 @@ let AdharaRouter = null;
         /**
          * @function
          * @static
-         * @param {String} page_name - View name with which a URL pattern is registered.
-         * @returns {RegExp} Pattern for which the provided page name is the page name.
+         * @param {String} view_name - View name with which a URL pattern is registered.
+         * @returns {RegExp} Pattern for which the provided view name is the view name.
          * */
-        static getURLPatternByPageName(page_name){
+        static getURLPatternByPageName(view_name){
             let matched_pattern = null;
             loop(registeredUrlPatterns, function(pattern, options){
-                if(options.page_name === page_name){
+                if(options.view_name === view_name){
                     matched_pattern = pattern;
                     return false;
                 }
@@ -765,7 +764,7 @@ let AdharaRouter = null;
 
     /**
      * @description
-     * setting current page name to undefined on moving to some other page that is not registered with router.
+     * setting current view name to undefined on moving to some other page that is not registered with router.
      * */
     window.onpopstate = (e) => {
         // if(e.state[STATE_KEY]){

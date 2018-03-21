@@ -11,7 +11,7 @@ class AdharaView extends AdharaController{
     constructor(parentViewInstance){
         super();
         this._parentView = parentViewInstance;
-        Adhara.instances[this.constructor.name] = this;
+        Adhara.addViewToInstances(this);
         this._data = null;
         this._state = {};
         this._error = null;

@@ -164,6 +164,22 @@ class AdharaApp{
     get webSocketConfig(){ }
 
     /**
+     * @getter
+     * @instance
+     * @returns {Object} DB Configuration
+     * */
+    get DBConfig(){
+        return {
+            name: "Adhara-app_db",
+            version: 1,
+            key_shelf: {
+                name: 'Adhara-key_shelf',
+                version: 1
+            }
+        }
+    }
+
+    /**
      * @function
      * @instance
      * @param {String} title - toast message title
