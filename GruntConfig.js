@@ -11,6 +11,9 @@ module.exports = {
         "js/components/Toast.js",
         "js/RestAPI.js",
         "js/templates.js",
+        //Data stores | Blobs
+        "js/Blobs/Serializable.js",
+        "js/Blobs/DataBlob.js",
         //Controller for controllable views
         "js/DataInterface/Controller.js",
         //basic view
