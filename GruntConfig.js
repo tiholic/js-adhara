@@ -10,7 +10,7 @@ module.exports = {
         "js/Router.js",
         "js/components/Toast.js",
         "js/RestAPI.js",
-        "js/templates.js",
+        // "js/templates.js",   //Commenting out assuming it is not required. TODO check here in case of any template issues
         //Data stores | Blobs
         "js/Blobs/Serializable.js",
         "js/Blobs/DataBlob.js",
