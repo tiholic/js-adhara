@@ -31,5 +31,9 @@ module.exports = {
         "js/DataInterface/ClientStorage.js",
         //Web Sockets
         "js/DataInterface/WebSocket.js",
+    ],
+    app_styles: [
+        //Adhara
+        "less/cards.css",
     ]
 };
