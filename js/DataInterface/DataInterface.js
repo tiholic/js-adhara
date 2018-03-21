@@ -1,4 +1,4 @@
-((scope) => {
+function initDataInterface(scope){
 
     function DataInterface(){
         let self = this;
@@ -339,19 +339,17 @@
             }
         };
 
-        (function initModule(){
-            // initiate DB
-            SCOPES.dataInterface = self;            // register self this with SCOPES (this refers to the latest object of the parent class)
-            initPersister(SCOPES.dataInterface);    // initializes the persistor and gives access to the DB promise
-            // turn the engine on
-        })();
+        // initiate DB
+        initPersister(self);    // initializes the persister and gives access to the DB promise
+        // turn the engine on
     }
 
-    scope.dataInterface = new DataInterface();  // i.e. SCOPES.global.dataInterface = new ...
-})(SCOPES.global);  // DataInterface scoped inside global (i.e. window in this case)
+    return new DataInterface();
+
+}
 
 let Controller = {
     control(method, entity_config, data, options){
-        return dataInterface.enqueue(method, entity_config, data, options);
+        return Adhara.dataInterface.enqueue(method, entity_config, data, options);
     }
 };

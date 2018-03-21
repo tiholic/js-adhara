@@ -182,6 +182,25 @@ class AdharaApp{
     /**
      * @function
      * @instance
+     * @description modify the response even before being utilized by the DataInterface
+     * */
+    responseMiddleWare(entity_config, success, response, xhr){
+        return response;
+    }
+
+    /**
+     * @function
+     * @instance
+     * @description modify the data with respect to the URL and method name and
+     * return formatted data to be posted or queried to/from the server
+     * */
+    requestMiddleWare(url, method_name, data){
+        return data;
+    }
+
+    /**
+     * @function
+     * @instance
      * @param {String} title - toast message title
      * @param {String} content - toast message content
      * @param {String} type - toast message type. can take the values "success"|"error"|"info".

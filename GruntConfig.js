@@ -27,11 +27,11 @@ module.exports = {
         "js/view/CardView.js",
         "js/view/DialogView.js",
         "js/view/ContainerView.js",
+        //Client DB Storage
+        "js/Storage/ClientStorage.js",
         //Data Interface & Processor
         "js/DataInterface/DataInterface.js",
         "js/DataInterface/Processors.js",
-        //Client DB Storage
-        "js/DataInterface/ClientStorage.js",
         //Web Sockets
         "js/DataInterface/WebSocket.js",
     ],

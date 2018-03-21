@@ -195,7 +195,7 @@ class AdharaView extends AdharaController{
                 this.render();
                 return this.control(undefined, config);
             }
-            if(dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
+            if(Adhara.dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
                 this.render();
                 return this.control(config.data_config.default_query_type, config, this.getPayload());
             }

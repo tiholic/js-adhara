@@ -21,6 +21,7 @@ let Adhara = null;
                 if(this.app.webSocketConfig){
                     WebSocket.listen(this.app.webSocketConfig);
                 }
+                this.dataInterface = initDataInterface(SCOPES.global)
             }else{
                 AdharaRouter.route();
             }
@@ -121,7 +122,7 @@ let Adhara = null;
     };
 
     let on_init_listeners = [
-        registerAdharaUtils
+        registerAdharaUtils,
     ];
 
     Adhara.onInit = (fn) => {
