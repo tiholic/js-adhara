@@ -166,16 +166,45 @@ class AdharaApp{
     /**
      * @getter
      * @instance
-     * @returns {Object} DB Configuration
+     * @returns {Object} DB Configuration which includes DB names and DB Schematics for Client Storage ( for all the object stores )
      * */
     get DBConfig(){
         return {
             name: "Adhara-app_db",
             version: 1,
+            schema: {
+                urlRes: {
+                    keyPath : "url"
+                }
+            },
             key_shelf: {
                 name: 'Adhara-key_shelf',
                 version: 1
             }
+        }
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object} Data interface related configuration
+     * */
+    get DIConfig(){
+        return {
+            url_storage: "urlRes"
+        }
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object<String, Object>} scopes that to be used in the app.
+     * @description Map of scopes that can be accessed across the application.
+     * Scopes can vary from environment to environment. Like in Node.JS vs in Browser JS.
+     * */
+    get scopes(){
+        return {
+            global : window // the global scope
         }
     }
 

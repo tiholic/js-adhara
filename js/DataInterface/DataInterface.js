@@ -1,4 +1,4 @@
-function initDataInterface(scope){
+function initDataInterface(){
 
     function DataInterface(){
         let self = this;
@@ -180,8 +180,8 @@ function initDataInterface(scope){
             remember : function(data_url, response, resource_timeout){
                 storage_m.rem_que[data_url] = response;  // hold response till dbPromise resolves
                 return self.dbPromise.then(db => {
-                    const tx = db.transaction('urlRes', 'readwrite');
-                    tx.objectStore('urlRes').put({
+                    const tx = db.transaction(Adhara.app.DIConfig.url_storage, 'readwrite');
+                    tx.objectStore(Adhara.app.DIConfig.url_storage).put({
                         url: data_url,
                         response: response,
                         useby : (!isNaN(resource_timeout) ? 30*60*1000 : resource_timeout) + (new Date()).getTime()
@@ -198,7 +198,7 @@ function initDataInterface(scope){
                         resolve(storage_m.rem_que[data_url]);
                     } else {
                         self.dbPromise.then(db => {
-                            return db.transaction('urlRes').objectStore('urlRes').get(data_url);
+                            return db.transaction(Adhara.app.DIConfig.url_storage).objectStore(Adhara.app.DIConfig.url_storage).get(data_url);
                         }).then((data)=>{
                             if(!data){
                                 reject({message: "No such key stored", code:404});
@@ -214,7 +214,7 @@ function initDataInterface(scope){
             },
             remove : function (data_url) {
                 return self.dbPromise.then(db => {
-                    return db.transaction('urlRes', 'readwrite').objectStore('urlRes').delete(data_url);
+                    return db.transaction(Adhara.app.DIConfig.url_storage, 'readwrite').objectStore(Adhara.app.DIConfig.url_storage).delete(data_url);
                 });
             }
         };

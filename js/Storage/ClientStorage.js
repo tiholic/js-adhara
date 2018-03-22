@@ -2,6 +2,7 @@ function initPersister(scope){
 
     if(initPersister.initialized) return;
     initPersister.initialized = true;
+    let SCOPES = Adhara.app.scopes;
 
     function takeDependencies(){
         return "indexedDB" in SCOPES.global && "Promise" in SCOPES.global;
@@ -402,6 +403,7 @@ function initPersister(scope){
 
     function createObjectStores(upgradeDb){
         try{
+            let DB_SCHEMA = Adhara.app.DBConfig.schema;
             for(let object_store_name in DB_SCHEMA){
                 if(DB_SCHEMA.hasOwnProperty(object_store_name)){
                     if(!upgradeDb.objectStoreNames.contains(object_store_name)){
