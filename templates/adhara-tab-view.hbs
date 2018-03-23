@@ -1,0 +1,20 @@
+<div class="{{containerClass}}">
+    <div class="{{tabClass}}">
+        <ul class="nav" role="tablist">
+            {{#each tabsList}}
+                <li class="{{className}}">
+                    <a href="{{link}}" role="tab" data-toggle="tab" aria-expanded="true">
+                        <!--<div class="icon-circle">
+                            <i class="tab-icon ti-x {{icon}}"></i>
+                        </div>-->
+                        {{name}}
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active in">
+        </div>
+    </div>
+</div>

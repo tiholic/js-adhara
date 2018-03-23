@@ -43,7 +43,9 @@ let Processor = {
             }
         },
         error: function(query_type, entity_config, error, response_code){
-            let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, error, response_code);
+            let processed_data = {error, response_code};
+            // let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, error, response_code);
+            //TODO is it required to create error response as a blob?
             let view = Adhara.configUtils.getViewInstance(entity_config);
             if(view) {
                 view.handleDataError(processed_data);

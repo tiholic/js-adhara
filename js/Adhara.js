@@ -14,6 +14,7 @@ let Adhara = null;
             this.container = null;
             if(app){
                 this.app = new app();
+                this.toast = Toast;
                 this.dataInterface = initDataInterface();
                 this.i18n = new Internationalize(Adhara.app.i18n_key_map);
                 this.createShortcuts();

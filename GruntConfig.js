@@ -24,6 +24,7 @@ module.exports = {
         "js/view/TemplateView.js",
         "js/view/CardView.js",
         "js/view/DialogView.js",
+        "js/view/TabView.js",
         "js/view/ContainerView.js",
         //Client DB Storage
         "js/Storage/ClientStorage.js",
