@@ -76,8 +76,8 @@ class AdharaView extends AdharaController{
      * @returns {HandlebarTemplate} template of the view
      * */
     get template(){
-        if(AdharaRouter.getCurrentPageName()){
-            return AdharaRouter.getCurrentPageName().replace(/_/g, "-");
+        if(Adhara.router.getCurrentPageName()){
+            return Adhara.router.getCurrentPageName().replace(/_/g, "-");
         }else{
             let className = this.constructor.name.toLowerCase();
             if(className.endsWith("view")){

@@ -193,7 +193,7 @@ let AdharaRouter = null;
         }
         return stripSlash(getFullPath()) === stripSlash(new_path);
     }
-    
+
     function callMiddlewares(params, proceed){
         let i=0;
         (function _proceed(){
@@ -209,6 +209,28 @@ let AdharaRouter = null;
     /**
      * @function
      * @private
+     * @description matches the current URL and returns the configuration, path and params
+     * @returns Object
+     * */
+    function matchUrl(){
+        let path = getPathName();
+        let matchFound = false;
+        for(let regex in registeredUrlPatterns){
+            if(registeredUrlPatterns.hasOwnProperty(regex) && !matchFound) {
+                let formed_regex = new RegExp(regex);
+                if (formed_regex.test(path)) {
+                    matchFound = true;
+                    let opts = registeredUrlPatterns[regex];
+                    let params = formed_regex.exec(path);
+                    return {opts, path, params};
+                }
+            }
+        }
+    }
+
+    /**
+     * @function
+     * @private
      * @description
      * Routes to the current URL.
      * Looks up in the registered URL patterns for a match to current URL.
@@ -217,45 +239,38 @@ let AdharaRouter = null;
      * @returns {Boolean} Whether any view function is found or not.
      * */
     function matchAndCall(){
-        let path = getPathName();
-        let matchFound = false;
-        loop(registeredUrlPatterns, (regex, opts) => {
-            if(!matchFound){
-                regex = new RegExp(regex);
-                if(regex.test(path)){
-                    matchFound = true;
-                    let params = regex.exec(path);
-                    params.splice(0,1);
-                    if(opts && opts.fn){
-                        let _pathParams = {};
-                        for(let [index, param] of params.entries()){
-                            _pathParams[opts.path_params[index]] = param;
-                        }
-
-                        //Setting current routing params...
-                        pathParams = _pathParams;
-                        currentRoute = opts;
-                        currentUrl = getFullUrl();
-                        fetchQueryParams();
-
-                        callMiddlewares({
-                            view_name: opts.view_name,
-                            path: path,
-                            query_params: getQueryParams(),
-                            path_params: _pathParams
-                        }, () => {
-                            params.push(queryParams);
-                            if(opts.fn.constructor instanceof AdharaView.constructor){
-                                Adhara.onRoute(opts.fn, params);
-                            }else{
-                                opts.fn.apply(this, params);
-                            }
-                        });
-                    }
+        let matchOptions = matchUrl();
+        if(matchOptions){
+            let {opts, path, params} = matchOptions;
+            params.splice(0,1);
+            if(opts && opts.fn){
+                let _pathParams = {};
+                for(let [index, param] of params.entries()){
+                    _pathParams[opts.path_params[index]] = param;
                 }
+
+                //Setting current routing params...
+                pathParams = _pathParams;
+                currentRoute = opts;
+                currentUrl = getFullUrl();
+                fetchQueryParams();
+
+                callMiddlewares({
+                    view_name: opts.view_name,
+                    path: path,
+                    query_params: getQueryParams(),
+                    path_params: _pathParams
+                }, () => {
+                    params.push(queryParams);
+                    if(opts.fn.constructor instanceof AdharaView.constructor){
+                        Adhara.onRoute(opts.fn, params);
+                    }else{
+                        opts.fn.apply(this, params);
+                    }
+                });
             }
-        });
-        return matchFound;
+        }
+        return !!matchOptions;
     }
 
     let curr_path;
@@ -528,6 +543,9 @@ let AdharaRouter = null;
          * @returns {RouterURLConf} Current view name.
          * */
         static getCurrentRoute(){
+            if(!currentRoute){
+                currentRoute = matchUrl().opts;
+            }
             return currentRoute;
         }
 
@@ -861,7 +879,7 @@ let AdharaRouter = null;
 
         }, false);*/
     }
-    
+
     //---------------------
 
 

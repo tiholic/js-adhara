@@ -13,7 +13,7 @@ class AdharaTabView extends AdharaView{
     }
 
     get currentTabLink(){
-        let current_tab = AdharaRouter.getCurrentURL();
+        let current_tab = Adhara.router.getCurrentURL();
         let tab_links = this.tabs.map(tab => tab.link);
         if(tab_links.indexOf(current_tab)===-1){
             return tab_links[0];

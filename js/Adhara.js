@@ -12,9 +12,10 @@ let Adhara = null;
             this.always_active_views = [];
             this.active_views = [];
             this.container = null;
+            this.router = AdharaRouter;
+            this.toast = Toast;
             if(app){
                 this.app = new app();
-                this.toast = Toast;
                 this.dataInterface = initDataInterface();
                 this.i18n = new Internationalize(Adhara.app.i18n_key_map);
                 this.createShortcuts();
@@ -24,7 +25,7 @@ let Adhara = null;
                     WebSocket.listen(this.app.webSocketConfig);
                 }
             }else{
-                AdharaRouter.route();
+                this.router.route();
             }
         }
 
@@ -48,18 +49,18 @@ let Adhara = null;
         }
 
         createContainer(){
-            AdharaRouter.configure(this.app.routerConfiguration);
-            AdharaRouter.listen();
+            this.router.configure(this.app.routerConfiguration);
+            this.router.listen();
             if(this.app.containerView) {
                 this.container = new this.app.containerView();
-                this.container.onViewRendered(AdharaRouter.route);
+                this.container.onViewRendered(this.router.route);
                 this.always_active_views = this.container.subViews.map(subView => Adhara.getView(subView));
                 this.always_active_views.push(this.container);
                 this.clearActiveViews();
                 Adhara.createView(this.container);
             }else{
                 this.clearActiveViews();
-                AdharaRouter.route();
+                this.router.route();
             }
         }
 
@@ -131,7 +132,7 @@ let Adhara = null;
     };
 
     Adhara.lightReload = ()=>{
-        Adhara.container?Adhara.container.refresh():AdharaRouter.route();
+        Adhara.container?Adhara.container.refresh():Adhara.router.route();
     };
     
     function callOnInitListeners(){

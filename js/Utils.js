@@ -768,7 +768,7 @@ class Internationalize{
      * @param {String} default_value - will be returned if key is not availalbe in the keymap
      * */
     getValue(key, subs, default_value){
-        let value = getValueFromJSON(this.key_map, key);
+        let value = this.key_map[key] || getValueFromJSON(this.key_map, key);
         if(!value){
             return default_value;
         }
