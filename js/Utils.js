@@ -360,9 +360,9 @@ function registerConfigUtils(){
             let app_config = Adhara.app.config;
             for(let entity_name in app_config){
                 if(app_config.hasOwnProperty(entity_name)){
-                    let entity_config = app_config[entity_name];
+                    let entity_config = Adhara.app.getEntityConfig(entity_name);
                     if(
-                        ( data_config.url === Adhara.configUtils.getDataConfig(entity_config).url
+                        ( data_config._url === Adhara.configUtils.getDataConfig(entity_config)._url
                             && data_config.blob === Adhara.configUtils.getBlobClass(entity_config) )
                         || JSON.stringify(data_config) === JSON.stringify(entity_config.data_config)
                     ){

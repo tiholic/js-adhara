@@ -67,6 +67,7 @@ class AdharaApp{
             data_config = {
                 batch_data_override: context.data_config.batch_data_override.map(batch_data_config => {
                     return {
+                        _url: batch_data_config.url,
                         url: batch_data_config.url,
                         query_type: batch_data_config.query_type,
                         identifier: batch_data_config.identifier,
@@ -77,6 +78,7 @@ class AdharaApp{
             }
         }else{
             data_config = {
+                _url: context.data_config.url,
                 url: context.data_config.url,
                 allowed_query_types: allowed_query_types,
                 default_query_type: context.data_config.default_query_type || allowed_query_types[0],
@@ -191,7 +193,8 @@ class AdharaApp{
      * */
     get DIConfig(){
         return {
-            url_storage: "urlRes"
+            url_storage: "urlRes",
+            default_reuse: true
         }
     }
 

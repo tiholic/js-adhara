@@ -135,22 +135,44 @@ class AdharaView extends AdharaController{
     }
 
     /**
+     * @getter
+     * @instance
+     * @returns {Object|null} url path parameters as an object with keys as template variables
+     * */
+    get urlPathParams(){
+        return null;
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object|null} Add dynamic input data to API calls made to server
+     * */
+    get payload(){
+        return null;
+    }
+
+    /**
      * @function
      * @instance
      * @returns Adhara style entity config for entity mapped with this view
      * */
     get entityConfig(){
         let entity_name = Adhara.view_context[this.constructor.name];
-        return entity_name?Adhara.app.getEntityConfig(entity_name):null;
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @returns Add dynamic input data to API calls made to server
-     * */
-    get payload(){
-        return null;
+        if(!entity_name){
+            return null;
+        }
+        let entity_config = entity_name?Adhara.app.getEntityConfig(entity_name):null;
+        let url_path_params = this.urlPathParams;
+        if(url_path_params) {
+            let match = entity_config.data_config.url.match(/\${([a-zA-Z0-9$_]*)}/gi);
+            let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
+            for(let idx in match){
+                entity_config.data_config.url = entity_config.data_config.url.replace(match[idx], this_match[idx]);
+            }
+            entity_config.data_config.url = new Function("return `" + entity_config.data_config.url + "`;").call(url_path_params);
+        }
+        return entity_config;
     }
 
     /**

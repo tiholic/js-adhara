@@ -2,6 +2,7 @@ function initDataInterface(){
 
     function DataInterface(){
         let self = this;
+        self.config = Adhara.app.DIConfig;
 
         let request_queue = {}; // for NON-get requests
 
@@ -114,6 +115,7 @@ function initDataInterface(){
                 let dummy_entity_config = {
                     data_config: {
                         url: batch_call.url,
+                        _url: batch_call.url,
                         identifier: batch_call.identifier,
                         default_query_type: batch_call.query_type || 'get',
                         allowed_query_types: ["get", "get_list"],
@@ -180,8 +182,8 @@ function initDataInterface(){
             remember : function(data_url, response, resource_timeout){
                 storage_m.rem_que[data_url] = response;  // hold response till dbPromise resolves
                 return self.dbPromise.then(db => {
-                    const tx = db.transaction(Adhara.app.DIConfig.url_storage, 'readwrite');
-                    tx.objectStore(Adhara.app.DIConfig.url_storage).put({
+                    const tx = db.transaction(self.config.url_storage, 'readwrite');
+                    tx.objectStore(self.config.url_storage).put({
                         url: data_url,
                         response: response,
                         useby : (!isNaN(resource_timeout) ? 30*60*1000 : resource_timeout) + (new Date()).getTime()
@@ -198,7 +200,7 @@ function initDataInterface(){
                         resolve(storage_m.rem_que[data_url]);
                     } else {
                         self.dbPromise.then(db => {
-                            return db.transaction(Adhara.app.DIConfig.url_storage).objectStore(Adhara.app.DIConfig.url_storage).get(data_url);
+                            return db.transaction(self.config.url_storage).objectStore(self.config.url_storage).get(data_url);
                         }).then((data)=>{
                             if(!data){
                                 reject({message: "No such key stored", code:404});
@@ -214,7 +216,7 @@ function initDataInterface(){
             },
             remove : function (data_url) {
                 return self.dbPromise.then(db => {
-                    return db.transaction(Adhara.app.DIConfig.url_storage, 'readwrite').objectStore(Adhara.app.DIConfig.url_storage).delete(data_url);
+                    return db.transaction(self.config.url_storage, 'readwrite').objectStore(self.config.url_storage).delete(data_url);
                 });
             }
         };
@@ -255,10 +257,10 @@ function initDataInterface(){
                 return;
             }
             // if it is not a get or get_list it will make it wait in a queue
+            if(!(request_queue[data_config.url] instanceof Array)){
+                request_queue[data_config.url] = [];
+            }
             if(['get', 'get_list'].indexOf(query_type) < 0) {
-                if(!(request_queue[data_config.url] instanceof Array)){
-                    request_queue[data_config.url] = [];
-                }
                 if(options && options.consider_for_queueing !== false){
                     options.consider_for_queueing = false; // would prevent recursive queueing of the same URL
                     request_queue[data_config.url].push( {entry_time : performance.now(), arg : [query_type, entity_config, data, options]} );
@@ -279,15 +281,16 @@ function initDataInterface(){
                 views_m.signalFailure(query_type, entity_config, failure_message, 405);
                 return;
             }
-            let reusage = data_config['reuse'], resource_timeout;
-            if(reusage instanceof Function){
-                reusage = reusage();
+            let reuse = data_config['reuse'], resource_timeout;
+            if(reuse instanceof Function){
+                reuse = reuse();
             }
-            if(!isNaN(reusage)){
-                resource_timeout = reusage;
-                reusage = true;
+            if(typeof reuse === "number"){
+                resource_timeout = reuse;
+                reuse = true;
             }
-            if((reusage === true || typeof(reusage) === "undefined") && http_method === 'get'){
+            if((reuse === true || ( typeof reuse === "undefined"  && self.config.default_reuse === true ))
+                && ['get', 'get_list'].indexOf(http_method) !== -1 ){
                 let unique_url = storage_m.getUniqueUrlForData(data_config.url, http_method, data);
                 storage_m.recall(unique_url)
                     .then(

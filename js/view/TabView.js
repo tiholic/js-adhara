@@ -8,8 +8,12 @@ class AdharaTabView extends AdharaView{
         return 'nav nav-pills';
     }
 
-    get tabClass(){
+    get tabNavClass(){
         return 'custom-tabs-line tabs-line-bottom left-aligned';
+    }
+
+    get tabListClass(){
+        return "nav";
     }
 
     get currentTabLink(){

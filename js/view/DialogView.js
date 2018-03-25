@@ -1,5 +1,5 @@
 /**
- * Created by varun-4519 on 10/2/18.
+ * Created by varun on 10/2/18.
  */
 class AdharaDialogView extends AdharaView{
 
@@ -16,7 +16,7 @@ class AdharaDialogView extends AdharaView{
     }
 
     get messageTemplate(){
-        return 'Adhara Dialog Message!!!!!!!!';
+        return 'Adhara Dialog Message!';
     }
 
     get buttons() {

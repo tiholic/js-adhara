@@ -405,13 +405,14 @@ let AdharaRouter = null;
          * */
         static register_one(pattern, view_name, fn){
             let path_params = [];
-            let regex = /{{([a-zA-Z]*)}}/g;
+            let regex = /{{([a-zA-Z$_][a-zA-Z0-9$_]*)}}/g;
             let match = regex.exec(pattern);
             while (match != null) {
                 path_params.push(match[1]);
                 match = regex.exec(pattern);
             }
-            pattern = pattern.replace(new RegExp("\\{\\{[a-zA-Z]*\\}\\}", "g"), '');	//Removing all {{XYZ}}
+            pattern = pattern.replace(new RegExp("\\{\\{[a-zA-Z$_][a-zA-Z0-9$_]*\\}\\}", "g"), '');
+            //Removing all {{XYZ}} iff, XYZ matches first character as an alphabet ot $ or _
 
             pattern = "^"+this.transformURL(pattern.substring(1));
             pattern = pattern.replace(/[?]/g, '\\?');   //Converting ? to \? as RegExp(pattern) dosen't handle that
