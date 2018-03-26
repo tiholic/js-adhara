@@ -363,7 +363,9 @@ function registerConfigUtils(){
                     let entity_config = Adhara.app.getEntityConfig(entity_name);
                     if(
                         ( data_config._url === Adhara.configUtils.getDataConfig(entity_config)._url
-                            && data_config.blob === Adhara.configUtils.getBlobClass(entity_config) )
+                            && (
+                                !data_config.blob || data_config.blob === Adhara.configUtils.getBlobClass(entity_config)
+                            ) )
                         || JSON.stringify(data_config) === JSON.stringify(entity_config.data_config)
                     ){
                         res.push(entity_config);
@@ -773,7 +775,7 @@ class Internationalize{
             return default_value;
         }
         if(subs && subs.length){
-            loop(subs, function(sub, idx) {
+            loop(subs, function(idx, sub) {
                 value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), (sub.indexOf('.')!==-1)?this.get(sub):sub );
             });
         }

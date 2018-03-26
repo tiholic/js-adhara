@@ -848,6 +848,12 @@ let AdharaRouter = null;
                 if (url.indexOf('javascript') !== -1) {
                     return;
                 }
+                try{
+                    let go_to_url = new URL(url);
+                    if(go_to_url.host !== window.location.host){
+                        return;
+                    }
+                }catch(e){/*Do nothing. Try catches the invalid url on new ULR(...)*/}
                 if (url) {
                     event.preventDefault();
                     event.stopPropagation();
