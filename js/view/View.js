@@ -137,9 +137,11 @@ class AdharaView extends AdharaController{
     /**
      * @getter
      * @instance
+     * @param {String} [batch_identifier=undefined] - In case if the config is a batch config,
+     * use batch_identifier to know what url's path parameters are required.
      * @returns {Object|null} url path parameters as an object with keys as template variables
      * */
-    get urlPathParams(){
+    getURLPathParams(batch_identifier){
         return null;
     }
 
@@ -150,6 +152,15 @@ class AdharaView extends AdharaController{
      * */
     get payload(){
         return null;
+    }
+
+    formatURL(url, params){
+        let match = url.match(/\${([a-zA-Z0-9$_]*)}/gi);
+        let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
+        for(let idx in match){
+            url = url.replace(match[idx], this_match[idx]);
+        }
+        return new Function("return `" + url + "`;").call(params);
     }
 
     /**
@@ -163,14 +174,18 @@ class AdharaView extends AdharaController{
             return null;
         }
         let entity_config = entity_name?Adhara.app.getEntityConfig(entity_name):null;
-        let url_path_params = this.urlPathParams;
-        if(url_path_params) {
-            let match = entity_config.data_config.url.match(/\${([a-zA-Z0-9$_]*)}/gi);
-            let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
-            for(let idx in match){
-                entity_config.data_config.url = entity_config.data_config.url.replace(match[idx], this_match[idx]);
+        if(entity_config.data_config.hasOwnProperty("batch_data_override")){
+            for(let one_config of entity_config.data_config.batch_data_override){
+                let url_path_params = this.getURLPathParams(one_config.identifier);
+                if(url_path_params){
+                    one_config.url = this.formatURL(one_config.url, url_path_params);
+                }
             }
-            entity_config.data_config.url = new Function("return `" + entity_config.data_config.url + "`;").call(url_path_params);
+        }else{
+            let url_path_params = this.getURLPathParams();
+            if(url_path_params) {
+                entity_config.data_config.url = this.formatURL(entity_config.data_config.url, url_path_params);
+            }
         }
         return entity_config;
     }
@@ -277,7 +292,7 @@ class AdharaView extends AdharaController{
         this._state.fetching_data = false;
         this.render();
     }
-    
+
     /**
      * @function
      * @instance

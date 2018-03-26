@@ -775,9 +775,9 @@ class Internationalize{
             return default_value;
         }
         if(subs && subs.length){
-            loop(subs, function(idx, sub) {
+            for (const [idx, sub] of subs.entries()) {
                 value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), (sub.indexOf('.')!==-1)?this.get(sub):sub );
-            });
+            }
         }
         return value;
     }
@@ -786,7 +786,7 @@ class Internationalize{
      * @instance
      * @function
      * @param {String} key - key
-     * @param {Array<String>} subs - substitutes
+     * @param {Array<String>} [subs=[]] - substitutes
      * */
     get(key, subs){
         return this.getValue(key, subs, key);
