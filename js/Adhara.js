@@ -78,11 +78,21 @@ let Adhara = null;
         }
 
         addToActiveViews(viewInstance){
-            this.active_views.push(viewInstance);
+            if(!this.isActiveView(viewInstance)){
+                this.active_views.push(viewInstance);
+            }
+        }
+
+        getActiveView(classReference){
+            let active_view = this.active_views.filter(view_instance => view_instance.constructor.name === classReference.name)[0];
+            if(!active_view){
+                active_view = this.always_active_views.filter(view_instance => view_instance.constructor.name === classReference.name)[0];
+            }
+            return active_view
         }
 
         isActiveView(viewInstance){
-            return this.active_views.indexOf(viewInstance)!==-1 || this.active_views.indexOf(viewInstance)!==-1;
+            return this.active_views.indexOf(viewInstance)!==-1 || this.always_active_views.indexOf(viewInstance)!==-1;
         }
 
         clearActiveViews(){
@@ -113,10 +123,14 @@ let Adhara = null;
         if(!viewClass){
             throw new Error("invalid view class");
         }
-        if(viewClass instanceof Function){
-            return view_instances[viewClass.name] || new viewClass(parentViewInstance);
+        let active_view = Adhara.getActiveView((viewClass instanceof Function)?viewClass:viewClass.constructor);
+        if(active_view){
+            return active_view;
+        }else if(parentViewInstance){
+            return new viewClass(parentViewInstance);
+        }else{
+            throw new Error(`parent view is required to construct a view. Failed to create view: ${viewClass.constructor.name}`);
         }
-        return view_instances[viewClass.constructor.name] || new viewClass(parentViewInstance);
     };
 
     //Create a view instance

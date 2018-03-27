@@ -212,7 +212,10 @@ class AdharaView extends AdharaController{
         return this._state;
     }
 
-    create(){
+    create(parentView){
+        if(parentView && AdharaView.isPrototypeOf(parentView.constructor)){
+            this._parentView = parentView;
+        }
         Adhara.addToActiveViews(this);
         this.fetchData();
     }
