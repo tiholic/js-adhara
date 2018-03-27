@@ -21,14 +21,14 @@ class AdharaFormView extends AdharaView{
                 default_query_type: this.method
             },
             processor: {
-                success: (query_type, entity_config, response, response_code, pass_over)=>{
+                success: (query_type, entity_config, response, xhr, pass_over)=>{
                     if(this.clearFormOnSuccess) {
                         form.reset();
                     }
                     this.updateFormState(false);
                     this.onSuccess(response);
                 },
-                error: (query_type, entity_config, error, response_code, pass_over)=>{
+                error: (query_type, entity_config, error, xhr, pass_over)=>{
                     this.updateFormState(false);
                     this.onError(error);
                 }

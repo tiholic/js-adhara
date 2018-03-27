@@ -38,8 +38,8 @@ function initDataInterface(){
                 let dummy_entity_config = Object.assign({}, entity_configs[i]);
                 dummy_entity_config.processor = (function IIFE(scoped_i){
                     return {
-                        success: function(query_type, entity_config, response, response_code){
-                            let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, response, response_code);
+                        success: function(query_type, entity_config, response, xhr){
+                            let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, response, xhr);
                             result[scoped_i] = processed_data;
                             entry_count++;
                             if(caller_viewable) {
@@ -50,8 +50,8 @@ function initDataInterface(){
                                 Adhara.configUtils.getViewInstance(entity_config).handleDataChange(processed_data);
                             }
                         },
-                        error: function(query_type, entity_config, error, response_code){
-                            let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, error, response_code);
+                        error: function(query_type, entity_config, error, xhr){
+                            let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, error, xhr);
                             result[scoped_i] = processed_data;
                             entry_count++;
                             if(caller_viewable) {
@@ -86,7 +86,7 @@ function initDataInterface(){
                 Adhara.configUtils.getViewInstance(entity_config).handleBatchData(final_batch_data);
             }
             let batch_processor = { // custom processor for batching requests
-                success: function(query_type, entity_config, response, response_code){
+                success: function(query_type, entity_config, response, xhr){
                     let blob = Adhara.configUtils.getBlobClass(entity_config);
                     let data_config = Adhara.configUtils.getDataConfig(entity_config);
                     let processed_data;
@@ -100,9 +100,9 @@ function initDataInterface(){
                     }
                     batch_result_map[data_config.identifier] = {success:processed_data};
                     if(check_fills(batch_result_map)) publishToView(batch_result_map);
-                    processor_helper.on_success_common(query_type, entity_config, response, response_code);
+                    processor_helper.on_success_common(query_type, entity_config, response, xhr);
                 },
-                error: function(query_type, entity_config, error, response_code){
+                error: function(query_type, entity_config, error, xhr){
                     let data_config = Adhara.configUtils.getDataConfig(entity_config);
                     batch_result_map[data_config.identifier] = {error};
                     if(check_fills(batch_result_map)) publishToView(batch_result_map);
@@ -223,15 +223,15 @@ function initDataInterface(){
         this.Storage = storage_m;
 
         let views_m = { // methods to talk to views service
-            signalSuccess : function(query_type, entity_config, response_json, response_code){
+            signalSuccess : function(query_type, entity_config, response_json, xhr){
                 Adhara.configUtils
                     .getProcessor(entity_config)
-                    .success(query_type, entity_config, response_json, response_code, true);
+                    .success(query_type, entity_config, response_json, xhr, true);
             },
-            signalFailure : function(query_type, entity_config, error, response_code){
+            signalFailure : function(query_type, entity_config, error, xhr){
                 Adhara.configUtils
                     .getProcessor(entity_config)
-                    .error(query_type, entity_config, error, response_code);
+                    .error(query_type, entity_config, error, xhr);
             }
         };
 
@@ -304,14 +304,14 @@ function initDataInterface(){
                                 views_m.signalSuccess(
                                     query_type, entity_config,
                                     response,
-                                    response_object.xhr.status
+                                    response_object.xhr
                                 );
                                 storage_m.remember(unique_url, response, resource_timeout);
                             }, response_object => {
                                 views_m.signalFailure(
                                     query_type, entity_config,
                                     Adhara.app.responseMiddleWare(entity_config, false, response_object.error, response_object.xhr),
-                                    response_object.xhr.status
+                                    response_object.xhr
                                 );
                             });
                         });
