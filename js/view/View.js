@@ -163,17 +163,7 @@ class AdharaView extends AdharaController{
         return new Function("return `" + url + "`;").call(params);
     }
 
-    /**
-     * @function
-     * @instance
-     * @returns Adhara style entity config for entity mapped with this view
-     * */
-    get entityConfig(){
-        let entity_name = Adhara.view_context[this.constructor.name];
-        if(!entity_name){
-            return null;
-        }
-        let entity_config = entity_name?Adhara.app.getEntityConfig(entity_name):null;
+    formatEntityConfig(entity_config){
         if(entity_config.data_config.hasOwnProperty("batch_data_override")){
             for(let one_config of entity_config.data_config.batch_data_override){
                 let url_path_params = this.getURLPathParams(one_config.identifier);
@@ -188,6 +178,19 @@ class AdharaView extends AdharaController{
             }
         }
         return entity_config;
+    }
+
+    /**
+     * @function
+     * @instance
+     * @returns Adhara style entity config for entity mapped with this view
+     * */
+    get entityConfig(){
+        let entity_name = Adhara.view_context[this.constructor.name];
+        if(!entity_name){
+            return null;
+        }
+        return this.formatEntityConfig(Adhara.app.getEntityConfig(entity_name));
     }
 
     /**
@@ -433,6 +436,10 @@ class AdharaView extends AdharaController{
 
     refresh(){
         Adhara.createView(this);
+    }
+
+    destroy(){
+        // This method will be called just before destroying the view
     }
 
 }

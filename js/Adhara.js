@@ -82,11 +82,18 @@ let Adhara = null;
         }
 
         isActiveView(viewInstance){
-            return this.active_views.indexOf(viewInstance)!==-1;
+            return this.active_views.indexOf(viewInstance)!==-1 || this.active_views.indexOf(viewInstance)!==-1;
         }
 
         clearActiveViews(){
-            this.active_views = this.always_active_views.slice();
+            this.active_views = [];
+        }
+
+        closeActiveViews(){
+            for(let active_view of this.active_views){
+                active_view.destroy();
+            }
+            this.clearActiveViews();
         }
 
     }
@@ -119,7 +126,7 @@ let Adhara = null;
 
     //On route listener
     Adhara.onRoute = (view_class) => {
-        Adhara.clearActiveViews();
+        Adhara.closeActiveViews();
         Adhara.createView(Adhara.getView(view_class, Adhara.container));
     };
 
