@@ -15,7 +15,8 @@ module.exports = function (grunt) {
     let index_dir = ``;
     let styles_dir = `${index_dir}less/`;
     let hbs_template_dir = `${index_dir}templates/`;
-    let dist_dir = `${index_dir}dist/${pkg.version}/`;
+    let dist_dir_base = `${index_dir}dist/`;
+    let dist_dir = `${dist_dir_base}${pkg.version}/`;
     let dist_scripts_dir = `${dist_dir}js/`;
     let dist_templates_dir = `${dist_dir}templates/`;
     let minified_scripts_dir = dist_scripts_dir;
@@ -60,6 +61,11 @@ module.exports = function (grunt) {
         minified_app_file,
         minified_styles_dir,
         minified_css_file,
+        clean: {
+            dist: {
+                src: [dist_dir_base]
+            }
+        },
         less: {
             all: {
                 options: {
@@ -119,6 +125,7 @@ module.exports = function (grunt) {
             }
         }
     });
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-uglify-es');
@@ -127,6 +134,7 @@ module.exports = function (grunt) {
 
 
     let command = [
+        'clean:dist',
         'less:all',
         'handlebars:compile',
         'concat:app_scripts',
