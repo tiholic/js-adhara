@@ -10,7 +10,7 @@ class AdharaView extends AdharaController{
      * */
     constructor(parentViewInstance){
         super();
-        this._parentView = parentViewInstance;
+        this._parentViewInstance = parentViewInstance;
         Adhara.addViewToInstances(this);
         this._data = null;
         this._state = {};
@@ -212,9 +212,9 @@ class AdharaView extends AdharaController{
         return this._state;
     }
 
-    create(parentView){
-        if(parentView && AdharaView.isPrototypeOf(parentView.constructor)){
-            this._parentView = parentView;
+    create(parentViewInstance){
+        if(parentViewInstance && AdharaView.isPrototypeOf(parentViewInstance.constructor)){
+            this._parentViewInstance = parentViewInstance;
         }
         Adhara.addToActiveViews(this);
         this.fetchData();
@@ -344,7 +344,7 @@ class AdharaView extends AdharaController{
     }
 
     get parentView(){
-        return this._parentView || Adhara.getView(Adhara.app.containerView);
+        return this._parentViewInstance || Adhara.getView(Adhara.app.containerView);
     }
 
     _getParentContainer(){

@@ -110,6 +110,9 @@ class AdharaFormView extends AdharaView{
         if(!this._formElement || !document.body.contains(this._formElement)){
             this._formElement = this.getParentContainerElement().querySelector("form");
         }
+        if(!this._formElement){
+            throw new Error("No from element discovered!");
+        }
         return this._formElement;
     }
 
@@ -162,6 +165,10 @@ class AdharaFormView extends AdharaView{
 
     handleSubmitButton(){
         let submit_button = this.submitButton;
+        if(!submit_button){
+            console.warn("Unable to discover 'Submit button'. Duplicate submission are not handled.");
+            return;
+        }
         if(this.formElement.submitting){
             submit_button.dataset.tosubmit = submit_button.innerHTML;
             submit_button.innerHTML = submit_button.dataset.inprogress || submit_button.dataset.tosubmit;

@@ -5,6 +5,7 @@ class AdharaDialogView extends AdharaView{
 
     onInit(){
         this._modelId = "adhara-dialog-id-"+Date.now();
+        this.close = this.close.bind(this);
     }
 
     get template(){
@@ -45,7 +46,8 @@ class AdharaDialogView extends AdharaView{
     }
 
     getParentContainerElement(){
-        return document.querySelector('.adhara-dialog')
+        // return document.querySelector('.adhara-dialog')
+        return document.querySelector('#'+this.modalId);
     }
 
     render(){
@@ -61,8 +63,9 @@ class AdharaDialogView extends AdharaView{
         let render_fn = super.render;
         let self = this;
         setTimeout(function(){
+            //TODO optimize...
             render_fn.call(self);
-            }, 0);
+        }, 0);
     }
 
     format(){
@@ -71,14 +74,16 @@ class AdharaDialogView extends AdharaView{
         }
     }
 
+    close(){
+        $('#'+this.modalId).modal('dispose');
+    }
+
     show(){
         //TODO modal.dispose is not available in bootstrap 3
         $('#'+ this.modalId).modal('show');
         if(this.destroyOnClose){
             setTimeout(()=>{
-                $('#'+this.modalId).on('hidden.bs.modal', function (event) {
-                    $('#'+this.modalId).modal('dispose');
-                });
+                $('#'+this.modalId).on('hidden.bs.modal', this.close);
             }, 0);
         }
     }

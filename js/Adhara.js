@@ -134,8 +134,8 @@ let Adhara = null;
     };
 
     //Create a view instance
-    Adhara.createView = (adhara_view_instance) => {
-        adhara_view_instance.create();
+    Adhara.createView = (adhara_view_instance, parentViewInstance) => {
+        adhara_view_instance.create(parentViewInstance);
     };
 
     //On route listener
