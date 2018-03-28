@@ -26,6 +26,8 @@ module.exports = {
         "js/view/DialogView.js",
         "js/view/TabView.js",
         "js/view/ContainerView.js",
+        //mixins
+        "js/view/DialogFormView.js",
         //Client DB Storage
         "js/Storage/ClientStorage.js",
         //Data Interface & Processor

@@ -4,8 +4,8 @@
 class AdharaDialogView extends AdharaView{
 
     onInit(){
-        this._modelId = "adhara-dialog-id-"+Date.now();
-        this.close = this.close.bind(this);
+        this._modalId = "adhara-dialog-id-"+Date.now();
+        this.destroy = this.destroy.bind(this);
     }
 
     get template(){
@@ -34,7 +34,18 @@ class AdharaDialogView extends AdharaView{
     }
 
     get modalId(){
-        return this._modelId;
+        return this._modalId;
+    }
+
+    get wrapperId(){
+        return `${this.modalId}-wrapper`;
+    }
+
+    get modalElement(){
+        if(!this._modalElemnt || !document.body.contains(this._modalElemnt[0])){
+            this._modalElemnt = $('#'+this.modalId);    //Using jQ as that is mostly used in this view
+        }
+        return this._modalElemnt;
     }
 
     get isAutoShow(){
@@ -47,7 +58,7 @@ class AdharaDialogView extends AdharaView{
 
     getParentContainerElement(){
         // return document.querySelector('.adhara-dialog')
-        return document.querySelector('#'+this.modalId);
+        return document.querySelector('#'+this.wrapperId);
     }
 
     render(){
@@ -58,14 +69,10 @@ class AdharaDialogView extends AdharaView{
             }
         }
         let wrapper= document.createElement('div');
+        wrapper.id = this.wrapperId;
         wrapper.classList.add('adhara-dialog');
         document.querySelector('body').appendChild(wrapper);
-        let render_fn = super.render;
-        let self = this;
-        setTimeout(function(){
-            //TODO optimize...
-            render_fn.call(self);
-        }, 0);
+        super.render();
     }
 
     format(){
@@ -74,25 +81,24 @@ class AdharaDialogView extends AdharaView{
         }
     }
 
-    close(){
-        $('#'+this.modalId).modal('dispose');
-    }
-
     show(){
-        //TODO modal.dispose is not available in bootstrap 3
-        $('#'+ this.modalId).modal('show');
+        this.modalElement.modal('show');
         if(this.destroyOnClose){
             setTimeout(()=>{
-                $('#'+this.modalId).on('hidden.bs.modal', this.close);
+                this.modalElement.on('hidden.bs.modal', this.destroy);
             }, 0);
         }
     }
 
-    hide(){
-        $('#'+this.modalId).modal('hide');
+    hide(){ //Note: destroy's if destroyOnClose is enabled. See event listener binding in show() method.
+        this.modalElement.modal('hide');
     }
 
     destroy(){
-        //destroy .adhara-dialog element
+        let wrapper_element = document.getElementById(this.wrapperId);
+        if(wrapper_element) {
+            wrapper_element.remove();
+        }
     }
+
 }
