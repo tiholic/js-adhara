@@ -16,7 +16,7 @@ class AdharaFormView extends AdharaView{
         let form = this.formElement;
         return {
             data_config: {
-                url: this.action,
+                url: this.formatURL(this.action, this.getURLPathParams()),
                 allowed_query_types: [this.method],
                 default_query_type: this.method
             },

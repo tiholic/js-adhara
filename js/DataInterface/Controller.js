@@ -12,7 +12,7 @@ class AdharaController{
         this.control('get_list', context, data);
     };
 
-    putDatafunction(context, data){
+    putData(context, data){
         this.control('put', context, data);
     };
 
@@ -21,7 +21,7 @@ class AdharaController{
     };
 
     deleteData(context, data){
-        this.control('del', context, data);
+        this.control('delete', context, data);
     };
 
 }

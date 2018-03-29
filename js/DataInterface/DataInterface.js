@@ -242,8 +242,6 @@ function initDataInterface(){
         // rest of the public methods and local glue logic goes here ...
         this.enqueue = function(query_type, entity_config, data, options){   // AS OF NOW options can contain additional parameter 'caller_view'. Which ensures the caller view does get the result.
             if(!isValidEntityConfig(entity_config)){
-                debugger;
-                isValidEntityConfig(entity_config);
                 throw new Error(`Entity config passed to enqueue is invalid: ${JSON.stringify(entity_config, null, 4)}`);
             }
             let data_config = Adhara.configUtils.getDataConfig(entity_config);

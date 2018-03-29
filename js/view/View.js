@@ -155,6 +155,9 @@ class AdharaView extends AdharaController{
     }
 
     formatURL(url, params){
+        if(!params){
+            return url;
+        }
         let match = url.match(/\${([a-zA-Z0-9$_]*)}/gi);
         let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
         for(let idx in match){
