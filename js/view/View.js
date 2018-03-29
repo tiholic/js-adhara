@@ -410,7 +410,7 @@ class AdharaView extends AdharaController{
 
     renderSubViews(){
         for(let sub_view of this.subViews){
-            Adhara.createView(Adhara.getView(sub_view, this));
+            Adhara.createView(Adhara.getView(sub_view, this), this);
         }
     }
 
