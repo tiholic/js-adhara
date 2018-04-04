@@ -1,4 +1,4 @@
-<div id="adharaTable_{{title}}" class="adhara-table-container">
+<div id="adharaTable_{{title}}" class="adhara-table-container" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
     {{#if title}}
         <div>
             <h3>{{title}}</h3>
@@ -19,12 +19,12 @@
                 {{include listTemplate this}}
             </div>
             {{#if isPaginationRequired}}
-            <div class="row flex-row-reverse">
-                <div class="btn-group" role="group">
-                    <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n '"i18n.adhara.list.previous"'}}</button>
-                    <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n '"i18n.adhara.list.next"'}}</button>
+                <div class="row flex-row-reverse">
+                    <div class="btn-group" role="group">
+                        <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n '"i18n.adhara.list.previous"'}}</button>
+                        <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n '"i18n.adhara.list.next"'}}</button>
+                    </div>
                 </div>
-            </div>
             {{/if}}
         {{else}}
             <div class="adhara-list-wrapper">

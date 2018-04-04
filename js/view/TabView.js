@@ -16,19 +16,25 @@ class AdharaTabView extends AdharaView{
         return "nav";
     }
 
-    get currentTabLink(){
-        let current_tab = Adhara.router.getCurrentURL();
-        let tab_links = this.tabs.map(tab => tab.link);
-        if(tab_links.indexOf(current_tab)===-1){
-            return tab_links[0];
-        }
-        return current_tab;
+    get tabs(){
+        return [];
+    }
+
+    /**
+     * @getter
+     * @instance
+     * @returns {Object} Active tab configuration
+     * */
+    get currentTab(){
+        let current_tab_link_from_url = Adhara.router.getCurrentURL();
+        let current_Tab = this.tabs.filter(tab=>tab.link===current_tab_link_from_url);
+        return current_Tab.length?current_Tab[0]:this.tabs[0];
     }
 
     get tabsList(){
-        let current_tab_link = this.currentTabLink;
+        let current_tab_id = this.currentTab.id;
         return this.tabs.map(tab => {
-            tab.className = (tab.link === current_tab_link)?"active":"";
+            tab.className = (tab.id === current_tab_id)?"active":"";
             return tab;
         });
     }
@@ -39,16 +45,6 @@ class AdharaTabView extends AdharaView{
 
     get previousSelector(){
         return '.btn-previous';
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @returns {Object} Active tab configuration
-     * */
-    get currentTab(){
-        let current_tab_link = this.currentTabLink;
-        return this.tabs.filter(tab=>tab.link===current_tab_link)[0];
     }
 
     onTabShow() {

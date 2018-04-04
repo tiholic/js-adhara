@@ -1,16 +1,18 @@
-<table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-        {{include headerTemplate columns}}
-    </tr>
-    </thead>
-    <tbody>
-    {{#each data as |datum index|}}
-        <tr adhara-datum-row="{{index}}">
-            <td adhara-datum-col="{{index}}-{{column}}">
-                {{include ../itemTemplate datum}}
-            </td>
+<div {{addAttr containerAttributes}}>
+    <table class="table {{tableClass}}">
+        <thead>
+        <tr>
+            {{include headerTemplate columns}}
         </tr>
-    {{/each}}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {{#each data as |datum index|}}
+            <tr adhara-datum-row="{{index}}">
+                <td adhara-datum-col="{{index}}-{{column}}">
+                    {{include ../itemTemplate datum}}
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>

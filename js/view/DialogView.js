@@ -94,7 +94,7 @@ class AdharaDialogView extends AdharaView{
         this.modalElement.modal('hide');
     }
 
-    destroy(){
+    onDestroy(){
         let wrapper_element = document.getElementById(this.wrapperId);
         if(wrapper_element) {
             wrapper_element.remove();

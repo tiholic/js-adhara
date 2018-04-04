@@ -211,11 +211,14 @@ class AdharaFormView extends AdharaView{
     }
 
     _format(container){
+        super._format(container);
+        if(this.errors){
+            return;
+        }
         this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
             this.submit();
         });
-        super._format(container);
     }
 
     submit(){

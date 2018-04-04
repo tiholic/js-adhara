@@ -16,7 +16,8 @@ class AdharaView extends AdharaController{
         this._state = {};
         this._error = null;
         this._event_listeners = {};
-        this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted"]);
+        this.is_active = false;
+        this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
         this._registerEvents(this.events);
         this.onInit();
     }
@@ -220,11 +221,12 @@ class AdharaView extends AdharaController{
             this._parentViewInstance = parentViewInstance;
         }
         Adhara.addToActiveViews(this);
+        this.is_active = true;
         this.fetchData();
     }
 
     isActive(){
-        return Adhara.isActiveView(this);
+        return Adhara.isActiveView(this) && this.is_active;
     }
 
     /**
@@ -418,6 +420,9 @@ class AdharaView extends AdharaController{
         for(let action of ["click", "change"]){
             let onActionElements = container.querySelectorAll(`[data-on${action}]`);
             for(let actionElement of onActionElements){
+                if(actionElement.dataset['_adharaevent_']){
+                    continue;
+                }
                 actionElement.addEventListener(action, event => {
                     let data = actionElement.dataset;
                     let action_key = `on${action}`;
@@ -428,10 +433,11 @@ class AdharaView extends AdharaController{
                         if(fn) {
                             fn(event, data, this);
                         }else{
-                            throw new Error(`Invalid function: ${data[action_key]}`);
+                            throw new Error(`Invalid function: ${data[action_key]} in View ${this.constructor.name}`);
                         }
                     }
                 });
+                actionElement.dataset['_adharaevent_'] = true;
             }
         }
     }
@@ -444,8 +450,18 @@ class AdharaView extends AdharaController{
         Adhara.createView(this);
     }
 
-    destroy(){
+    onDestroy(){
         // This method will be called just before destroying the view
+    }
+
+    destroy(){
+        // This method will destroy the view
+        this.onDestroy();
+        this.trigger("ViewDestroyed");
+        this.is_active = false;
+        try{
+            this.getParentContainerElement().innerHTML = "";
+        }catch(e){/*Do nothing*/}
     }
 
 }

@@ -141,6 +141,9 @@ let Adhara = null;
     //On route listener
     Adhara.onRoute = (view_class) => {
         Adhara.closeActiveViews();
+        if(!Adhara.container.isActive()){
+            return Adhara.container.create();
+        }
         Adhara.createView(Adhara.getView(view_class, Adhara.container));
     };
 

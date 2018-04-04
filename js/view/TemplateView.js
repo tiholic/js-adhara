@@ -12,4 +12,12 @@ class AdharaTemplateView extends AdharaListView{
         return 'adhara-list-template-item';
     }
 
+    get tableClass(){
+        return "table-bordered table-hover";
+    }
+
+    get containerAttributes(){
+        return {};
+    }
+
 }

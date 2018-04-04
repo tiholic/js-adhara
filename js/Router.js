@@ -845,7 +845,8 @@ let AdharaRouter = null;
             let re = getRoutingElement(event);
             if ((AdharaRouter.enableAllAnchors || hasAttribute(re, "route")) && hasAttribute(re, "href")) {
                 let url = this.getAttribute('href').trim();
-                if (url.indexOf('javascript') !== -1) {
+                let target = this.getAttribute("target");
+                if( ( target && target !== "_self") || url.indexOf('javascript') !== -1){
                     return;
                 }
                 try{

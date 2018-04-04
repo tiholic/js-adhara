@@ -318,13 +318,13 @@ function initDataInterface(){
                     views_m.signalSuccess(
                         query_type, entity_config,
                         Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr),
-                        response_object.xhr.status
+                        response_object.xhr
                     );
                 }, response_object => {
                     views_m.signalFailure(
                         query_type, entity_config,
                         Adhara.app.responseMiddleWare(entity_config, false, response_object.error, response_object.xhr),
-                        response_object.xhr.status
+                        response_object.xhr
                     );
                 }).then(()=>{
                     request_queue[data_config.url].shift();

@@ -51,7 +51,7 @@ let HandlebarsHelpers = {
                     attrData.push(key+'='+value);
                 }
             });
-            return new Handlebars.SafeString(attrData.join(' '));
+            return new window.Handlebars.SafeString(attrData.join(' '));
         }
     },
     'selectedClass': function(selected,selectedClassName){
@@ -91,7 +91,7 @@ let HandlebarsHelpers = {
      * //</div>
      * */
     'include' : function(template_name, context){			
-        return new Handlebars.SafeString(HandlebarUtils.execute(template_name, context));
+        return new window.Handlebars.SafeString(HandlebarUtils.execute(template_name, context));
     },
     /**
      * @function
@@ -381,7 +381,7 @@ function registerAdharaUtils(){
     //config utils
     registerConfigUtils();
     //Register handlebar helpers
-    Handlebars.registerHelper(HandlebarsHelpers);
+    window.Handlebars.registerHelper(HandlebarsHelpers);
     //Form listeners
     jQuery(document).on('submit', 'form.api-form', function (event) {
         event.preventDefault();
@@ -445,7 +445,7 @@ function evaluateLogic(param1, operator, param2){
             ">=" : param1>=param2,
             "<=" : param1<=param2,
             "equals" : param1==param2,
-            "and" : param1&&param2,	
+            "and" : param1&&param2,
             "or" : param1||param2	
         }[operator]
     }
@@ -731,8 +731,8 @@ let HandlebarUtils = {};
      * */
     HandlebarUtils.execute = function(template_or_template_string, context, cache){
         //Check if it is a pre compiled hbs template
-        let template = Handlebars.templates[template_or_template_string];
-        if(!template && Handlebars.hasOwnProperty("compile")){
+        let template = window.Handlebars.templates[template_or_template_string];
+        if(!template && window.Handlebars.hasOwnProperty("compile")){
             //If template not found in precompiled hbs list => template is a handlebar string template
             // check if cacheable
             if(cache !== false){
@@ -740,11 +740,11 @@ let HandlebarUtils = {};
                 template = preCompiledCache[template_or_template_string];
                 if(!template){
                     //else compile, store it in cache and proceed to execution
-                    template = preCompiledCache[template_or_template_string] = Handlebars.compile(template_or_template_string);
+                    template = preCompiledCache[template_or_template_string] = window.Handlebars.compile(template_or_template_string);
                 }
             }else{
                 //else compile and proceed to execution
-                template = Handlebars.compile(template_or_template_string);
+                template = window.Handlebars.compile(template_or_template_string);
             }
         }
         //execute with the provided context and return the output content...
