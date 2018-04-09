@@ -775,8 +775,13 @@ class Internationalize{
             return default_value;
         }
         if(subs && subs.length){
-            for (const [idx, sub] of subs.entries()) {
-                value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), (sub.indexOf('.')!==-1)?this.get(sub):sub );
+            for (let [idx, sub] of subs.entries()) {
+                try {
+                    if (sub.indexOf('.') !== -1) {
+                        sub = this.get(sub);
+                    }
+                }catch(e){/*Do Nothing*/}
+                value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), sub );
             }
         }
         return value;

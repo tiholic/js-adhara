@@ -1,7 +1,7 @@
 module.exports = {
     app_scripts: [
         "js/Utils.js",
-        "js/py.js",
+        // "js/py.js",
         //Adhara
         "js/App.js",
         "js/Adhara.js",
@@ -38,6 +38,7 @@ module.exports = {
     ],
     app_styles: [
         //Adhara
+        "less/adhara.css",
         "less/cards.css",
     ]
 };

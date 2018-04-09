@@ -84,9 +84,9 @@ let Adhara = null;
         }
 
         getActiveView(classReference){
-            let active_view = this.active_views.filter(view_instance => view_instance.constructor.name === classReference.name)[0];
+            let active_view = this.active_views.filter(view_instance => view_instance.constructor === classReference)[0];
             if(!active_view){
-                active_view = this.always_active_views.filter(view_instance => view_instance.constructor.name === classReference.name)[0];
+                active_view = this.always_active_views.filter(view_instance => view_instance.constructor === classReference)[0];
             }
             return active_view
         }
