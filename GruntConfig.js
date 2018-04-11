@@ -29,7 +29,10 @@ module.exports = {
         //mixins
         "js/view/DialogFormView.js",
         //Client DB Storage
-        "js/Storage/ClientStorage.js",
+        "js/Storage/Storage.js",
+        "js/Storage/StorageSelector.js",
+        "js/Storage/DBStorage.js",
+        "js/Storage/CacheStorage.js",
         //Data Interface & Processor
         "js/DataInterface/DataInterface.js",
         "js/DataInterface/Processors.js",
