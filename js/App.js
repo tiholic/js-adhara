@@ -188,8 +188,8 @@ class AdharaApp{
                 name: 'Adhara-key_shelf',
                 version: 1,
                 schema: {
-                    http_cache: {
-                        keyPath : "key_shelf"
+                    key_shelf: {
+                        keyPath : "key"
                     }
                 }
             }

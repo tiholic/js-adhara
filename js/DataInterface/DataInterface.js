@@ -5,7 +5,7 @@ class DataInterface extends StorageSelector.select(){
         this.config = Adhara.app.DIConfig;
         this.request_queue = {}; // for NON-get requests
         this.rem_que = {};
-        this.db_table = this.select(this.config.http_cache_table);
+        this.db_table = this.select("default", this.config.http_cache_table);
     }
 
     // local helpers ...
@@ -185,7 +185,7 @@ class DataInterface extends StorageSelector.select(){
 
     remember(data_url, response, resource_timeout){
         this.rem_que[data_url] = response;  // hold response till dbPromise resolves
-        return this.db_table.store(data_url, {
+        return this.db_table.store(/*data_url, */{
             url: data_url,
             response: response,
             expires : (isNaN(resource_timeout) ? (this.config.reuse_timeout || 5*60*1000 ) : resource_timeout) + Date.now()  //5 minutes is the default timeout
@@ -279,7 +279,7 @@ class DataInterface extends StorageSelector.select(){
         if((reuse === true || reuse instanceof Function || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
             && ['get', 'get_list'].indexOf(http_method) !== -1 ){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
-            function msc(){
+            let msc = ()=>{
                 //initiating call to Backend Service, and registering listeners for success and failure
                 this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
                     let response = Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr);

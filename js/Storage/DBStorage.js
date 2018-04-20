@@ -4,18 +4,95 @@ class AdharaDBStorage extends AdharaStorage{
         super();
         // promise based Async wrapper for indexedDB
 
+        function promisifyRequest(request) {
+            return new Promise(function(resolve, reject) {
+                request.onsuccess = function() {
+                    resolve(request.result);
+                };
+                request.onerror = function() {
+                    reject(request.error);
+                };
+            });
+        }
+
+        function promisifyRequestCall(obj, method, args) {
+            let request;
+            let p = new Promise((resolve, reject) => {
+                request = obj[method].apply(obj, args);
+                promisifyRequest(request).then(resolve, reject);
+            });
+            p.request = request;
+            return p;
+        }
+
+        function promisifyCursorRequestCall(obj, method, args) {
+            let p = promisifyRequestCall(obj, method, args);
+            return p.then(function(value) {
+                if (!value) {
+                    return;
+                }
+                return new Cursor(value, p.request);
+            });
+        }
+
+        function proxyProperties(ProxyClass, targetProp, properties) {
+            properties.forEach(function(prop) {
+                Object.defineProperty(ProxyClass.prototype, prop, {
+                    get: function() {
+                        return this[targetProp][prop];
+                    },
+                    set: function(val) {
+                        this[targetProp][prop] = val;
+                    }
+                });
+            });
+        }
+
+        function proxyRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+            properties.forEach(prop => {
+                if (!(prop in Constructor.prototype)) {
+                    return;
+                }
+                ProxyClass.prototype[prop] = function(){
+                    return promisifyRequestCall(this[targetProp], prop, arguments);
+                };
+            });
+        }
+
+        function proxyMethods(ProxyClass, targetProp, Constructor, properties) {
+            properties.forEach(prop => {
+                if (!(prop in Constructor.prototype)) {
+                    return;
+                }
+                ProxyClass.prototype[prop] = function(){
+                    return this[targetProp][prop].apply(this[targetProp], arguments);
+                };
+            });
+        }
+
+        function proxyCursorRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+            properties.forEach(function(prop) {
+                if (!(prop in Constructor.prototype)) {
+                    return;
+                }
+                ProxyClass.prototype[prop] = function() {
+                    return promisifyCursorRequestCall(this[targetProp], prop, arguments);
+                };
+            });
+        }
+
         function Index(index) {
             this._index = index;
         }
 
-        this.proxyProperties(Index, '_index', [
+        proxyProperties(Index, '_index', [
             'name',
             'keyPath',
             'multiEntry',
             'unique'
         ]);
 
-        this.proxyRequestMethods(Index, '_index', IDBIndex, [
+        proxyRequestMethods(Index, '_index', IDBIndex, [
             'get',
             'getKey',
             'getAll',
@@ -23,7 +100,7 @@ class AdharaDBStorage extends AdharaStorage{
             'count'
         ]);
 
-        this.proxyCursorRequestMethods(Index, '_index', IDBIndex, [
+        proxyCursorRequestMethods(Index, '_index', IDBIndex, [
             'openCursor',
             'openKeyCursor'
         ]);
@@ -33,14 +110,14 @@ class AdharaDBStorage extends AdharaStorage{
             this._request = request;
         }
 
-        this.proxyProperties(Cursor, '_cursor', [
+        proxyProperties(Cursor, '_cursor', [
             'direction',
             'key',
             'primaryKey',
             'value'
         ]);
 
-        this.proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
+        proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
             'update',
             'delete'
         ]);
@@ -55,7 +132,7 @@ class AdharaDBStorage extends AdharaStorage{
                 let args = arguments;
                 return Promise.resolve().then(function() {
                     cursor._cursor[methodName].apply(cursor._cursor, args);
-                    return this.promisifyRequest(cursor._request).then(value => value ? (new Cursor(value, cursor._request)) : null);
+                    return promisifyRequest(cursor._request).then(value => value ? (new Cursor(value, cursor._request)) : null);
                 });
             };
         });
@@ -72,14 +149,14 @@ class AdharaDBStorage extends AdharaStorage{
             return new Index(this._store.index.apply(this._store, arguments));
         };
 
-        this.proxyProperties(ObjectStore, '_store', [
+        proxyProperties(ObjectStore, '_store', [
             'name',
             'keyPath',
             'indexNames',
             'autoIncrement'
         ]);
 
-        this.proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+        proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
             'put',
             'add',
             'delete',
@@ -91,12 +168,12 @@ class AdharaDBStorage extends AdharaStorage{
             'count'
         ]);
 
-        this.proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+        proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
             'openCursor',
             'openKeyCursor'
         ]);
 
-        this.proxyMethods(ObjectStore, '_store', IDBObjectStore, [
+        proxyMethods(ObjectStore, '_store', IDBObjectStore, [
             'deleteIndex'
         ]);
 
@@ -119,12 +196,12 @@ class AdharaDBStorage extends AdharaStorage{
             return new ObjectStore(this._tx.objectStore.apply(this._tx, arguments));
         };
 
-        this.proxyProperties(Transaction, '_tx', [
+        proxyProperties(Transaction, '_tx', [
             'objectStoreNames',
             'mode'
         ]);
 
-        this.proxyMethods(Transaction, '_tx', IDBTransaction, [
+        proxyMethods(Transaction, '_tx', IDBTransaction, [
             'abort'
         ]);
 
@@ -138,13 +215,13 @@ class AdharaDBStorage extends AdharaStorage{
             return new ObjectStore(this._db.createObjectStore.apply(this._db, arguments));
         };
 
-        this.proxyProperties(UpgradeDB, '_db', [
+        proxyProperties(UpgradeDB, '_db', [
             'name',
             'version',
             'objectStoreNames'
         ]);
 
-        this.proxyMethods(UpgradeDB, '_db', IDBDatabase, [
+        proxyMethods(UpgradeDB, '_db', IDBDatabase, [
             'deleteObjectStore',
             'close'
         ]);
@@ -157,13 +234,13 @@ class AdharaDBStorage extends AdharaStorage{
             return new Transaction(this._db.transaction.apply(this._db, arguments));
         };
 
-        this.proxyProperties(DB, '_db', [
+        proxyProperties(DB, '_db', [
             'name',
             'version',
             'objectStoreNames'
         ]);
 
-        this.proxyMethods(DB, '_db', IDBDatabase, [
+        proxyMethods(DB, '_db', IDBDatabase, [
             'close'
         ]);
 
@@ -208,94 +285,9 @@ class AdharaDBStorage extends AdharaStorage{
             };
         });
 
-        this.dbs = {};
-        for(let db_config of Adhara.app.DBConfig){
-            this.dbs[db_config.name] = this.idb.open(db_config.name, db_config.version, upgradeDb => this.createObjectStores(upgradeDb, db_config));
-        }
-
-    }
-
-    promisifyRequest(request) {
-        return new Promise(function(resolve, reject) {
-            request.onsuccess = function() {
-                resolve(request.result);
-            };
-            request.onerror = function() {
-                reject(request.error);
-            };
-        });
-    }
-
-    promisifyRequestCall(obj, method, args) {
-        let request;
-        let p = new Promise((resolve, reject) => {
-            request = obj[method].apply(obj, args);
-            this.promisifyRequest(request).then(resolve, reject);
-        });
-        p.request = request;
-        return p;
-    }
-
-    promisifyCursorRequestCall(obj, method, args) {
-        let p = this.promisifyRequestCall(obj, method, args);
-        return p.then(function(value) {
-            if (!value) {
-                return;
-            }
-            return new Cursor(value, p.request);
-        });
-    }
-
-    proxyProperties(ProxyClass, targetProp, properties) {
-        properties.forEach(function(prop) {
-            Object.defineProperty(ProxyClass.prototype, prop, {
-                get: function() {
-                    return this[targetProp][prop];
-                },
-                set: function(val) {
-                    this[targetProp][prop] = val;
-                }
-            });
-        });
-    }
-
-    proxyRequestMethods(ProxyClass, targetProp, Constructor, properties) {
-        properties.forEach(function(prop) {
-            if (!(prop in Constructor.prototype)) {
-                return;
-            }
-            ProxyClass.prototype[prop] = function() {
-                return this.promisifyRequestCall(this[targetProp], prop, arguments);
-            };
-        });
-    }
-
-    proxyMethods(ProxyClass, targetProp, Constructor, properties) {
-        properties.forEach(function(prop) {
-            if (!(prop in Constructor.prototype)) {
-                return;
-            }
-            ProxyClass.prototype[prop] = function() {
-                return this[targetProp][prop].apply(this[targetProp], arguments);
-            };
-        });
-    }
-
-    proxyCursorRequestMethods(ProxyClass, targetProp, Constructor, properties) {
-        properties.forEach(function(prop) {
-            if (!(prop in Constructor.prototype)) {
-                return;
-            }
-            ProxyClass.prototype[prop] = function() {
-                return this.promisifyCursorRequestCall(this[targetProp], prop, arguments);
-            };
-        });
-    }
-
-    get idb(){
-        return {
+        let idb = {
             open: (name, version, upgradeCallback)=>{
-                let p = this.promisifyRequestCall(indexedDB, 'open', [name, version]);
+                let p = promisifyRequestCall(indexedDB, 'open', [name, version]);
                 let request = p.request;
 
                 request.onupgradeneeded = function(event) {
@@ -309,9 +301,15 @@ class AdharaDBStorage extends AdharaStorage{
                 });
             },
             del: (name)=>{
-                return this.promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
+                return promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
             }
         };
+
+        this.dbs = {};
+        for(let db_config of Adhara.app.DBConfig){
+            this.dbs[db_config.id] = idb.open(db_config.name, db_config.version, upgradeDb => this.createObjectStores(upgradeDb, db_config));
+        }
+
     }
 
     createObjectStores(upgradeDb, db_config){
@@ -350,8 +348,8 @@ class AdharaDBStorage extends AdharaStorage{
         }
     }
 
-    select(table_name){
-        return new DBStorageOperator(table_name, this.dbs[table_name]);
+    select(database_name, dataset_name){
+        return new DBStorageOperator(dataset_name, this.dbs[database_name]);
     }
 
 }
@@ -371,6 +369,10 @@ class DBStorageOperator extends AdharaStorageOperator{
     }
 
     store(key, val) {
+        if(!val){
+            val = key;
+            key = undefined;
+        }
         return this.db.then(db => {
             const tx = db.transaction(this.dataset, 'readwrite');
             tx.objectStore(this.dataset).put(val, key);

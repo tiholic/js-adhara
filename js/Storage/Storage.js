@@ -8,9 +8,10 @@ class AdharaStorage{
     /**
      * @function
      * @instance
+     * @param {String} database_name - name of the database
      * @param {String} dataset_name - name/key_name of the dataset on which operations are to be carried out
      * */
-    select(dataset_name){
+    select(database_name, dataset_name){
         throw new Error("return a StorageOperator instance from this method. create a `class xStorageOperator extends AdharaStorageOperator{...}`");
     }
 
