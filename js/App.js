@@ -171,19 +171,29 @@ class AdharaApp{
      * @returns {Object} DB Configuration which includes DB names and DB Schematics for Client Storage ( for all the object stores )
      * */
     get DBConfig(){
-        return {
-            name: "Adhara-app_db",
-            version: 1,
-            schema: {
-                urlRes: {
-                    keyPath : "url"
+        return [
+            {
+                id: "default",
+                name: "Adhara-app_db",
+                version: 1,
+                schema: {
+                    http_cache: {
+                        keyPath : "url"
+
+                    }
                 }
             },
-            key_shelf: {
+            {
+                id: "key_shelf",
                 name: 'Adhara-key_shelf',
-                version: 1
+                version: 1,
+                schema: {
+                    http_cache: {
+                        keyPath : "key_shelf"
+                    }
+                }
             }
-        }
+        ];
     }
 
     /**
@@ -193,8 +203,9 @@ class AdharaApp{
      * */
     get DIConfig(){
         return {
-            url_storage: "urlRes",
-            default_reuse: true
+            http_cache_table: "http_cache",
+            default_reuse: true,
+            reuse_timeout: 5*60*1000
         }
     }
 

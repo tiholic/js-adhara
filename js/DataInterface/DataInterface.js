@@ -5,6 +5,7 @@ class DataInterface extends StorageSelector.select(){
         this.config = Adhara.app.DIConfig;
         this.request_queue = {}; // for NON-get requests
         this.rem_que = {};
+        this.db_table = this.select(this.config.http_cache_table);
     }
 
     // local helpers ...
@@ -184,14 +185,10 @@ class DataInterface extends StorageSelector.select(){
 
     remember(data_url, response, resource_timeout){
         this.rem_que[data_url] = response;  // hold response till dbPromise resolves
-        return this.db.then(db => {
-            const tx = db.transaction(this.config.url_storage, 'readwrite');
-            tx.objectStore(this.config.url_storage).put({
-                url: data_url,
-                response: response,
-                useby : (isNaN(resource_timeout) ? 30*60*1000 : resource_timeout) + (new Date()).getTime()
-            });
-            return tx.complete;
+        return this.db_table.store(data_url, {
+            url: data_url,
+            response: response,
+            expires : (isNaN(resource_timeout) ? (this.config.reuse_timeout || 5*60*1000 ) : resource_timeout) + Date.now()  //5 minutes is the default timeout
         }).then(()=> {
             delete this.rem_que[data_url];
             return true;
@@ -203,13 +200,11 @@ class DataInterface extends StorageSelector.select(){
             if(this.rem_que[data_url]){
                 resolve(this.rem_que[data_url]);
             } else {
-                this.db.then(db => {
-                    return db.transaction(this.config.url_storage).objectStore(this.config.url_storage).get(data_url);
-                }).then((data)=>{
+                this.db_table.retrieve(data_url).then((data)=>{
                     if(!data){
                         reject({message: "No such key stored", code:404});
-                    } else if (isNaN(data.useby) || data.useby < (new Date()).getTime()){
-                        reject({message: "use by period has expired", code:404});
+                    } else if (isNaN(data.expires) || data.expires < (new Date()).getTime()){
+                        reject({message: "data has expired", code:404});
                     }
                     else {
                         this.isValidStorageData(data) ? resolve(data.response) : reject({message:`Invalid data ${data.response}`, code:500});
@@ -219,11 +214,9 @@ class DataInterface extends StorageSelector.select(){
         });
     }
 
-    // remove(data_url) {
-    //     return this.db.then(db => {
-    //         return db.transaction(this.config.url_storage, 'readwrite').objectStore(this.config.url_storage).delete(data_url);
-    //     });
-    // }
+    remove(data_url) {
+        return this.db_table.remove(data_url);
+    }
 
     signalViewSuccess(query_type, entity_config, response_json, xhr){
         Adhara.configUtils
@@ -279,38 +272,42 @@ class DataInterface extends StorageSelector.select(){
             return;
         }
         let reuse = data_config['reuse'], resource_timeout;
-        if(reuse instanceof Function){
-            reuse = reuse();
-        }
         if(typeof reuse === "number"){
             resource_timeout = reuse;
             reuse = true;
         }
-        if((reuse === true || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
+        if((reuse === true || reuse instanceof Function || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
             && ['get', 'get_list'].indexOf(http_method) !== -1 ){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
+            function msc(){
+                //initiating call to Backend Service, and registering listeners for success and failure
+                this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
+                    let response = Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr);
+                    this.signalViewSuccess(
+                        query_type, entity_config,
+                        response,
+                        response_object.xhr
+                    );
+                    this.remember(unique_url, response, resource_timeout);
+                }, error_response_object => {
+                    this.signalViewFailure(
+                        query_type, entity_config,
+                        Adhara.app.responseMiddleWare(entity_config, false, error_response_object.error, error_response_object.xhr),
+                        error_response_object.xhr
+                    );
+                });
+            }
             this.recall(unique_url)
                 .then(
                     response => {
-                        this.signalViewSuccess(query_type, entity_config, response, 200);
+                        if(reuse(response)){
+                            this.signalViewSuccess(query_type, entity_config, response, 200);
+                        }else{
+                            msc();
+                        }
                     },
                     err => {
-                        //initiating call to Backend Service, and registering listeners for success and failure
-                        this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
-                            let response = Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr);
-                            this.signalViewSuccess(
-                                query_type, entity_config,
-                                response,
-                                response_object.xhr
-                            );
-                            this.remember(unique_url, response, resource_timeout);
-                        }, response_object => {
-                            this.signalViewFailure(
-                                query_type, entity_config,
-                                Adhara.app.responseMiddleWare(entity_config, false, response_object.error, response_object.xhr),
-                                response_object.xhr
-                            );
-                        });
+                        msc();
                     });
         } else {
             this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
@@ -319,11 +316,11 @@ class DataInterface extends StorageSelector.select(){
                     Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr),
                     response_object.xhr
                 );
-            }, response_object => {
+            }, error_response_object => {
                 this.signalViewFailure(
                     query_type, entity_config,
-                    Adhara.app.responseMiddleWare(entity_config, false, response_object.error, response_object.xhr),
-                    response_object.xhr
+                    Adhara.app.responseMiddleWare(entity_config, false, error_response_object.error, error_response_object.xhr),
+                    error_response_object.xhr
                 );
             }).then(()=>{
                 this.request_queue[data_config.url].shift();

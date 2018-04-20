@@ -17,7 +17,7 @@ let Adhara = null;
             if(app){
                 this.app = new app();
                 // this.dataInterface = initDataInterface();
-                this.dataInterface = new DataInterface()
+                this.dataInterface = new DataInterface();
                 this.i18n = new Internationalize(Adhara.app.i18n_key_map);
                 this.createShortcuts();
                 this.performSystemChecks();
