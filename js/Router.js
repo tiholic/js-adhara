@@ -246,12 +246,11 @@ let AdharaRouter = null;
             if(opts && opts.fn){
                 let _pathParams = {};
                 for(let [index, param] of params.entries()){
-                    _pathParams[opts.path_params[index]] = param;
+                    _pathParams[opts.path_param_keys[index]] = param;
                 }
-
+                currentRoute = opts;
                 //Setting current routing params...
                 pathParams = _pathParams;
-                currentRoute = opts;
                 currentUrl = getFullUrl();
                 fetchQueryParams();
 
@@ -404,11 +403,11 @@ let AdharaRouter = null;
          * @param {ViewFunction|Adhara} fn - View function that will be called when the pattern matches window URL.
          * */
         static register_one(pattern, view_name, fn){
-            let path_params = [];
+            let path_param_keys = [];
             let regex = /{{([a-zA-Z$_][a-zA-Z0-9$_]*)}}/g;
             let match = regex.exec(pattern);
             while (match != null) {
-                path_params.push(match[1]);
+                path_param_keys.push(match[1]);
                 match = regex.exec(pattern);
             }
             pattern = pattern.replace(new RegExp("\\{\\{[a-zA-Z$_][a-zA-Z0-9$_]*\\}\\}", "g"), '');
@@ -416,7 +415,7 @@ let AdharaRouter = null;
 
             pattern = "^"+this.transformURL(pattern.substring(1));
             pattern = pattern.replace(/[?]/g, '\\?');   //Converting ? to \? as RegExp(pattern) dosen't handle that
-            registeredUrlPatterns[pattern] = { view_name, fn, path_params };
+            registeredUrlPatterns[pattern] = { view_name, fn, path_param_keys };
         }
 
         /**
@@ -436,6 +435,7 @@ let AdharaRouter = null;
          * @typedef {Object} RouterURLConf
          * @property {string} url - url regex
          * @property {String} view_name - view name
+         * @property {Object} path_params - Path params
          * @property {Function|class} view - view
          * */
 

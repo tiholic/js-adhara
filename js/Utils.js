@@ -810,6 +810,7 @@ function MutateViews(baseClass, ...mixins){
         }
     }
     function copyProps(target, source){  // this function copies all properties and symbols, filtering out some special ones
+        //TODO "Object.getOwnPropertyNames" and "Object.getOwnPropertySymbols" Doesn't work in IE even after transpilation to ES5...
         Object.getOwnPropertyNames(source)
             .concat(Object.getOwnPropertySymbols(source))
             .forEach((prop) => {
