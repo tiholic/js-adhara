@@ -6,6 +6,7 @@ class DataInterface extends StorageSelector.select(){
         this.request_queue = {}; // for NON-get requests
         this.rem_que = {};
         this.db_table = this.select("default", this.config.http_cache_table);
+        this.initDependencies();
     }
 
     // local helpers ...
@@ -177,20 +178,23 @@ class DataInterface extends StorageSelector.select(){
 
     getHTTPMethod(query_type){
         return query_type==="get_list"?"get":query_type;
-    };
+    }
 
     getUniqueUrlForData(url, http_method, data){
         return url+ ( data?("?"+Object.keys(data).sort().map(key=> key+"="+data[key]).join("&")):"" );
     }
 
-    remember(data_url, response, resource_timeout){
-        this.rem_que[data_url] = response;  // hold response till dbPromise resolves
-        return this.db_table.store(/*data_url, */{
-            url: data_url,
-            response: response,
-            expires : (isNaN(resource_timeout) ? (this.config.reuse_timeout || 5*60*1000 ) : resource_timeout) + Date.now()  //5 minutes is the default timeout
-        }).then(()=> {
-            delete this.rem_que[data_url];
+    remember(url, response, reuse){
+        let expires = (isNaN(reuse) ? (this.config.reuse_timeout || 5*60*1000 ) : reuse) + Date.now();  //5 minutes is the default timeout
+        let _ = {
+            expires,
+        };
+        if(typeof reuse === "string" && reuse === "in_page"){
+            _.page_name = Adhara.router.getCurrentPageName();
+        }
+        this.rem_que[url] = response;  // hold response till dbPromise resolves
+        return this.db_table.store({ url, response, _ }).then(()=> {
+            delete this.rem_que[url];
             return true;
         });
     }
@@ -203,7 +207,7 @@ class DataInterface extends StorageSelector.select(){
                 this.db_table.retrieve(data_url).then((data)=>{
                     if(!data){
                         reject({message: "No such key stored", code:404});
-                    } else if (isNaN(data.expires) || data.expires < (new Date()).getTime()){
+                    } else if (isNaN(data._.expires) || data._.expires < (new Date()).getTime()){
                         reject({message: "data has expired", code:404});
                     }
                     else {
@@ -272,12 +276,12 @@ class DataInterface extends StorageSelector.select(){
             return;
         }
         let reuse = data_config['reuse'], resource_timeout;
-        if(typeof reuse === "number"){
+        if(!(reuse instanceof Function) && (typeof reuse === "number")){
             resource_timeout = reuse;
             reuse = true;
         }
-        if((reuse === true || reuse instanceof Function || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
-            && ['get', 'get_list'].indexOf(http_method) !== -1 ){
+        // if((reuse === true || reuse instanceof Function || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
+        if( ( reuse || this.config.default_reuse === true ) && ['get', 'get_list'].indexOf(http_method) !== -1 ){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
             let msc = ()=>{
                 //initiating call to Backend Service, and registering listeners for success and failure
@@ -288,7 +292,7 @@ class DataInterface extends StorageSelector.select(){
                         response,
                         response_object.xhr
                     );
-                    this.remember(unique_url, response, resource_timeout);
+                    this.remember(unique_url, response, reuse);
                 }, error_response_object => {
                     this.signalViewFailure(
                         query_type, entity_config,
@@ -296,7 +300,7 @@ class DataInterface extends StorageSelector.select(){
                         error_response_object.xhr
                     );
                 });
-            }
+            };
             this.recall(unique_url)
                 .then(
                     response => {
@@ -336,4 +340,31 @@ class DataInterface extends StorageSelector.select(){
         }
     }
 
+    cleanUp(current_page_name){
+        this.db_table.keys().then(urls => {
+            for(let url of urls){
+                this.retrieve(url).then(response => {
+                    if(
+                        response._.expires <= Date.now()
+                        || ( response._.page_name && response._.page_name !== current_page_name )
+                    ){
+                        this.remove(url);
+                    }
+                });
+            }
+        });
+    }
+
+    initDependencies(){
+        Adhara.router.onRoute("DIPageChangeListener", ()=>{
+            this.cleanUp(Adhara.router.getCurrentPageName());
+        });
+    }
+
 }
+
+(function () {
+
+
+
+})();
