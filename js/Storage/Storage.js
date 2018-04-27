@@ -79,11 +79,20 @@ class AdharaStorageOperator{
      * */
     removeMultiple(filter){
         return this.keys().then(async keys => {
-            for(let key of keys){
-                if(!!filter(key, await this.retrieve(key))){
-                    await this.remove(key);
+            let key_promises = [];
+            for(let key of keys) {
+                key_promises.push(await this.retrieve(key))
+            }
+            let data = await Promise.all(key_promises);
+            let data_promises = [];
+            for(let i=0; i<data.length; i++){
+                let datum = data[i];
+                let key = keys[i];
+                if(!!filter(key, datum)){
+                    data_promises.push(this.remove(key));
                 }
             }
+            return await Promise.all(data_promises);
         });
     }
 

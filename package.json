@@ -1,6 +1,6 @@
 {
   "name": "adhara",
-  "version": "1.4.33",
+  "version": "1.4.35",
   "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
