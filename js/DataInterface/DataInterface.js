@@ -184,12 +184,13 @@ class DataInterface extends StorageSelector.select(){
         return url+ ( data?("?"+Object.keys(data).sort().map(key=> key+"="+data[key]).join("&")):"" );
     }
 
-    remember(url, response, reuse){
-        let expires = (isNaN(reuse) ? (this.config.reuse_timeout || 5*60*1000 ) : reuse) + Date.now();  //5 minutes is the default timeout
+    remember(url, response, reuse, _url){
+        let expires = (reuse.timeout || this.config.reuse_timeout || 5*60*1000 ) + Date.now();  //5 minutes is the default timeout
         let _ = {
             expires,
+            url: _url
         };
-        if(typeof reuse === "string" && reuse === "in_page"){
+        if(reuse.scope === "in_page"){
             _.page_name = Adhara.router.getCurrentPageName();
         }
         this.rem_que[url] = response;  // hold response till dbPromise resolves
@@ -275,13 +276,8 @@ class DataInterface extends StorageSelector.select(){
             this.signalViewFailure(query_type, entity_config, failure_message, 405);
             return;
         }
-        let reuse = data_config['reuse'], resource_timeout;
-        if(!(reuse instanceof Function) && (typeof reuse === "number")){
-            resource_timeout = reuse;
-            reuse = true;
-        }
-        // if((reuse === true || reuse instanceof Function || ( typeof reuse === "undefined"  && this.config.default_reuse === true ))
-        if( ( reuse || this.config.default_reuse === true ) && ['get', 'get_list'].indexOf(http_method) !== -1 ){
+        let reuse = data_config.reuse;
+        if( ( reuse.enable !== false && this.config.default_reuse !== false ) && ['get', 'get_list'].indexOf(http_method) !== -1 ){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
             let msc = ()=>{
                 //initiating call to Backend Service, and registering listeners for success and failure
@@ -292,7 +288,7 @@ class DataInterface extends StorageSelector.select(){
                         response,
                         response_object.xhr
                     );
-                    this.remember(unique_url, response, reuse);
+                    this.remember(unique_url, response, reuse, data_config._url);
                 }, error_response_object => {
                     this.signalViewFailure(
                         query_type, entity_config,
@@ -304,7 +300,7 @@ class DataInterface extends StorageSelector.select(){
             this.recall(unique_url)
                 .then(
                     response => {
-                        if(reuse(response)){
+                        if(!(reuse instanceof Function) || reuse(response)){
                             this.signalViewSuccess(query_type, entity_config, response, 200);
                         }else{
                             msc();
@@ -341,17 +337,9 @@ class DataInterface extends StorageSelector.select(){
     }
 
     cleanUp(current_page_name){
-        this.db_table.keys().then(urls => {
-            for(let url of urls){
-                this.retrieve(url).then(response => {
-                    if(
-                        response._.expires <= Date.now()
-                        || ( response._.page_name && response._.page_name !== current_page_name )
-                    ){
-                        this.remove(url);
-                    }
-                });
-            }
+        this.db_table.removeMultiple((url, response) => {
+            return ( response._.expires <= Date.now()
+                        || ( response._.page_name && response._.page_name !== current_page_name ) );
         });
     }
 
@@ -362,9 +350,3 @@ class DataInterface extends StorageSelector.select(){
     }
 
 }
-
-(function () {
-
-
-
-})();

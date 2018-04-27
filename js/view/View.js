@@ -161,7 +161,7 @@ class AdharaView extends AdharaController{
         }
         let match = url.match(/\${([a-zA-Z0-9$_]*)}/gi);
         let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
-        for(let idx in match){
+        for(let idx in match){  //in works of doesn't work here as it is not a classic Array
             url = url.replace(match[idx], this_match[idx]);
         }
         return new Function("return `" + url + "`;").call(params);
@@ -411,6 +411,9 @@ class AdharaView extends AdharaController{
     }
 
     renderSubViews(){
+        if(!this.subViews){
+            return;
+        }
         for(let sub_view of this.subViews){
             Adhara.createView(Adhara.getView(sub_view, this), this);
         }

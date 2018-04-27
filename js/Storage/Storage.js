@@ -65,11 +65,26 @@ class AdharaStorageOperator{
     /**
      * @function
      * @instance
-     * @abstract
      * @returns {Promise}
      * */
     removeAll(){
-        throw new Error("Override `removeAll` method");
+        return this.removeMultiple(()=>true);
+    }
+
+    /**
+     * @function
+     * @instance
+     * @param {Function} filter - A function whose return value is interpreted as a boolean. return true, will remove the entry, else do nothing
+     * @returns {Promise}
+     * */
+    removeMultiple(filter){
+        return this.keys().then(async keys => {
+            for(let key of keys){
+                if(!!filter(key, await this.retrieve(key))){
+                    await this.remove(key);
+                }
+            }
+        });
     }
 
     /**

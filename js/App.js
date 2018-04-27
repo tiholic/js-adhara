@@ -57,33 +57,48 @@ class AdharaApp{
     /**
      * @function
      * @instance
-     * @return {Object} Adhara style entity config
+     * @return {Object} Adhara style entity config from crude entity config
      * */
-    getEntityConfig(context_name){
-        let context = this.config[context_name];
+    getEntityConfigFromContext(context){
         let allowed_query_types = context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[];
         let data_config;
         if(context.data_config.hasOwnProperty("batch_data_override")){
             data_config = {
                 batch_data_override: context.data_config.batch_data_override.map(batch_data_config => {
+                    if(!batch_data_config.reuse){
+                        batch_data_config.reuse = {};
+                    }
                     return {
                         _url: batch_data_config.url,
                         url: batch_data_config.url,
                         query_type: batch_data_config.query_type,
                         identifier: batch_data_config.identifier,
-                        reuse: batch_data_config.reuse,
+                        reuse: {
+                            enable: batch_data_config.reuse.enable,
+                            timeout: batch_data_config.reuse.timeout,
+                            scope: batch_data_config.reuse.scope,
+                            handler: batch_data_config.reuse.handler,
+                        },
                         blob: batch_data_config.blob
                     }
                 })
             }
         }else{
+            if(!context.data_config.reuse){
+                context.data_config.reuse = {};
+            }
             data_config = {
                 _url: context.data_config.url,
                 url: context.data_config.url,
                 allowed_query_types: allowed_query_types,
                 default_query_type: context.data_config.default_query_type || allowed_query_types[0],
                 socket_tag: context.data_config.socket_tag,
-                reuse: context.data_config.reuse,
+                reuse: {
+                    enable: context.data_config.reuse.enable,
+                    timeout: context.data_config.reuse.timeout,
+                    scope: context.data_config.reuse.scope,
+                    handler: context.data_config.reuse.handler,
+                },
                 blob: context.data_config.blob
             }
         }
@@ -92,6 +107,15 @@ class AdharaApp{
             view: context.view,
             processor: context.processor
         }
+    }
+
+    /**
+     * @function
+     * @instance
+     * @return {Object} Adhara style entity config
+     * */
+    getEntityConfig(context_name){
+        return this.getEntityConfigFromContext(this.config[context_name]);
     }
 
     /**
@@ -179,17 +203,6 @@ class AdharaApp{
                 schema: {
                     http_cache: {
                         keyPath : "url"
-
-                    }
-                }
-            },
-            {
-                id: "key_shelf",
-                name: 'Adhara-key_shelf',
-                version: 1,
-                schema: {
-                    key_shelf: {
-                        keyPath : "key"
                     }
                 }
             }

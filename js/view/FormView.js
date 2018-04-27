@@ -14,7 +14,7 @@ class AdharaFormView extends AdharaView{
 
     get formEntityConfig(){
         let form = this.formElement;
-        return {
+        return Adhara.app.getEntityConfigFromContext({
             data_config: {
                 url: this.formatURL(this.action, this.getURLPathParams()),
                 allowed_query_types: [this.method],
@@ -33,7 +33,7 @@ class AdharaFormView extends AdharaView{
                     this.onError(error);
                 }
             }
-        };
+        });
     }
 
     /**

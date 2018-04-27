@@ -5,7 +5,7 @@ class AdharaController{
      * @instance
      * @param {String} method - can be any of [get|get_list|put|post|delete]
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a data call
      * */
@@ -17,7 +17,7 @@ class AdharaController{
      * @function
      * @instance
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a get data call
      * */
@@ -29,7 +29,7 @@ class AdharaController{
      * @function
      * @instance
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a get list data call
      * */
@@ -41,7 +41,7 @@ class AdharaController{
      * @function
      * @instance
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a put data call
      * */
@@ -53,7 +53,7 @@ class AdharaController{
      * @function
      * @instance
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a post data call
      * */
@@ -65,7 +65,7 @@ class AdharaController{
      * @function
      * @instance
      * @param {Object} entity_config - entity configuration
-     * @param {*} data - data to be passed as a payload/query params
+     * @param {*} [data=undefined] - data to be passed as a payload/query params
      * @param {Object} [options={}] - options for DI handling! might not be necessary
      * @description initial hook to handle a delete data call
      * */
