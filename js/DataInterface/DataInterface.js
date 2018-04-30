@@ -2,7 +2,7 @@ class DataInterface extends StorageSelector.select(){
 
     constructor(){
         super();
-        this.config = Adhara.app.DIConfig;
+        this.config = Adhara.app._diConfig;
         this.request_queue = {}; // for NON-get requests
         this.rem_que = {};
         this.db_table = this.select("default", this.config.http_cache_table);
@@ -276,7 +276,7 @@ class DataInterface extends StorageSelector.select(){
             this.signalViewFailure(query_type, entity_config, failure_message, 405);
             return;
         }
-        let reuse = data_config.reuse;
+        let reuse = data_config.reuse || {};
         if( ( reuse.enable !== false && this.config.default_reuse !== false ) && ['get', 'get_list'].indexOf(http_method) !== -1 ){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
             let msc = ()=>{
@@ -301,7 +301,8 @@ class DataInterface extends StorageSelector.select(){
                 .then(
                     response => {
                         if(!(reuse instanceof Function) || reuse(response)){
-                            this.signalViewSuccess(query_type, entity_config, response, 200);
+                            let xhr = new XMLHttpRequest();
+                            this.signalViewSuccess(query_type, entity_config, response, xhr);
                         }else{
                             msc();
                         }

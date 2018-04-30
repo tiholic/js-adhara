@@ -209,17 +209,21 @@ class AdharaApp{
         ];
     }
 
+    get _diConfig(){
+        return Object.assign({
+            http_cache_table: "http_cache",
+            default_reuse: true,
+            reuse_timeout: 5*60*1000
+        }, this.DIConfig);
+    }
+
     /**
      * @getter
      * @instance
      * @returns {Object} Data interface related configuration
      * */
     get DIConfig(){
-        return {
-            http_cache_table: "http_cache",
-            default_reuse: true,
-            reuse_timeout: 5*60*1000
-        }
+        return {};
     }
 
     /**
