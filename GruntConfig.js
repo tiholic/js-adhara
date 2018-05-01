@@ -3,7 +3,7 @@ let pkg = require("./package.json");
 let index_dir = ``;
 let styles_dir = `${index_dir}less/`;
 let hbs_template_dir = `${index_dir}templates/`;
-let dist_dir_base = `${index_dir}dist/`;
+let dist_dir_base = `${index_dir}cdn/`;
 let dist_dir = `${dist_dir_base}${pkg.version}/`;
 let dist_scripts_dir = `${dist_dir}js/`;
 let dist_templates_dir = `${dist_dir}templates/`;
@@ -65,6 +65,7 @@ module.exports = {
         "less/adhara.css",
         "less/cards.css",
     ],
+    index_dir,
     styles_dir,
     hbs_template_dir,
     dist_dir_base,
