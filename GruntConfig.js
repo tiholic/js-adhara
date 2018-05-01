@@ -1,3 +1,24 @@
+let pkg = require("./package.json");
+
+let index_dir = ``;
+let styles_dir = `${index_dir}less/`;
+let hbs_template_dir = `${index_dir}templates/`;
+let dist_dir_base = `${index_dir}dist/`;
+let dist_dir = `${dist_dir_base}${pkg.version}/`;
+let dist_scripts_dir = `${dist_dir}js/`;
+let dist_templates_dir = `${dist_dir}templates/`;
+let minified_scripts_dir = dist_scripts_dir;
+let minified_styles_dir = `${dist_dir}css/`;
+
+let templates_output_file = "templates.js";
+let concat_app_file = "adhara.combined.js";
+let minified_scripts_file = "adhara.min.js";
+let minified_css_file = "adhara.min.css";
+
+let adhara_min_templates = `${dist_templates_dir}${templates_output_file}`;
+let adhara_min_js = `${minified_scripts_dir}${minified_scripts_file}`;
+let adhara_min_css = `${minified_styles_dir}${minified_css_file}`;
+
 module.exports = {
     app_scripts: [
         "js/Utils.js",
@@ -43,5 +64,15 @@ module.exports = {
         //Adhara
         "less/adhara.css",
         "less/cards.css",
-    ]
+    ],
+    styles_dir,
+    hbs_template_dir,
+    dist_dir_base,
+    dist_scripts_dir,
+    dist_templates_dir,
+    templates_output_file,
+    concat_app_file,
+    adhara_min_templates,
+    adhara_min_js,
+    adhara_min_css
 };

@@ -1,5 +1,18 @@
 let config = require('./GruntConfig');
 
+let {
+    styles_dir,
+    hbs_template_dir,
+    dist_dir_base,
+    dist_scripts_dir,
+    dist_templates_dir,
+    templates_output_file,
+    concat_app_file,
+    adhara_min_js,
+    adhara_min_templates,
+    adhara_min_css
+} = config;
+
 module.exports = function (grunt) {
     let debug = !grunt.option('production') && !grunt.option('prod');
     let mode_config = debug?config.debug:config.prod;
@@ -9,23 +22,6 @@ module.exports = function (grunt) {
             tp_scripts: []
         }
     }
-
-    let pkg = grunt.file.readJSON('package.json');
-
-    let index_dir = ``;
-    let styles_dir = `${index_dir}less/`;
-    let hbs_template_dir = `${index_dir}templates/`;
-    let dist_dir_base = `${index_dir}dist/`;
-    let dist_dir = `${dist_dir_base}${pkg.version}/`;
-    let dist_scripts_dir = `${dist_dir}js/`;
-    let dist_templates_dir = `${dist_dir}templates/`;
-    let minified_scripts_dir = dist_scripts_dir;
-    let minified_styles_dir = `${dist_dir}css/`;
-
-    let templates_output_file = "templates.js";
-    let concat_app_file = "adhara.combined.js";
-    let minified_app_file = "adhara.min.js";
-    let minified_css_file = "app.min.css";
 
     let styles = grunt.file.expand({ filter: "isFile" }, [`${styles_dir}/*.css`]);
     let scripts = config.app_scripts;
@@ -55,12 +51,9 @@ module.exports = function (grunt) {
 
     //Grunt config
     grunt.initConfig({
-        dist_templates_dir,
-        templates_output_file,
-        minified_scripts_dir,
-        minified_app_file,
-        minified_styles_dir,
-        minified_css_file,
+        adhara_min_js,
+        adhara_min_templates,
+        adhara_min_css,
         clean: {
             dist: {
                 src: [dist_dir_base]
@@ -92,7 +85,7 @@ module.exports = function (grunt) {
             },
             compile: {
                 files: {
-                    '<%= dist_templates_dir %><%= templates_output_file %>' : hbs_templates
+                    '<%= adhara_min_templates %>' : hbs_templates
                 }
             }
         },
@@ -108,7 +101,7 @@ module.exports = function (grunt) {
         uglify: {
             all: {
                 files: {
-                    '<%= minified_scripts_dir %><%= minified_app_file %>' :
+                    '<%= adhara_min_js %>' :
                         [
                             `${dist_scripts_dir}${concat_app_file}`,
                             `${dist_templates_dir}${templates_output_file}`,
@@ -119,7 +112,7 @@ module.exports = function (grunt) {
         cssmin: {
             all: {
                 files: {
-                    '<%= minified_styles_dir %>/<%= minified_css_file %>':
+                    '<%= adhara_min_css %>':
                         [ `${styles_dir}/*.css` ]    //App app styles.
                 }
             }
