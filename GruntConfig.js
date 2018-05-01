@@ -1,14 +1,20 @@
 let pkg = require("./package.json");
 
+let version_dir = `${pkg.version}/`
 let index_dir = ``;
 let styles_dir = `${index_dir}less/`;
 let hbs_template_dir = `${index_dir}templates/`;
 let dist_dir_base = `${index_dir}cdn/`;
-let dist_dir = `${dist_dir_base}${pkg.version}/`;
-let dist_scripts_dir = `${dist_dir}js/`;
-let dist_templates_dir = `${dist_dir}templates/`;
+let dist_dir = `${dist_dir_base}${version_dir}`;
+
+let js_dir = 'js/';
+let templates_dir = 'templates/';
+let css_dir = 'css/';
+
+let dist_scripts_dir = `${dist_dir}${js_dir}`;
+let dist_templates_dir = `${dist_dir}${templates_dir}`;
 let minified_scripts_dir = dist_scripts_dir;
-let minified_styles_dir = `${dist_dir}css/`;
+let minified_styles_dir = `${dist_dir}${css_dir}`;
 
 let templates_output_file = "templates.js";
 let concat_app_file = "adhara.combined.js";
@@ -18,6 +24,11 @@ let minified_css_file = "adhara.min.css";
 let adhara_min_templates = `${dist_templates_dir}${templates_output_file}`;
 let adhara_min_js = `${minified_scripts_dir}${minified_scripts_file}`;
 let adhara_min_css = `${minified_styles_dir}${minified_css_file}`;
+
+let cdn_base = `https://adhara-js.firebaseapp.com/${dist_dir}`;
+let cdn_min_templates = cdn_base + templates_dir + templates_output_file;
+let cdn_min_js = cdn_base + js_dir + minified_scripts_file;
+let cdn_min_css = cdn_base + css_dir + minified_css_file;
 
 module.exports = {
     app_scripts: [
@@ -75,5 +86,8 @@ module.exports = {
     concat_app_file,
     adhara_min_templates,
     adhara_min_js,
-    adhara_min_css
+    adhara_min_css,
+    cdn_min_templates,
+    cdn_min_js,
+    cdn_min_css
 };
