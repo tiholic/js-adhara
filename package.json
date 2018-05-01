@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "grunt",
+    "deploy": "firebase publish",
     "test": "mocha tests/**.spec.js",
-    "broadcast": "npm run build && npm publish"
+    "broadcast": "npm run build && npm publish && firebase deploy"
   },
   "repository": {
     "type": "git",
