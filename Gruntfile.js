@@ -11,7 +11,9 @@ let {
     concat_app_file,
     adhara_min_js,
     adhara_min_templates,
-    adhara_min_css
+    adhara_min_css,
+    concat_app_file_es5,
+    adhara_min_js_es5
 } = config;
 
 module.exports = function (grunt) {
@@ -26,6 +28,10 @@ module.exports = function (grunt) {
         adhara_min_js,
         adhara_min_templates,
         adhara_min_css,
+        concat_app_file,
+        concat_app_file_es5,
+        adhara_min_js_es5,
+        dist_scripts_dir,
         /*clean: {
             dist: {
                 src: [dist_dir_base]
@@ -70,6 +76,17 @@ module.exports = function (grunt) {
                 dest: `${dist_scripts_dir}/${concat_app_file}`
             }
         },
+        babel: {
+            options: {
+                sourceMap: true,
+                presets: ['env']
+            },
+            dist: {
+                files: {
+                    '<%= dist_scripts_dir %><%= concat_app_file_es5 %>': '<%= dist_scripts_dir %><%= concat_app_file %>',
+                }
+            }
+        },
         uglify: {
             all: {
                 files: {
@@ -77,7 +94,13 @@ module.exports = function (grunt) {
                         [
                             `${dist_scripts_dir}${concat_app_file}`,
                             `${dist_templates_dir}${templates_output_file}`,
-                        ]
+                        ],
+                    '<%= adhara_min_js_es5 %>' :
+                        [
+                            `${dist_scripts_dir}${concat_app_file_es5}`,
+                            `${dist_templates_dir}${templates_output_file}`,
+                        ],
+
                 }
             }
         },
@@ -96,13 +119,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify-es');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-babel');
 
 
     let command = [
         'less:all',
         'handlebars:compile',
         'concat:app_scripts',
+        'babel:dist',
         'uglify:all',
         'cssmin:all'
     ];

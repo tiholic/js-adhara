@@ -266,7 +266,7 @@ class AdharaApp{
      * @param {String} type - toast message type. can take the values "success"|"error"|"info".
      * */
     toast(title, content, type){
-        AdharaDefaultToaster.make(title, content, type);
+        return AdharaDefaultToaster.make(title, content, type);
     }
 
     get i18n_key_map(){

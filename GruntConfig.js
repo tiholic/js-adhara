@@ -18,16 +18,21 @@ let minified_styles_dir = `${dist_dir}${css_dir}`;
 
 let templates_output_file = "templates.js";
 let concat_app_file = "adhara.combined.js";
+let concat_app_file_es5 = "adhara.combined.es5.js";
+
 let minified_scripts_file = "adhara.min.js";
+let minified_scripts_file_es5 = "adhara.min.es5.js";
 let minified_css_file = "adhara.min.css";
 
 let adhara_min_templates = `${dist_templates_dir}${templates_output_file}`;
 let adhara_min_js = `${minified_scripts_dir}${minified_scripts_file}`;
+let adhara_min_js_es5 = `${minified_scripts_dir}${minified_scripts_file_es5}`;
 let adhara_min_css = `${minified_styles_dir}${minified_css_file}`;
 
 let cdn_base = `https://adhara-js.firebaseapp.com/${dist_dir}`;
 let cdn_min_templates = cdn_base + templates_dir + templates_output_file;
 let cdn_min_js = cdn_base + js_dir + minified_scripts_file;
+let cdn_min_js_es5 = cdn_base + js_dir + minified_scripts_file_es5;
 let cdn_min_css = cdn_base + css_dir + minified_css_file;
 
 module.exports = {
@@ -84,10 +89,13 @@ module.exports = {
     dist_templates_dir,
     templates_output_file,
     concat_app_file,
+    concat_app_file_es5,
     adhara_min_templates,
     adhara_min_js,
+    adhara_min_js_es5,
     adhara_min_css,
     cdn_min_templates,
     cdn_min_js,
+    cdn_min_js_es5,
     cdn_min_css
 };

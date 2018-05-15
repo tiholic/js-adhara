@@ -1,6 +1,6 @@
 {
   "name": "adhara",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,10 @@
   },
   "homepage": "https://gitlab.com/infitio/Adhara#README",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "grunt": "^1.0.2",
+    "grunt-babel": "^7.0.0",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-cssmin": "^2.2.1",

@@ -3,10 +3,10 @@ let Toast = {};
 
     Toast.make = function(title, content, type){    //type should be "success", "error" or "info"
         if(Adhara.app){
-            Adhara.app.toast(title, content, type);
+            return Adhara.app.toast(title, content, type);
         }else{
             if(window.ToastHandler){
-                window.ToastHandler[type](content, title);
+                return window.ToastHandler[type](content, title);
             }else{
                 console.log(`No toast handler found. Toast message: type-${type}, title-${title}, content=${content}`);
             }
@@ -14,11 +14,11 @@ let Toast = {};
     };
 
     Toast.error = function(message){
-        Toast.make("Error!", message, "error");
+        return Toast.make("Error!", message, "error");
     };
 
     Toast.success = function(message){
-        Toast.make("Success", message, "success");
+        return Toast.make("Success", message, "success");
     };
 
 })();
@@ -29,8 +29,8 @@ let AdharaDefaultToaster = {};
 
     let notifyQueue = 0;
 
-    function notify(title, content, type){
-        let id = "notification_"+new Date().getTime();
+    function notify(title, content, type, id){
+        id = "notification_"+id;
         let $notificationDiv = jQuery('<div class="notification '+type+'" id="'+id+'"/>');
         let $title = jQuery('<strong style="display:block" />').text(title);
         let $content = jQuery('<p />').html(content);
@@ -70,14 +70,20 @@ let AdharaDefaultToaster = {};
         if(!content && type==="failure"){
             content = "Error occurred...";
         }
+        let nid = performance.now();
         setTimeout(function(){
             if(notifyQueue === 0 && proceed){
                 notifyQueue++;
-                notify(title, content, type);
+                notify(title, content, type, nid);
             }else{
                 AdharaDefaultToaster.make(title, content, type);
             }
         }, notifyTimeout);
-    }
+        return {
+            remove: function(){
+                jQuery("#notification_"+nid).remove();
+            }
+        };
+    };
 
 })();
