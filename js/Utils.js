@@ -203,7 +203,7 @@ let HandlebarsHelpers = {
      * @returns {String|Number|Boolean|Object|Array} - Value of the global letiable.
      * */
     'global' : function(global_letiable){
-        if(global_letiable.startsWith("Adhara.")){
+        if(global_letiable.indexOf("Adhara.") === 0){
             return getValueFromJSON(Adhara, global_letiable.substring("Adhara.".length));
         }
         return getValueFromJSON(window, global_letiable);
