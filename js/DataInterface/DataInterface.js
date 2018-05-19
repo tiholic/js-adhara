@@ -126,7 +126,8 @@ class DataInterface extends StorageSelector.select(){
                     blob: batch_call.blob
                 },
                 view: Adhara.configUtils.getViewInstance(entity_config),
-                processor: batch_processor
+                processor: batch_processor,
+                controller: Adhara.configUtils.getController(entity_config)
             };
             this.enqueue(undefined, dummy_entity_config, undefined);
         }

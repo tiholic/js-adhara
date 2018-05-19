@@ -347,10 +347,10 @@ function registerConfigUtils(){
             }
         },
         getProcessor(entity_config){
-            return entity_config.processor || Processor.fallback;
+            return entity_config.processor;
         },
         getController(entity_config){
-            return entity_config.controller || Adhara.restAPI;
+            return entity_config.controller;
         },
         getDataConfig(entity_config){
             return entity_config.data_config;

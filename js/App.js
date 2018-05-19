@@ -102,18 +102,16 @@ class AdharaApp{
                 blob: context.data_config.blob
             }
         }
-        let processor = {};
-        if(context.processor){
-            processor.success = context.processor.success;
-            processor.error = context.processor.error;
-        }
-        let controller = {};
-        if(context.controller){
-            controller.get = context.controller.success;
-            controller.put = context.controller.error;
-            controller.post = context.controller.error;
-            controller.delete = context.controller.error;
-        }
+        let processor = {
+            success: ( context.processor && context.processor.success ) || Processor.fallback.success,
+            error: ( context.processor && context.processor.error ) || Processor.fallback.error
+        };
+        let controller = {
+            get: ( context.controller && context.controller.get ) || Adhara.restAPI.get,
+            put: ( context.controller && context.controller.put ) || Adhara.restAPI.put,
+            post: ( context.controller && context.controller.post ) || Adhara.restAPI.post,
+            delete: ( context.controller && context.controller.delete ) || Adhara.restAPI.delete
+        };
         return {
             data_config,
             view: context.view,
