@@ -102,10 +102,23 @@ class AdharaApp{
                 blob: context.data_config.blob
             }
         }
+        let processor = {};
+        if(context.processor){
+            processor.success = context.processor.success;
+            processor.error = context.processor.error;
+        }
+        let controller = {};
+        if(context.controller){
+            controller.get = context.controller.success;
+            controller.put = context.controller.error;
+            controller.post = context.controller.error;
+            controller.delete = context.controller.error;
+        }
         return {
             data_config,
             view: context.view,
-            processor: context.processor
+            controller,
+            processor
         }
     }
 

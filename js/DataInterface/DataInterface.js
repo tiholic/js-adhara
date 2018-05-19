@@ -10,11 +10,11 @@ class DataInterface extends StorageSelector.select(){
     }
 
     // local helpers ...
-    makeServiceCall(url, method_name, data){
+    makeServiceCall(url, method_name, data, controller){
         data = Adhara.app.requestMiddleWare(url, method_name, data);
         return new Promise(function (resolve, reject) {
             // make API call and fetch data OR fetch from client storage, pass on_success and on_failure to the thing
-            RestAPI[method_name] ({
+            controller[method_name] ({
                 url, data, crossDomain: true, xhrFields: { "withCredentials": true },
                 beforeSend(xhr){
                     xhr.withCredentials = true;
@@ -281,7 +281,7 @@ class DataInterface extends StorageSelector.select(){
             let unique_url = this.getUniqueUrlForData(data_config.url, http_method, data);
             let msc = ()=>{
                 //initiating call to Backend Service, and registering listeners for success and failure
-                this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
+                this.makeServiceCall(data_config.url, http_method, data, Adhara.configUtils.getController(entity_config)).then(response_object => {
                     let response = Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr);
                     this.signalViewSuccess(
                         query_type, entity_config,
@@ -311,7 +311,7 @@ class DataInterface extends StorageSelector.select(){
                         msc();
                     });
         } else {
-            this.makeServiceCall(data_config.url, http_method, data).then(response_object => {
+            this.makeServiceCall(data_config.url, http_method, data, Adhara.configUtils.getController(entity_config)).then(response_object => {
                 this.signalViewSuccess(
                     query_type, entity_config,
                     Adhara.app.responseMiddleWare(entity_config, true, response_object.response, response_object.xhr),

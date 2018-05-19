@@ -27,7 +27,10 @@ let RestAPI = {};
         return cookieValue;
     };
 
-    RestAPI.getHeaders = function () {
+    RestAPI.getHeaders = function (url, method) {
+        if(isFullURL(url)){
+            return {};
+        }
         return {
             'X-CSRFToken' : RestAPI.getCookie('csrftoken')
         };
@@ -95,7 +98,14 @@ let RestAPI = {};
         send(o);
     };
 
+    function isFullURL(link) {
+        return link.startsWith("http://")||link.startsWith("https://")||link.startsWith("//");
+    }
+
     function formatURL(url){
+        if(isFullURL(url)){
+            return url;
+        }
         let base = Adhara.app?Adhara.app.apiServerURL:"/";
         if(base.lastIndexOf("/")+1 !== base.length){
             base += "/";
@@ -112,7 +122,7 @@ let RestAPI = {};
         let fnf = o.failure;
         o.success = function(d,s,x){RestAPI.handle_api_success(fns,fnf,d,s,x,o.handleError,o.successMessage);};
         o.error = function(x,s,e){RestAPI.handle_api_failure(fnf,x,s,e);};
-        o.headers = RestAPI.getHeaders();
+        o.headers = RestAPI.getHeaders(o.url, o.type);
         if(o.data instanceof FormData){
             multipart(o);
         }else {
