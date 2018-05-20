@@ -88,6 +88,9 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            options: {
+                mangle: false
+            },
             all: {
                 files: {
                     '<%= adhara_min_js %>' :
