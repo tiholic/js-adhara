@@ -189,7 +189,7 @@ class DataInterface extends StorageSelector.select(){
         let expires = (reuse.timeout || this.config.reuse_timeout || 5*60*1000 ) + Date.now();  //5 minutes is the default timeout
         let _ = {
             expires,
-            url: _url
+            url: _url || url
         };
         if(reuse.scope === "in_page"){
             _.page_name = Adhara.router.getCurrentPageName();
