@@ -190,7 +190,7 @@ class AdharaView extends AdharaController{
      * @returns Adhara style entity config for entity mapped with this view
      * */
     get entityConfig(){
-        let entity_name = Adhara.view_context[this.constructor.name];
+        let entity_name = Adhara.getViewContext(this);
         if(!entity_name){
             return null;
         }
@@ -254,7 +254,7 @@ class AdharaView extends AdharaController{
 
     /**
      * @function
-     * @private
+     * @protected
      * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
      * */
     handleDataChange(new_data){

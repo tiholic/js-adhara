@@ -40,6 +40,10 @@ let Adhara = null;
             });
         }
 
+        getViewContext(viewInstance){
+            return this.view_context[viewInstance.constructor.name];
+        }
+
         performSystemChecks(){
             /*// verify the controller for if it has support for all the API methods (for ease of Dev)
             for(let i = 0; i < Adhara.app.allowedHttpMethods.length; i++){
