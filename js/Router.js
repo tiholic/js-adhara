@@ -156,7 +156,7 @@ let AdharaRouter = null;
      * @returns {String} URL Path with search query (/path?search_query).
      * */
     function getFullPath(){
-        return window.location.pathname+window.location.search+window.location.hash;
+        return getPathName()+window.location.search+window.location.hash;
         // return "/"+getFullUrl().split('://')[1].substring(window.location.host.length+1);
     }
 
@@ -566,6 +566,15 @@ let AdharaRouter = null;
          * */
         static getCurrentURL(){
             return getFullPath();
+        }
+
+        /**
+         * @function
+         * @static
+         * @returns {String} Current Path.
+         * */
+        static getCurrentPath(){
+            return getPathName();
         }
 
         /**

@@ -4,11 +4,9 @@
             <h3>{{title}}</h3>
         </div>
     {{/if}}
-    {{#if addNew}}
-        <div>
-            <button class="btn btn-sm btn-primary">Add new {{title}}</button>
-        </div>
-    {{/if}}
+    {{#each buttons}}
+        <button {{addAttr attributes '{"class": "btn btn-sm btn-primary"}'}}>{{title}}</button>
+    {{/each}}
     {{#if state.fetching_data}}
         <div class="adhara-list-wrapper">
             {{include fetchingDataTemplate this}}

@@ -83,10 +83,20 @@ class AdharaListView extends AdharaView{
     /**
      * @function
      * @getter
-     * @returns {Boolean} whether add new button is required or not
+     * @returns {Array<Object>} Buttons to be added in the header
+     * @example
+     * return [
+     *  {
+     *      title: "Add new element",
+     *      attributes: {
+     *          "class": "btn btn-primary",
+     *          "data-onclick": "openForm",
+     *      }
+     *  }
+     * ]
      * */
-    get addNew(){
-        return false;
+    get buttons(){
+        return [];
     }
 
     /**

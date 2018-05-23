@@ -3,7 +3,7 @@ let processor_helper = {
         // put here the common functionality that is shared among all the processors on success
         // like intimating the data to other processors of contexts with mutually same data_configs
         let data_config = Adhara.configUtils.getDataConfig(entity_config);
-        if(!data_config) return;
+        if(!data_config) return false;
         let related_app_configs = Adhara.configUtils.getByDataConfig(data_config);
         for(let i = 0; i < related_app_configs.length; i++){
             let processor = Adhara.configUtils.getProcessor(related_app_configs[i]);
@@ -34,12 +34,10 @@ let Processor = {
             let processed_data = processor_helper.get_basic_processed_data(query_type, entity_config, response, xhr);
             let view = Adhara.configUtils.getViewInstance(entity_config);
             // move on to the functionality common among all the processors
-            if(pass_over === true){
-                processor_helper.on_success_common(query_type, entity_config, response, xhr, false);
-            }else{
-                if(view){
-                    view.handleDataChange(processed_data);
-                }
+            if(pass_over === true && (!processor_helper.on_success_common(query_type, entity_config, response, xhr, false) && view) ){
+                view.handleDataChange(processed_data);
+            }else if(view){
+                view.handleDataChange(processed_data);
             }
         },
         error: function(query_type, entity_config, error, xhr){
