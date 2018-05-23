@@ -160,7 +160,7 @@ class AdharaFormView extends AdharaView{
     }
 
     get submitButton(){
-        return this.formElement.querySelector('button[type="submit"]');
+        return this.formElement.querySelector('[type="submit"]');
     }
 
     handleSubmitButton(){
