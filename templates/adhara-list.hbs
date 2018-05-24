@@ -1,11 +1,9 @@
 <div id="adharaTable_{{title}}" class="adhara-table-container" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
     {{#if title}}
-        <div>
-            <h3>{{title}}</h3>
-        </div>
+        <h3>{{title}}</h3>
     {{/if}}
     {{#each buttons}}
-        <button {{addAttr attributes '{"class": "btn btn-sm btn-primary"}'}}>{{title}}</button>
+        <button {{addAttr attributes '{"class": "adhara-template-button"}'}}>{{title}}</button>
     {{/each}}
     {{#if state.fetching_data}}
         <div class="adhara-list-wrapper">
@@ -13,7 +11,7 @@
         </div>
     {{else}}
         {{#if data}}
-            <div class="adhara-list-wrapper row">
+            <div class="adhara-list-wrapper">
                 {{include listTemplate this}}
             </div>
             {{#if isPaginationRequired}}

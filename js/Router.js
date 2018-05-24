@@ -279,7 +279,6 @@ let AdharaRouter = null;
         }
         curr_path = getFullPath();
     }
-    updateHistoryStack();	//updating history stack with the entry URL
 
     /**
      * @private
@@ -900,5 +899,5 @@ let AdharaRouter = null;
     //---------------------
 
 
-
+    updateHistoryStack();	//updating history stack with the entry URL
 })();
