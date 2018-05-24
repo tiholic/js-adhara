@@ -37,6 +37,7 @@ let cdn_min_css = cdn_base + css_dir + minified_css_file;
 
 module.exports = {
     app_scripts: [
+        "js/TemplateEngineHelpers.js",
         "js/Utils.js",
         // "js/py.js",
         //Adhara

@@ -14,6 +14,10 @@ let Adhara = null;
             this.container = null;
             this.router = AdharaRouter;
             this.toast = Toast;
+            this.templateEngine = {
+                name: "Handlebars",
+                helpersHandler: TemplateEngineHelpers
+            };
             if(app){
                 this.app = new app();
                 this.dataInterface = new DataInterface();
