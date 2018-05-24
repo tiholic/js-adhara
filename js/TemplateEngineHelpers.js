@@ -308,9 +308,7 @@ class TemplateEngineHelpers{
     }
 
     static registerHelpers(){
-        window.Handlebars.registerHelper(HandlebarsHelpers, window.Handlebars.helpers);
+        window.Handlebars.registerHelper(TemplateEngineHelpers.getHelpers(window.Handlebars.helpers));
     }
-
-
 
 }
