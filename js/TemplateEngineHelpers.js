@@ -154,7 +154,7 @@ class TemplateEngineHelpers{
              * */
             'ifCond' : function(param1, operator, param2, options){
                 if(typeof operator === "object"){
-                    return if_helper(param1, options);
+                    return if_helper(param1, operator);
                 }
                 if(evaluateLogic(param1, operator, param2)){
                     return options.fn(this);

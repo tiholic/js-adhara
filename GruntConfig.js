@@ -39,13 +39,10 @@ module.exports = {
     app_scripts: [
         "js/TemplateEngineHelpers.js",
         "js/Utils.js",
-        // "js/py.js",
-        //Adhara
-        "js/App.js",
-        "js/Adhara.js",
         "js/Router.js",
-        "js/components/Toast.js",
         "js/RestAPI.js",
+        "js/components/Toast.js",
+        // "js/py.js",
         // "js/templates.js",   //Commenting out assuming it is not required. TODO check here in case of any template issues
         //Data stores | Blobs
         "js/Blobs/Serializable.js",
@@ -76,6 +73,9 @@ module.exports = {
         "js/DataInterface/Processors.js",
         //Web Sockets
         "js/DataInterface/WebSocket.js",
+        //Adhara
+        "js/App.js",
+        "js/Adhara.js",
     ],
     app_styles: [
         //Adhara

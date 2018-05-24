@@ -7,17 +7,23 @@ let Adhara = null;
 (()=>{
     class AdharaBase{
 
-        init(app){
-            callOnInitListeners();
+        constructor(){
+            this.container = null;
             this.always_active_views = [];
             this.active_views = [];
-            this.container = null;
             this.router = AdharaRouter;
             this.toast = Toast;
-            this.templateEngine = {
+        }
+
+        get templateEngine(){
+            return {
                 name: "Handlebars",
                 helpersHandler: TemplateEngineHelpers
             };
+        }
+
+        init(app){
+            callOnInitListeners();
             if(app){
                 this.app = new app();
                 this.dataInterface = new DataInterface();
