@@ -12,7 +12,7 @@ class TemplateEngineHelpers{
      * */
     static getHelpers(currentHelpers){
         let if_helper = currentHelpers.if;
-        let helpers = {
+        return {
             /**
              * @function
              * @static
@@ -37,7 +37,7 @@ class TemplateEngineHelpers{
                     default_attributes = (default_attributes && typeof(default_attributes) === "string") ? JSON.parse(default_attributes) : {};
                     let class_names = attributes?(attributes.className||attributes["class"]||""):"";
                     class_names += default_attributes.hasOwnProperty("class")?" "+default_attributes['class']:"";
-                    attributes = jQuery.extend( {}, default_attributes , attributes );
+                    attributes = jQuery.extend( {}, default_attributes, attributes );
                     attributes['class'] = class_names;
                     loop(attributes, function(key, value){
                         if(key && value !== undefined){
@@ -152,9 +152,9 @@ class TemplateEngineHelpers{
              * @returns
              * handlebar block based on logic.
              * */
-            'ifCond' : function(param1, operator, param2, options){
+            'if' : function(param1, operator, param2, options){
                 if(typeof operator === "object"){
-                    return if_helper(param1, operator);
+                    return if_helper.call(this, param1, operator);
                 }
                 if(evaluateLogic(param1, operator, param2)){
                     return options.fn(this);
@@ -303,8 +303,6 @@ class TemplateEngineHelpers{
                 return str_buf;
             }
         };
-        helpers['if'] = helpers.ifCond;
-        return helpers;
     }
 
     static registerHelpers(){
