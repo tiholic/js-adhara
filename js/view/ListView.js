@@ -83,6 +83,16 @@ class AdharaListView extends AdharaView{
     /**
      * @function
      * @getter
+     * @returns {HandlebarTemplate}
+     * @description this template contents will be rendered just above the table.
+     * */
+    get menuTemplate(){
+        return "adhara-list-menu";
+    }
+
+    /**
+     * @function
+     * @getter
      * @returns {Array<Object>} Buttons to be added in the header
      * @example
      * return [

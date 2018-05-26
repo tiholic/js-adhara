@@ -215,6 +215,12 @@ class DataInterface extends StorageSelector.select(){
                     else {
                         this.isValidStorageData(data) ? resolve(data.response) : reject({message:`Invalid data ${data.response}`, code:500});
                     }
+                }, e => {
+                    if(e.code === 8){
+                        reject({message: "No such key stored", code:404});
+                    } else {
+                        reject({message: "Unknown Error", code:500});
+                    }
                 });//.catch(reject);
             }
         });
@@ -341,7 +347,7 @@ class DataInterface extends StorageSelector.select(){
     cleanUp(current_page_name){
         this.db_table.removeMultiple((url, response) => {
             return ( response._.expires <= Date.now()
-                        || ( response._.page_name && response._.page_name !== current_page_name ) );
+                || ( response._.page_name && response._.page_name !== current_page_name ) );
         });
     }
 

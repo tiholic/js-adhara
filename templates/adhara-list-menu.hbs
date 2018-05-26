@@ -1,0 +1,6 @@
+{{#if title}}
+    <h3>{{title}}</h3>
+{{/if}}
+{{#each buttons}}
+    <button {{addAttr attributes '{"class": "adhara-template-button"}'}}>{{title}}</button>
+{{/each}}

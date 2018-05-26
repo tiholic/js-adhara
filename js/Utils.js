@@ -477,17 +477,18 @@ class Internationalize{
         if(!value){
             return default_value;
         }
-        if(subs && subs.length){
-            for (let [idx, sub] of subs.entries()) {
-                try {
-                    if (sub.indexOf('.') !== -1) {
-                        sub = this.get(sub);
-                    }
-                }catch(e){/*Do Nothing*/}
-                value = value.replace( new RegExp( "\\{"+idx+"\\}","g"), sub );
-            }
+        subs = subs || [];
+        let placeholders = value.match(/{[0-9]+}/g) || [];
+        for(let i=0; i<placeholders.length; i++){
+            let sub = subs[i] || "";
+            try {
+                if (sub.indexOf('.') !== -1) {
+                    sub = this.get(sub);
+                }
+            }catch(e){/*Do Nothing*/}
+            value = value.replace( new RegExp( "\\{"+i+"\\}","g"), sub );
         }
-        return value;
+        return value.trim();
     }
 
     /**
