@@ -341,7 +341,7 @@ let AdharaRouter = null;
         let url = getPathName();
         let params = [];
         loop(queryParams, function(key, value){
-            params.push(key+"="+value);
+            params.push(encodeURIComponent(key)+"="+encodeURIComponent(value));
         });
         if(params.length){
             url+="?"+params.join("&");
@@ -358,14 +358,14 @@ let AdharaRouter = null;
      * @see {@link RouteType}
      * */
     function _route(route_type, route_options){
-        if(!route_type || route_type===this.RouteTypes.SET){
-            this.setURL(generateCurrentUrl());
-        }else if(route_type===this.RouteTypes.NAVIGATE){
-            this.navigateTo(generateCurrentUrl(), (route_options && route_options.force)||false);
-        }else if(route_type===this.RouteTypes.OVERRIDE){
-            this.overrideURL(generateCurrentUrl());
-        }else if(route_type===this.RouteTypes.UPDATE){
-            this.updateURL(generateCurrentUrl());
+        if(!route_type || route_type===AdharaRouter.RouteTypes.SET){
+            AdharaRouter.setURL(generateCurrentUrl());
+        }else if(route_type===AdharaRouter.RouteTypes.NAVIGATE){
+            AdharaRouter.navigateTo(generateCurrentUrl(), (route_options && route_options.force)||false);
+        }else if(route_type===AdharaRouter.RouteTypes.OVERRIDE){
+            AdharaRouter.overrideURL(generateCurrentUrl());
+        }else if(route_type===AdharaRouter.RouteTypes.UPDATE){
+            AdharaRouter.updateURL(generateCurrentUrl());
         }
     }
 

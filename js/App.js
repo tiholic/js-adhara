@@ -282,8 +282,8 @@ class AdharaApp{
 
     get i18n_key_map(){
         return {
-            "i18n.adhara.list.previous": "Previous",
-            "i18n.adhara.list.next": "Next",
+            "list_view.navigation.previous": "Previous",
+            "list_view.navigation.next": "Next",
         };
     }
 

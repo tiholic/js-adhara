@@ -176,7 +176,10 @@ class AdharaListView extends AdharaView{
     }
 
     getPayload(){
-        return Object.assign({}, this.payload, AdharaListView.getPagePayload(this.pageNumber));
+        if(this.isPaginationRequired){
+            return Object.assign({}, super.getPayload(), AdharaListView.getPagePayload(this.pageNumber));
+        }
+        return super.getPayload();
     }
 
 }

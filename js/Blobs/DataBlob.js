@@ -11,6 +11,14 @@ class DataBlob extends Serializable{
         if (data_is_fine === false) {
             throw new Error(`assigned data does not clear the custom validation: ${data}`);
         }
+        this.onInit();
+    }
+
+    /**
+     * Easy override method: to handle creating any cacheable objects/references classes
+     * */
+    onInit(){
+
     }
 
     static get _context() {
