@@ -25,7 +25,7 @@ class TemplateEngineHelpers{
              * let options = {
 	         * 	attributes : { id : 'element-id', className : 'css-class' }
 	         * }
-             * HandlebarUtils.execute(
+             * TemplateUtils.execute(
              * 	'<a {{addAttr attributes "{"href":"javascript:void(0)", "route":"true"}"}}></a>',
              * 	options
              * )
@@ -94,7 +94,7 @@ class TemplateEngineHelpers{
              * //</div>
              * */
             'include' : function(template_name, context){
-                return new window.Handlebars.SafeString(HandlebarUtils.execute(template_name, context));
+                return new window.Handlebars.SafeString(TemplateUtils.execute(template_name, context));
             },
             /**
              * @function

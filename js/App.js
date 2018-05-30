@@ -287,4 +287,8 @@ class AdharaApp{
         };
     }
 
+    renderTemplate(template, context){
+        return TemplateUtils.execute(template, context);
+    }
+
 }

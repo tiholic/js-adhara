@@ -412,9 +412,9 @@ function loop(object, cbk, reverseIterate) {
 /**
  * @namespace
  * @description
- * HandlebarUtils is a set of utilities related to handlebars
+ * TemplateUtils is a set of utilities related to handlebars
  * */
-let HandlebarUtils = {};
+let TemplateUtils = {};
 (function(){
     let preCompiledCache = {};
 
@@ -427,12 +427,12 @@ let HandlebarUtils = {};
      * @returns {String} compiled adn executed handlebar template
      * @example
      * //using template
-     * HandlebarUtils.execute('template-file-name', {context_key1: "value1", ...});
+     * TemplateUtils.execute('template-file-name', {context_key1: "value1", ...});
      *
      * //using template string
-     * HandlebarUtils.execute('Hello {{name}}', {name: "Adhara"});	//returns "Hello Adhara"
+     * TemplateUtils.execute('Hello {{name}}', {name: "Adhara"});	//returns "Hello Adhara"
      * */
-    HandlebarUtils.execute = function(template_or_template_string, context, cache){
+    TemplateUtils.execute = function(template_or_template_string, context, cache){
         //Check if it is a pre compiled hbs template
         let template = window.Handlebars.templates[template_or_template_string];
         if(!template && window.Handlebars.hasOwnProperty("compile")){
