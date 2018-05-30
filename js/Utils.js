@@ -58,7 +58,7 @@ function registerConfigUtils(){
         getBlobClass(entity_config){
             return entity_config.data_config.blob || entity_config.blob || DataBlob;
         },
-        getByDataConfig(data_config){
+        getSimilarDataConfigs(data_config){
             let res = [];
             let app_config = Adhara.app.config;
             for(let entity_name in app_config){

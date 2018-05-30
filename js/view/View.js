@@ -375,7 +375,9 @@ class AdharaView extends AdharaController{
             return;
         }
         container.innerHTML = this._getHTML();
-        if(this.state.fetching_data){ return; }
+        if(this.state.fetching_data){
+            return;
+        }
         this.trigger("ViewRendered");
         this._format(container);
         setTimeout(()=> {
@@ -411,10 +413,7 @@ class AdharaView extends AdharaController{
     }
 
     renderSubViews(){
-        if(!this.subViews){
-            return;
-        }
-        for(let sub_view of this.subViews){
+        for(let sub_view of (this.subViews || [])){
             Adhara.createView(Adhara.getView(sub_view, this), this);
         }
     }
