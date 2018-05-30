@@ -342,7 +342,7 @@ class AdharaView extends AdharaController{
     }
 
     _getHTML(template){
-        return TemplateUtils.execute(
+        return Adhara.app.renderTemplate(
             template || this.getTemplate(),
             this
         );
