@@ -60,7 +60,7 @@ class DataBlob extends Serializable{
 
     //TODO generalize this using string format's
     _formatDate(date){
-        return `${this._formatTimeBit(date.getDate())}/${this._formatTimeBit(date.getMonth())}/${date.getFullYear()}`;
+        return `${this._formatTimeBit(date.getMonth())}/${this._formatTimeBit(date.getDate())}/${date.getFullYear()}`;
     }
 
 }
