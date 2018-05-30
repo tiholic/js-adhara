@@ -738,9 +738,7 @@ let AdharaRouter = null;
          * */
         static updateQueryParams(new_params, drop_existing, route_type, route_options){
             if(!route_type){route_type = this.RouteTypes.NAVIGATE;}
-            if(!Object.keys(new_params).length){
-                return;
-            }
+            /*if(!Object.keys(new_params).length){ return; }*/
             if(drop_existing){
                 queryParams = new_params;
             }else{
