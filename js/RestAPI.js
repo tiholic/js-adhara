@@ -106,14 +106,7 @@ let RestAPI = {};
         if(isFullURL(url)){
             return url;
         }
-        let base = Adhara.app?Adhara.app.apiServerURL:"/";
-        if(base.lastIndexOf("/")+1 !== base.length){
-            base += "/";
-        }
-        if(url.indexOf("/") === 0){
-            url = url.substring(1);
-        }
-        return base+url;
+        return (Adhara.app?Adhara.app.apiServerURL:"/")+url;
     }
 
     function send(o){
