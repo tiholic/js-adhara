@@ -39,6 +39,15 @@ class AdharaFormView extends AdharaView{
     /**
      * @getter
      * @instance
+     * @returns {Boolean} whether duplicate submissions are to be allowed
+     * */
+    get duplicateSubmissions(){
+        return false;
+    }
+
+    /**
+     * @getter
+     * @instance
      * @returns {Boolean} whether to clear form on successful submission or not
      * */
     get clearFormOnSuccess(){
@@ -157,6 +166,9 @@ class AdharaFormView extends AdharaView{
     updateFormState(submitting){
         this.formElement.submitting = submitting;
         this.handleSubmitButton();
+        if(!submitting){
+            this.reSubmitIfRequired();
+        }
     }
 
     get submitButton(){
@@ -164,6 +176,9 @@ class AdharaFormView extends AdharaView{
     }
 
     handleSubmitButton(){
+        if(this.duplicateSubmissions){
+            return;
+        }
         let submit_button = this.submitButton;
         if(!submit_button){
             console.warn("Unable to discover 'Submit button'. Duplicate submission are not handled.");
@@ -188,9 +203,8 @@ class AdharaFormView extends AdharaView{
     _handleForm(){
         let form = this.formElement;
         if(form.submitting){
-            return;
+            return false;
         }
-        this.updateFormState(true);
         let apiData;
         let fileElements = Array.prototype.slice.apply(form.querySelectorAll('input[type="file"]')).filter(fileElement => !fileElement.disabled);
         if(this.handleFileUploads && !!fileElements.length){ // ~ if(hasFiles){
@@ -203,12 +217,14 @@ class AdharaFormView extends AdharaView{
             });
         }
         try{
-            this.validate(apiData)
+            this.validate(apiData);
         }catch(e){
             return this.onValidationError(e);
         }
         apiData = this.formatData(apiData);
-        return this.control(this.method, this.formEntityConfig, apiData);
+        this.updateFormState(true);
+        this.control(this.method, this.formEntityConfig, apiData);
+        return true;
     }
 
     _format(container){
@@ -222,8 +238,12 @@ class AdharaFormView extends AdharaView{
         });
     }
 
+    reSubmitIfRequired(){
+        this.re_submit = this.duplicateSubmissions && this.re_submit && !this._handleForm();
+    }
+
     submit(){
-        this._handleForm(this.formElement);
+        this.re_submit = !this._handleForm();
     }
 
 }
