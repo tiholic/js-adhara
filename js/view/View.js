@@ -160,6 +160,9 @@ class AdharaView extends AdharaController{
             return url;
         }
         let match = url.match(/\${([a-zA-Z0-9$_]*)}/gi);
+        if(!match){
+            return url;
+        }
         let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
         for(let idx in match){  //in works of doesn't work here as it is not a classic Array
             url = url.replace(match[idx], this_match[idx]);
@@ -426,7 +429,7 @@ class AdharaView extends AdharaController{
                             "toggle", "wheel"  ]){
             let onActionElements = container.querySelectorAll(`[data-on${action}]`);
             for(let actionElement of onActionElements){
-                if(actionElement.dataset['_adharaevent_']){
+                if(actionElement.dataset['_adharaevent_'] === "true"){
                     continue;
                 }
                 actionElement.addEventListener(action, event => {
@@ -443,7 +446,7 @@ class AdharaView extends AdharaController{
                         }
                     }
                 });
-                actionElement.dataset['_adharaevent_'] = true;
+                actionElement.dataset['_adharaevent_'] = "true";
             }
         }
     }
