@@ -36,7 +36,7 @@ let RestAPI = {};
         };
     };
 
-    RestAPI.handle_api_success = function(fns, fne, d, s, x, toastFailure, successMessage){  //data, success, xhr
+    RestAPI.handle_api_success = function(fns, fne, d, s, x){  //data, success, xhr
         if(s === "nocontent"){
             //DO NOTHING
             return;
@@ -46,18 +46,12 @@ let RestAPI = {};
                 return call_fn(fns, d, x);
             } else {
                 if(typeof d === "string"){
-                    d = JSON.parse(d);
+                    try{
+                        d = JSON.parse(d);
+                    }catch(e){ /*DO NOTHING*/ }
                 }
-                if (d.status === "success") {
-                    if (successMessage && successMessage !== "") {
-                        Toast.success(successMessage);
-                    }
-                    return call_fn(fns, d, x);
-                }
+                return call_fn(fns, d, x);
             }
-        }
-        if(toastFailure !== false) {
-            Toast.error(d, x);
         }
         call_fn(fne, d, x);
     };
@@ -138,7 +132,9 @@ let RestAPI = {};
                 }*!/
             }
         }*/
-        o.headers['Content-Type'] = 'application/json';
+        if(o.type !== "get" && o.type !== "delete"){
+            o.headers['Content-Type'] = 'application/json';
+        }
         jQuery.ajax(o);
     }
 

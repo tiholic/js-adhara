@@ -37,7 +37,7 @@ class TemplateEngineHelpers{
                     default_attributes = (default_attributes && typeof(default_attributes) === "string") ? JSON.parse(default_attributes) : {};
                     let class_names = attributes?(attributes.className||attributes["class"]||""):"";
                     class_names += default_attributes.hasOwnProperty("class")?" "+default_attributes['class']:"";
-                    attributes = jQuery.extend( {}, default_attributes, attributes );
+                    attributes = Object.assign( default_attributes, attributes );
                     attributes['class'] = class_names;
                     loop(attributes, function(key, value){
                         if(key && value !== undefined){
@@ -56,6 +56,11 @@ class TemplateEngineHelpers{
                     });
                     return new window.Handlebars.SafeString(attrData.join(' '));
                 }
+            },
+            'addProps': function(){
+                let properties = Array.prototype.slice.call(arguments);
+                properties = properties.splice(1, subs.length-2);
+                return properties.join(" ");
             },
             'selectedClass': function(selected,selectedClassName){
                 if(selected === true){
