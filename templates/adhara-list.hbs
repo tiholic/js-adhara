@@ -1,26 +1,22 @@
 <div id="adharaTable_{{title}}" class="adhara-table-container" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
     {{include menuTemplate this}}
-    {{#if state.fetching_data}}
-        <div class="adhara-list-wrapper">
+    <div class="adhara-list-wrapper">
+        {{#if state.fetching_data}}
             {{include fetchingDataTemplate this}}
-        </div>
-    {{else}}
-        {{#if data}}
-            <div class="adhara-list-wrapper">
-                {{include listTemplate this}}
-            </div>
-            {{#if isPaginationRequired}}
-                <div class="row flex-row-reverse">
-                    <div class="btn-group" role="group">
-                        <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n "list_view.navigation.previous"}}</button>
-                        <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n "list_view.navigation.next"}}</button>
-                    </div>
-                </div>
-            {{/if}}
         {{else}}
-            <div class="adhara-list-wrapper">
+            {{#if data}}
+                {{include listTemplate this}}
+                {{#if isPaginationRequired}}
+                    <div class="row flex-row-reverse">
+                        <div class="btn-group" role="group">
+                            <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n "list_view.navigation.previous"}}</button>
+                            <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n "list_view.navigation.next"}}</button>
+                        </div>
+                    </div>
+                {{/if}}
+            {{else}}
                 {{include noDataTemplate this}}
-            </div>
+            {{/if}}
         {{/if}}
-    {{/if}}
+    </div>
 </div>

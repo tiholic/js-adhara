@@ -1,6 +1,6 @@
 class AdharaCardView extends AdharaListView{
 
-    get template(){
+    get listTemplate(){
         return "adhara-card";
     }
 
