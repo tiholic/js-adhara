@@ -5,15 +5,15 @@ let processor_helper = {
         let data_config = Adhara.configUtils.getDataConfig(entity_config);
         if(!data_config) return false;
         let similar_app_configs = Adhara.configUtils.getSimilarDataConfigs(data_config);
-        let processor_called = false;
+        let views_called = false;
         for(let i = 0; i < similar_app_configs.length; i++){
             let processor = Adhara.configUtils.getProcessor(similar_app_configs[i]);
             if(processor){
                 processor.success(query_type, similar_app_configs[i], response, xhr, false);
-                processor_called = true;
+                views_called = true;
             }
         }
-        return processor_called;
+        return views_called;
     },
     get_basic_processed_data: function(query_type, entity_config, response, xhr){
         let blob = Adhara.configUtils.getBlobClass(entity_config);
@@ -38,7 +38,10 @@ let Processor = {
             let view = Adhara.configUtils.getViewInstance(entity_config);
             // move on to the functionality common among all the processors
             if(pass_over === true){
-                return processor_helper.on_success_common(query_type, entity_config, response, xhr);
+                let view_called = processor_helper.on_success_common(query_type, entity_config, response, xhr);
+                if(!view_called && view){
+                    view.handleDataChange(processed_data);
+                }
             }else if(view){
                 view.handleDataChange(processed_data);
             }
