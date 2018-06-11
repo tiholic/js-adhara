@@ -7,9 +7,11 @@
             {{#if data}}
                 {{#if isPaginationRequired}}
                     <div class="row flex-row-reverse">
-                        <div class="btn-group" role="group">
-                            <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n "list_view.navigation.previous"}}</button>
-                            <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n "list_view.navigation.next"}}</button>
+                        <div class="col-xs-12">
+                            <div class="btn-group float-right" role="group">
+                                <button {{#if isFirstPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block" data-onclick="onPreviousPage">{{i18n "list_view.navigation.previous"}}</button>
+                                <button {{#if isLastPage}}disabled{{/if}} class="btn btn-sm btn-link d-inline-block ml-2" data-onclick="onNextPage">{{i18n "list_view.navigation.next"}}</button>
+                            </div>
                         </div>
                     </div>
                 {{/if}}
