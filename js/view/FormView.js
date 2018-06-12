@@ -186,7 +186,9 @@ class AdharaFormView extends AdharaView{
         }
         if(this.formElement.submitting){
             submit_button.dataset.tosubmit = submit_button.innerHTML;
-            submit_button.innerHTML = submit_button.dataset.inprogress || submit_button.dataset.tosubmit;
+            submit_button.innerHTML = submit_button.dataset.inprogress
+                                        || Adhara.i18n.getValue("form.processing", [], "")
+                                        || submit_button.dataset.tosubmit;
             submit_button.disabled = true;
         }else{
             submit_button.dataset.inprogress = submit_button.innerHTML;
