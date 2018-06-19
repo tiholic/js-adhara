@@ -1,13 +1,13 @@
 {
   "name": "adhara",
-  "version": "1.5.24",
+  "version": "1.5.27",
   "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
     "build": "grunt",
     "deploy": "firebase publish",
     "test": "mocha tests/**.spec.js",
-    "broadcast": "npm run build && firebase deploy && npm publish"
+    "broadcast": "npm run build && npm publish && firebase deploy"
   },
   "repository": {
     "type": "git",

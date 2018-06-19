@@ -151,8 +151,8 @@ class AdharaListView extends AdharaView{
      * @instance
      * @description listens to the previous page request, and triggers the Page Change Listener
      * */
-    onPreviousPage(){
-        this._page_number = this.pageNumber - 1;
+    previousPage(){
+        this.setPage(this.pageNumber - 1);
         this.pageChange();
     }
 
@@ -161,9 +161,18 @@ class AdharaListView extends AdharaView{
      * @instance
      * @description listens to the next page request, and triggers the Page Change Listener
      * */
-    onNextPage(){
-        this._page_number = this.pageNumber + 1;
+    nextPage(){
+        this.setPage(this.pageNumber + 1);
         this.pageChange();
+    }
+
+    firstPage(){
+        this.setPage(1);
+        this.pageChange();
+    }
+
+    setPage(page_number){
+        this._page_number = page_number;
     }
 
     /**
