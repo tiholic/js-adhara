@@ -850,11 +850,13 @@ let AdharaRouter = null;
         function routeHandler(event){
             let re = getRoutingElement(event);
             if ((AdharaRouter.enableAllAnchors || hasAttribute(re, "route")) && hasAttribute(re, "href")) {
-                let url = this.getAttribute('href').trim();
                 let target = this.getAttribute("target");
-                if( ( target && target !== "_self") || url.indexOf('javascript') !== -1){
+                let miniURL = this.getAttribute('href').trim();
+                let isHash = miniURL.indexOf("#") === 0;
+                if( ( target && target !== "_self") || miniURL.indexOf('javascript') !== -1 || isHash ){
                     return;
                 }
+                let url = miniURL;//this.href;
                 try{
                     let go_to_url = new URL(url);
                     if(go_to_url.host !== window.location.host){
@@ -892,7 +894,7 @@ let AdharaRouter = null;
             }
 
         }, false);*/
-    }
+    };
 
     //---------------------
 

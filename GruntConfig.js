@@ -39,6 +39,7 @@ module.exports = {
     app_scripts: [
         "js/TemplateEngineHelpers.js",
         "js/Utils.js",
+        "js/Ticker.js",
         "js/Router.js",
         "js/RestAPI.js",
         "js/components/Toast.js",

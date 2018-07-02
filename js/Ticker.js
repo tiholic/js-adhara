@@ -2,23 +2,25 @@
  * @class
  * @classdesc Ticker class that handles repetitive, time based queueing
  * @param {Number} [interval=2000] - polling interval
- * @param {Number} [exponential_factor=2] - factor by which polling interval should be multiplied
- * @param {Number} min_interval - minimum value configured for Poller's timer to work
+ * @param {Number} [exponential_factor=1] - factor by which polling interval should be multiplied
+ * @param {Number} [min_interval=0] - minimum value configured for Poller's timer to work
  * */
 class AdharaTicker{
 
     constructor(interval, exponential_factor, min_interval){
         this.interval = ( interval===0 ? interval: (interval || 2000) );
-        this.exponential_factor = exponential_factor || 2;
+        this.exponential_factor = exponential_factor || 1;
         this.min_interval = min_interval || 0;
         this.initial_interval = interval;
         this.timeoutId = null;
     }
 
     scheduleNextTick(){
-        self.pause();
+        this.pause();
         if(!(this.interval <= this.min_interval)) {
-            this.timeoutId = window.setTimeout(this.onExecute, this.interval);
+            this.timeoutId = window.setTimeout(()=>{
+                this.onExecute()
+            }, this.interval);
         }
     }
 
@@ -28,7 +30,7 @@ class AdharaTicker{
 
     onExecute(){
         this.interval *= this.exponential_factor;
-        self.on_execute(this.next);
+        this.on_execute(this.next);
     }
 
     /**
