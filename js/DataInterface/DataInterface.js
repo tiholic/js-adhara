@@ -219,7 +219,7 @@ class DataInterface extends StorageSelector.select(){
                     if(e.code === 8){
                         reject({message: "No such key stored", code:404});
                     } else {
-                        reject({message: "Unknown Error", code:500});
+                        reject({message: e || "Unknown Error", code:500});
                     }
                 });//.catch(reject);
             }
