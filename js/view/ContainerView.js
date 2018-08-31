@@ -4,6 +4,10 @@ class AdharaContainerView extends AdharaView{
         return "container";
     }
 
+    get isImmortal(){
+        return true;
+    }
+
     get contentContainer(){
         return "main";
     }

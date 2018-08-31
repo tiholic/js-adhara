@@ -219,6 +219,10 @@ class AdharaView extends AdharaController{
         return this._state;
     }
 
+    get isImmortal(){
+        return false;
+    }
+
     create(parentViewInstance){
         if(parentViewInstance && AdharaView.isPrototypeOf(parentViewInstance.constructor)){
             this._parentViewInstance = parentViewInstance;

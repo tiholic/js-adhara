@@ -69,10 +69,10 @@ let Adhara = null;
             if(this.app.containerView) {
                 this.container = new this.app.containerView();
                 this.container.onViewRendered(this.router.route);
-                this.always_active_views = this.container.subViews.map(subView => Adhara.getView(subView));
-                this.always_active_views.push(this.container);
                 this.clearActiveViews();
+                this.always_active_views = this.container.subViews.map(subView => Adhara.getView(subView, this.container));
                 Adhara.createView(this.container);
+                this.always_active_views.push(this.container);
             }else{
                 this.clearActiveViews();
                 this.router.route();
@@ -94,7 +94,11 @@ let Adhara = null;
 
         addToActiveViews(viewInstance){
             if(!this.isActiveView(viewInstance)){
-                this.active_views.push(viewInstance);
+                if(viewInstance.isImmortal){
+                    this.always_active_views.push(viewInstance);
+                }else{
+                    this.active_views.push(viewInstance);
+                }
             }
         }
 
