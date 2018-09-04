@@ -295,7 +295,7 @@ class AdharaView extends AdharaController{
         for(let identifier in map){
             if(map.hasOwnProperty(identifier)){
                 if(map[identifier].hasOwnProperty("error")){
-                    errors[identifier] = map[identifier].error;
+                    errors[identifier] = map[identifier];
                 }else{
                     success[identifier] = map[identifier].success;
                 }
