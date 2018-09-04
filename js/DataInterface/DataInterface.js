@@ -107,7 +107,7 @@ class DataInterface extends StorageSelector.select(){
             },
             error: function(query_type, entity_config, error, xhr){
                 let data_config = Adhara.configUtils.getDataConfig(entity_config);
-                batch_result_map[data_config.identifier] = {error};
+                batch_result_map[data_config.identifier] = {error, response_code:xhr.status};
                 if(check_fills(batch_result_map)) publishToView(batch_result_map);
             }
         };
