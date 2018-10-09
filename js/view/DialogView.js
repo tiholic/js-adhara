@@ -62,10 +62,11 @@ class AdharaDialogView extends AdharaView{
     }
 
     render(){
+        this.destroy();
         let dialog_elements = document.querySelectorAll('#'+this.modalId);
         if(dialog_elements && dialog_elements.length){
             for(let i = 0; i < dialog_elements.length; i++){
-                dialog_elements[i].remove()
+                dialog_elements[i].remove();
             }
         }
         let wrapper= document.createElement('div');
