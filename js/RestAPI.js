@@ -149,7 +149,7 @@ let RestAPI = {};
                 if(xhr.status === 200) {
                     o.success(xhr.responseText, "success", xhr);
                 }else{
-                    o.error(xhr, "error", "Multipart upload error");
+                    o.error(xhr, "error", xhr.responseText);
                 }
             }
         };
