@@ -69,12 +69,12 @@ let Adhara = null;
             if(this.app.containerView) {
                 this.container = new this.app.containerView();
                 this.container.onViewRendered(this.router.route);
-                this.clearActiveViews();
+                this._clearActiveViews();
                 this.always_active_views = this.container.subViews.map(subView => Adhara.getView(subView, this.container));
                 Adhara.createView(this.container);
                 this.always_active_views.push(this.container);
             }else{
-                this.clearActiveViews();
+                this._clearActiveViews();
                 this.router.route();
             }
         }
@@ -114,7 +114,7 @@ let Adhara = null;
             return this.active_views.indexOf(viewInstance)!==-1 || this.always_active_views.indexOf(viewInstance)!==-1;
         }
 
-        clearActiveViews(){
+        _clearActiveViews(){
             this.active_views = [];
         }
 
@@ -122,7 +122,7 @@ let Adhara = null;
             for(let active_view of this.active_views){
                 active_view.destroy();
             }
-            this.clearActiveViews();
+            this._clearActiveViews();
         }
 
     }
