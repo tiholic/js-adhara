@@ -1,12 +1,12 @@
 let pkg = require("./package.json");
 
-let version_dir = `${pkg.version}/`
+//let version_dir = `${pkg.version}/`;
 let index_dir = ``;
 let styles_dir = `${index_dir}less/`;
 let hbs_template_dir = `${index_dir}templates/`;
 let dist_dir_base = `${index_dir}cdn/`;
-let dist_dir = `${dist_dir_base}${version_dir}`;
-
+// let dist_dir = `${dist_dir_base}${version_dir}`;
+let dist_dir = `${dist_dir_base}`;
 let js_dir = 'js/';
 let templates_dir = 'templates/';
 let css_dir = 'css/';
@@ -29,7 +29,8 @@ let adhara_min_js = `${minified_scripts_dir}${minified_scripts_file}`;
 let adhara_min_js_es5 = `${minified_scripts_dir}${minified_scripts_file_es5}`;
 let adhara_min_css = `${minified_styles_dir}${minified_css_file}`;
 
-let cdn_base = `https://adhara-js.firebaseapp.com/${dist_dir}`;
+// let cdn_base = `https://adhara-js.firebaseapp.com/${dist_dir}`;
+let cdn_base = `https://cdn.jsdelivr.net/npm/adhara@${pkg.version}/${dist_dir}`;
 let cdn_min_templates = cdn_base + templates_dir + templates_output_file;
 let cdn_min_js = cdn_base + js_dir + minified_scripts_file;
 let cdn_min_js_es5 = cdn_base + js_dir + minified_scripts_file_es5;
