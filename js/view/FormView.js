@@ -197,7 +197,7 @@ class AdharaFormView extends AdharaView{
         }
     }
 
-    getFromData(){
+    getFormData(){
         let form = this.formElement;
         let fileElements = Array.prototype.slice.apply(form.querySelectorAll('input[type="file"]')).filter(fileElement => !fileElement.disabled);
         if(this.handleFileUploads && !!fileElements.length){ // ~ if(hasFiles){
