@@ -197,6 +197,21 @@ class AdharaFormView extends AdharaView{
         }
     }
 
+    getFromData(){
+        let form = this.formElement;
+        let fileElements = Array.prototype.slice.apply(form.querySelectorAll('input[type="file"]')).filter(fileElement => !fileElement.disabled);
+        if(this.handleFileUploads && !!fileElements.length){ // ~ if(hasFiles){
+            return new FormData(form);
+        }else{
+            let formData = jQuery(form).serializeArray();
+            let apiData = {};
+            jQuery.each(formData, function (i, fieldData) {
+                apiData[fieldData.name] = fieldData.value;
+            });
+            return apiData;
+        }
+    }
+
     /**
      * @getter
      * @private
@@ -207,17 +222,7 @@ class AdharaFormView extends AdharaView{
         if(form.submitting){
             return false;
         }
-        let apiData;
-        let fileElements = Array.prototype.slice.apply(form.querySelectorAll('input[type="file"]')).filter(fileElement => !fileElement.disabled);
-        if(this.handleFileUploads && !!fileElements.length){ // ~ if(hasFiles){
-            apiData = new FormData(form);
-        }else{
-            let formData = jQuery(form).serializeArray();
-            apiData = {};
-            jQuery.each(formData, function (i, fieldData) {
-                apiData[fieldData.name] = fieldData.value;
-            });
-        }
+        let apiData = this.getFromData();
         try{
             this.validate(apiData);
         }catch(e){
