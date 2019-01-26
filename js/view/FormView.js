@@ -187,8 +187,8 @@ class AdharaFormView extends AdharaView{
         if(this.formElement.submitting){
             submit_button.dataset.tosubmit = submit_button.innerHTML;
             submit_button.innerHTML = submit_button.dataset.inprogress
-                                        || Adhara.i18n.getValue("form.processing", [], "")
-                                        || submit_button.dataset.tosubmit;
+                || Adhara.i18n.getValue("form.processing", [], "")
+                || submit_button.dataset.tosubmit;
             submit_button.disabled = true;
         }else{
             submit_button.dataset.inprogress = submit_button.innerHTML;
@@ -219,10 +219,13 @@ class AdharaFormView extends AdharaView{
      * */
     _handleForm(){
         let form = this.formElement;
+        if(!form.checkValidity()){
+            return form.reportValidity();
+        }
         if(form.submitting){
             return false;
         }
-        let apiData = this.getFromData();
+        let apiData = this.getFormData();
         try{
             this.validate(apiData);
         }catch(e){
@@ -239,6 +242,10 @@ class AdharaFormView extends AdharaView{
         if(this.errors){
             return;
         }
+        if(this.formElement.dataset['_adharaevent_'] === "true"){
+            return;
+        }
+        this.formElement.dataset['_adharaevent_'] = "true";
         this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
             this.submit();
