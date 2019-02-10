@@ -4,6 +4,7 @@
   "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
+    "build.templates": "grunt handlebars",
     "build": "grunt",
     "deploy": "firebase publish",
     "test": "mocha tests/**.spec.js",

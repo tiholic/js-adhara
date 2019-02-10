@@ -3,8 +3,8 @@ class AdharaListView extends AdharaView{
     constructor(parentViewInstance){
         super(parentViewInstance);
         this._page_number = 1;
+        this.searchText = null;
     }
-
     get template(){
         return "adhara-list";
     }
@@ -189,6 +189,43 @@ class AdharaListView extends AdharaView{
             return Object.assign({}, super.getPayload(), AdharaListView.getPagePayload(this.pageNumber));
         }
         return super.getPayload();
+    }
+
+    search(){
+        return {
+            attributes: {
+
+            }
+        }
+    }
+
+    onSearchToggle(event, data){
+        if(event.target === document.activeElement){
+            event.target.classList.add("active");
+        }else{
+            event.target.classList.remove("active");
+        }
+    }
+
+    onSearchCapture(event, data){
+        if(event.target.value !== this.searchText){
+            this.onSearch(event.target.value);
+            this.searchText = event.target.value;
+        }
+    }
+
+    onSearch(text){
+        console.error(`TODO Search is enabled for this list view.
+         So, implement onSearch... search text: "${text}"`);
+    }
+
+    format(container){
+        if(this.searchText) {
+            let $search = container.querySelector("input[type=\"search\"]");
+            $search.focus();
+            $search.setSelectionRange(this.searchText.length, this.searchText.length);
+        }
+        super.format(container);
     }
 
 }

@@ -430,10 +430,10 @@ class AdharaView extends AdharaController{
                             "dblclick", "drag", "dragend", "dragenter", "dragleave", "dragover", "dragstart",
                             "drop", "focus", "focusin", "focusout", "input", "invalid", "mousedown", "mouseenter",
                             "mouseleave", "mouseover", "mouseout", "mouseup", "paste", "scroll", "show",
-                            "toggle", "wheel"  ]){
+                            "toggle", "wheel", "keyup", "keydown", "keypress" ]){
             let onActionElements = container.querySelectorAll(`[data-on${action}]`);
             for(let actionElement of onActionElements){
-                if(actionElement.dataset['_adharaevent_'] === "true"){
+                if(actionElement.dataset[`_ae_${action}_`] === "true"){
                     continue;
                 }
                 actionElement.addEventListener(action, event => {
@@ -450,7 +450,7 @@ class AdharaView extends AdharaController{
                         }
                     }
                 });
-                actionElement.dataset['_adharaevent_'] = "true";
+                actionElement.dataset[`_ae_${action}_`] = "true";
             }
         }
     }

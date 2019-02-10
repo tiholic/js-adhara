@@ -1,6 +1,25 @@
 {{#if title}}
     <h3>{{title}}</h3>
 {{/if}}
-{{#each buttons}}
-    <button {{addAttr attributes '{"class": "adhara-template-button"}'}}>{{title}}</button>
-{{/each}}
+<div class="table-actions-container">
+    <div class="mutation-actions table-actions">
+        {{#each buttons}}
+            <button {{addAttr attributes '{"class": "adhara-template-button"}'}}>{{title}}</button>
+        {{/each}}
+    </div>
+    <div class="flex-1 table-actions"></div>
+    <div class="data-actions table-actions">
+        {{#if search}}
+            <input type="search" autofocus
+                {{#if searchText}}
+                    {{addAttr search.attributes (append '{"class": "form-control list-search active"}')}}
+                {{else}}
+                    {{addAttr search.attributes (append '{"class": "form-control list-search"}')}}
+                {{/if}}
+                   data-onfocus="onSearchToggle" data-onblur="onSearchToggle"
+                   data-onchange="onSearchCapture" data-onpaste="onSearchCapture" data-onkeyup="onSearchCapture"
+                   value="{{searchText}}"
+            />
+        {{/if}}
+    </div>
+</div>

@@ -40,10 +40,6 @@
   text-overflow: ellipsis;
 }
 
-.adhara-template-button{
-  margin: 1.2em 5px 1.2em 0;
-}
-
 .float-right{
   float: right;
 }
@@ -54,4 +50,26 @@
 
 .float-none{
   float: none;
+}
+
+.table-actions-container{
+  display: flex;
+  .table-actions {
+    margin: 1.2em 5px 1.2em 0;
+  }
+}
+
+.list-search{
+  border: none;
+  border-bottom: 3px solid;
+  min-width: 200px;
+  transition: all 0.2s ease;
+  &.active{
+    min-width: 300px;
+    transition: all 0.2s ease;
+  }
+}
+
+.flex-1{
+  flex: 1;
 }

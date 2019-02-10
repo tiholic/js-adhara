@@ -242,10 +242,10 @@ class AdharaFormView extends AdharaView{
         if(this.errors){
             return;
         }
-        if(this.formElement.dataset['_adharaevent_'] === "true"){
+        if(this.formElement.dataset['_ae_'] === "true"){
             return;
         }
-        this.formElement.dataset['_adharaevent_'] = "true";
+        this.formElement.dataset['_ae_'] = "true";
         this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
             this.submit();
