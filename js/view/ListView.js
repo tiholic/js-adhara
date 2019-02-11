@@ -5,8 +5,17 @@ class AdharaListView extends AdharaView{
         this._page_number = 1;
         this.searchText = null;
     }
+
     get template(){
         return "adhara-list";
+    }
+
+    get allowedListTypes(){
+        throw new Error("override `get allowedListTypes`");
+    }
+
+    get listType(){
+        return this.allowedListTypes[0];
     }
 
     /**
@@ -15,7 +24,7 @@ class AdharaListView extends AdharaView{
      * @returns {HandlebarTemplate} template of the list structure
      * */
     get listTemplate(){
-        throw new Error("override `get listTemplate`");
+        return AdharaListView.DEFAULT_TEMPLATES[this.listType].listTemplate;
     }
 
     /**
@@ -24,7 +33,7 @@ class AdharaListView extends AdharaView{
      * @returns {HandlebarTemplate} template of the list header
      * */
     get headerTemplate(){
-        throw new Error("override `get headerTemplate`");
+        return AdharaListView.DEFAULT_TEMPLATES[this.listType].headerTemplate;
     }
 
     /**
@@ -33,7 +42,7 @@ class AdharaListView extends AdharaView{
      * @returns {HandlebarTemplate} template of a list item
      * */
     get itemTemplate(){
-        throw new Error("override `get itemTemplate`");
+        return AdharaListView.DEFAULT_TEMPLATES[this.listType].itemTemplate;
     }
 
     /**
@@ -220,7 +229,7 @@ class AdharaListView extends AdharaView{
     }
 
     format(container){
-        if(this.searchText) {
+        if(this.searchText !== null) {
             let $search = container.querySelector("input[type=\"search\"]");
             $search.focus();
             $search.setSelectionRange(this.searchText.length, this.searchText.length);
@@ -241,3 +250,24 @@ AdharaListView.rowCount = 5;
  * Recommended to override.
  * */
 AdharaListView.getPagePayload = page=>({page});
+
+AdharaListView.VIEW_TYPES = {
+    CARD_VIEW: "card",
+    GRID_VIEW: "grid",
+    TEMPLATE_VIEW: "template"
+};
+
+AdharaListView.DEFAULT_TEMPLATES = {
+    [AdharaListView.VIEW_TYPES.CARD_VIEW]: {
+        listTemplate: "adhara-card",
+        itemTemplate: "adhara-card-content"
+    },
+    [AdharaListView.VIEW_TYPES.GRID_VIEW]: {
+        listTemplate: "adhara-list-grid"
+    },
+    [AdharaListView.VIEW_TYPES.TEMPLATE_VIEW]: {
+        listTemplate: "adhara-list-template",
+        headerTemplate: "adhara-list-template-header",
+        itemTemplate: "adhara-list-template-item"
+    }
+};

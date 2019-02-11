@@ -1,6 +1,6 @@
 <div id="adharaTable_{{title}}" class="adhara-table-container" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
     {{include menuTemplate this}}
-    <div class="adhara-list-wrapper">
+    <div class="adhara-list-wrapper adhara-{{listType}}-list">
         {{#if state.fetching_data}}
             {{include fetchingDataTemplate this}}
         {{else}}

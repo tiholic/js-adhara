@@ -1,7 +1,7 @@
 class AdharaCardView extends AdharaListView{
 
-    get listTemplate(){
-        return "adhara-card";
+    get listType(){
+        return AdharaListView.VIEW_TYPES.CARD_VIEW;
     }
 
     get containerClass(){
@@ -10,10 +10,6 @@ class AdharaCardView extends AdharaListView{
 
     get cardSizeClass(){
         return "col-md-4";
-    }
-
-    get itemTemplate(){
-        return "adhara-card-content";
     }
 
 }

@@ -1,15 +1,7 @@
 class AdharaTemplateView extends AdharaListView{
 
-    get listTemplate(){
-        return 'adhara-list-template';
-    }
-
-    get headerTemplate(){
-        return 'adhara-list-template-header';
-    }
-
-    get itemTemplate(){
-        return 'adhara-list-template-item';
+    get listType(){
+        return AdharaListView.VIEW_TYPES.TEMPLATE_VIEW;
     }
 
     get tableClass(){
