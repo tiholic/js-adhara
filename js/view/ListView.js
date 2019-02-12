@@ -200,12 +200,13 @@ class AdharaListView extends AdharaView{
         return super.getPayload();
     }
 
+    /**
+     * example:
+     * return Object
+     * { attributes: {} }
+     * */
     search(){
-        return {
-            attributes: {
 
-            }
-        }
     }
 
     onSearchToggle(event, data){
