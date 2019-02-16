@@ -22,4 +22,17 @@
             />
         {{/if}}
     </div>
+    {{#if nextType}}
+        <div data-onclick="changeViewType" data-viewtype="{{nextType}}" class="table-actions centre-all pointer">
+        <svg class="a-s-fa-Ha-pa" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" focusable="false" fill="#6d6d6d">
+            {{#if nextType "===" "card"}}
+                <g><path fill-rule="evenodd" clip-rule="evenodd" d="M3,3v8h8V3H3z M9,9H5V5h4V9z M3,13v8h8v-8H3z M9,19H5v-4h4V19z M13,3v8h8V3H13z M19,9h-4V5h4V9z M13,13v8h8v-8H13z M19,19h-4v-4h4V19z"></path><rect fill-rule="evenodd" clip-rule="evenodd" fill="none" width="24" height="24"></rect></g>
+            {{else if nextType "===" "template"}}
+                <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path></svg>
+            {{else}}
+                <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h4v-4H9v4zm0 5h4v-4H9v4zM9 9h4v-4H9v4zm0"></path>
+            {{/if}}
+            </svg>
+        </div>
+    {{/if}}
 </div>

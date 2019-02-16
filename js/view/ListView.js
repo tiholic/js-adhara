@@ -11,11 +11,34 @@ class AdharaListView extends AdharaView{
     }
 
     get allowedListTypes(){
-        throw new Error("override `get allowedListTypes`");
+        return [];
+    }
+
+    set listType(listType){
+        this._listType = listType;
     }
 
     get listType(){
-        return this.allowedListTypes[0];
+        if(this._listType){
+            return this._listType;
+        }
+        if(this.allowedListTypes.length){
+            return this.allowedListTypes[0];
+        }
+        throw new Error("override `get listType`");
+    }
+
+    get nextType(){
+        if(this.allowedListTypes.length > 1) {
+            let currentIndex = this.allowedListTypes.indexOf(this.listType);
+            return this.allowedListTypes[currentIndex + 1] || this.allowedListTypes[0];
+        }
+        return null;
+    }
+
+    changeViewType(event, data){
+        this.listType = data.viewtype;
+        this.refresh();
     }
 
     /**
