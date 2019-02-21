@@ -14,18 +14,18 @@ class AdharaListView extends AdharaView{
         return [];
     }
 
-    set listType(listType){
-        this._listType = listType;
+    get defaultListType(){
+        if(this.allowedListTypes.length){
+            return this.allowedListTypes[0];
+        }
+        throw new Error("override `get listType`");
     }
 
     get listType(){
         if(this._listType){
             return this._listType;
         }
-        if(this.allowedListTypes.length){
-            return this.allowedListTypes[0];
-        }
-        throw new Error("override `get listType`");
+        return this.defaultListType;
     }
 
     get nextType(){
@@ -37,8 +37,13 @@ class AdharaListView extends AdharaView{
     }
 
     changeViewType(event, data){
-        this.listType = data.viewtype;
+        this._listType = data.viewtype;
         this.refresh();
+        this.onViewTypeChanged(this.listType);
+    }
+
+    onViewTypeChanged(new_view_type){
+        //Override as required
     }
 
     /**
