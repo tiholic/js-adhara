@@ -247,14 +247,19 @@ class AdharaListView extends AdharaView{
 
     onSearchCapture(event, data){
         if(event.target.value !== this.searchText){
-            this.onSearch(event.target.value);
             this.searchText = event.target.value;
+            this.onSearch(event.target.value);
         }
     }
 
     onSearch(text){
         console.error(`TODO Search is enabled for this list view.
          So, implement onSearch... search text: "${text}"`);
+    }
+
+    updateResults(){
+        this.getParentContainerElement().querySelector(".list-contents").innerHTML
+            = Adhara.app.renderTemplate(this.listTemplate, this);
     }
 
     format(container){

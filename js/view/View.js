@@ -368,7 +368,7 @@ class AdharaView extends AdharaController{
     }
 
     getParentContainerElement(){
-        return document.querySelector(this._getParentContainer())
+        return document.querySelector(this._getParentContainer());
     }
 
     _render(){
