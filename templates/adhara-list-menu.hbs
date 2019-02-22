@@ -2,12 +2,15 @@
     <h3>{{title}}</h3>
 {{/if}}
 <div class="table-actions-container">
+    {{#if buttons}}
     <div class="mutation-actions table-actions">
         {{#each buttons}}
             <button {{addAttr attributes '{"class": "adhara-template-button"}'}}>{{title}}</button>
         {{/each}}
     </div>
-    <div class="flex-1 table-actions"></div>
+    {{/if}}
+    <div class="flex-1"></div>
+    {{#if search}} {{!add all necessary if conditions here to collpse the below div if noting is to be inserted}}
     <div class="data-actions table-actions">
         {{#if search}}
             <input type="search" autofocus
@@ -22,6 +25,7 @@
             />
         {{/if}}
     </div>
+    {{/if}}
     {{#if nextType}}
         <div data-onclick="changeViewType" data-viewtype="{{nextType}}" class="table-actions centre-all pointer">
         <svg class="a-s-fa-Ha-pa" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" focusable="false" fill="#6d6d6d">
