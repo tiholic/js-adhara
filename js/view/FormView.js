@@ -208,6 +208,10 @@ class AdharaFormView extends AdharaView{
             jQuery.each(formData, function (i, fieldData) {
                 apiData[fieldData.name] = fieldData.value;
             });
+            let checkboxes = form.querySelectorAll('[type=checkbox]');
+            for(let i=0; i<checkboxes.length; i++){
+                apiData[checkboxes[i].name] = checkboxes[i].checked;
+            }
             return apiData;
         }
     }
