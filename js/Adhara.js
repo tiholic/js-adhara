@@ -42,16 +42,16 @@ let Adhara = null;
 
         createShortcuts(){
             //Creating a view_name vs context_name map
-            this.view_context = {};
+            this.view_config = {};
             loop(this.app.config, (context_name, configuration)=>{
                 if(configuration.hasOwnProperty("view") && AdharaView.isPrototypeOf(configuration.view)){
-                    this.view_context[configuration.view.name] = context_name;
+                    this.view_config[configuration.view.name] = context_name;
                 }
             });
         }
 
-        getViewContext(viewInstance){
-            return this.view_context[viewInstance.constructor.name];
+        getEntityNameFromViewConfig(viewInstance){
+            return this.view_config[viewInstance.constructor.name];
         }
 
         performSystemChecks(){
@@ -66,12 +66,14 @@ let Adhara = null;
         createContainer(){
             this.router.configure(this.app.routerConfiguration);
             this.router.listen();
-            if(this.app.containerView) {
-                this.container = new this.app.containerView();
+            let containerView = this.app.containerView;
+            if(containerView) {
+                this.container = containerView;
                 this.container.onViewRendered(this.router.route);
                 this._clearActiveViews();
+                //TODO Adhara.getView is not valid function anymore...
                 this.always_active_views = this.container.subViews.map(subView => Adhara.getView(subView, this.container));
-                Adhara.createView(this.container);
+                this.container.create();
                 this.always_active_views.push(this.container);
             }else{
                 this._clearActiveViews();
@@ -137,7 +139,7 @@ let Adhara = null;
         view_instances[instance.constructor.name] = instance;
     };
 
-    //Query singleton views
+    // //Query singleton views
     Adhara.getView = (viewClass, parentViewInstance) => {
         if(!viewClass){
             throw new Error("invalid view class");
@@ -154,16 +156,18 @@ let Adhara = null;
 
     //Create a view instance
     Adhara.createView = (adhara_view_instance, parentViewInstance) => {
-        adhara_view_instance.create(parentViewInstance);
+        adhara_view_instance.context.parentContext = parentViewInstance.context;
+        adhara_view_instance.create();
     };
 
     //On route listener
-    Adhara.onRoute = (view_class) => {
+    Adhara.onRoute = (view) => {
         Adhara.closeActiveViews();
         if(!Adhara.container.isActive()){
             return Adhara.container.create();
         }
-        Adhara.createView(Adhara.getView(view_class, Adhara.container));
+        view.parentContainer = Adhara.container.contentContainer;
+        Adhara.createView(view, Adhara.container);
     };
 
     let on_init_listeners = [

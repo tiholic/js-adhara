@@ -2,23 +2,24 @@
  * @class
  * @classdesc a base class that is to be extended by all the view classes
  * */
-class AdharaView extends AdharaController{
+class AdharaView extends AdharaEventHandler{
 
     /**
      * @constructor
-     * @param {AdharaView} parentViewInstance - parent view instance that is to be passed to render a view inside another.
+     * @param {Object} [settings]
+     * @param {String} settings.key - Instance key
+     * @param {String} settings.c - CSS Selector from parent view to place content of this class
      * */
-    constructor(parentViewInstance){
+    constructor(settings){
+        let {key, c} = settings || {};
         super();
-        this._parentViewInstance = parentViewInstance;
+        this.context = new Context(key, this);
+        this.parentContainer = c;
         Adhara.addViewToInstances(this);
-        this._data = null;
-        this._state = {};
-        this._error = null;
-        this._event_listeners = {};
         this.is_active = false;
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
-        this._registerEvents(this.events);
+        this.controller = new AdharaController();
+        this.fetching_data = false;
         this.onInit();
     }
 
@@ -29,46 +30,6 @@ class AdharaView extends AdharaController{
      * */
     onInit(){
         //Override this method to do any miscellaneous operations/assignments right after initializing the View
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @returns {Array<String>} return list of custom event names in PascalCase...
-     * @description event listener registration functions will be created dynamically by prepending "on" th the event name
-     * @example
-     * say get events() returns this array: ["Render", "Format"]
-     * listener functions these events can be then registered using `onRender(listener)` and `onFormat(listener)`
-     * */
-    get events(){
-        return [];
-    }
-
-    /**
-     * @function
-     * @protected
-     * @param {Array<String>} event_names - list of events that are to be enabled on the current View instance.
-     * @description registers the event names and creates event registration functions.
-     * @example
-     * _registerEvents(["Render", "Format"]);
-     * //This will create 2 functions onRender and onFormat runtime to allow registration of events
-     * */
-    _registerEvents(event_names){
-        for(let event_name of event_names){
-            this._event_listeners[event_name] = [];
-            this["on"+event_name] = handler => {
-                this._event_listeners[event_name].push(handler);
-            };
-            this["off"+event_name] = handler => {
-                this._event_listeners[event_name].splice(this._event_listeners[event_name].indexOf(handler), 1);
-            };
-        }
-    }
-
-    trigger(event_name, ...data){
-        for(let event_handler of this._event_listeners[event_name]){
-            event_handler(data);
-        }
     }
 
     /**
@@ -132,108 +93,28 @@ class AdharaView extends AdharaController{
      * @description Helper method to get required template. Error template or success template.
      * */
     getTemplate(){
-        return this.state.fetching_data?this.fetchingDataTemplate:(this.errors?(this.errorTemplate||this.template):this.template);
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @param {String} [batch_identifier=undefined] - In case if the config is a batch config,
-     * use batch_identifier to know what url's path parameters are required.
-     * @returns {Object|null} url path parameters as an object with keys as template variables
-     * */
-    getURLPathParams(batch_identifier){
-        return null;
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @returns {Object|null} Add dynamic input data to API calls made to server
-     * */
-    get payload(){
-        return null;
-    }
-
-    formatURL(url, params){
-        if(!params){
-            return url;
-        }
-        let match = url.match(/\${([a-zA-Z0-9$_]*)}/gi);
-        if(!match){
-            return url;
-        }
-        let this_match = match.map( match => '${this.'+/\${([a-zA-Z0-9$_]*)}/.exec(match)[1]+'}' );
-        for(let idx in match){  //in works of doesn't work here as it is not a classic Array
-            url = url.replace(match[idx], this_match[idx]);
-        }
-        return new Function("return `" + url + "`;").call(params);
-    }
-
-    formatEntityConfig(entity_config){
-        if(entity_config.data_config.hasOwnProperty("batch_data_override")){
-            for(let one_config of entity_config.data_config.batch_data_override){
-                let url_path_params = this.getURLPathParams(one_config.identifier);
-                if(url_path_params){
-                    one_config.url = this.formatURL(one_config.url, url_path_params);
-                }
-            }
-        }else{
-            let url_path_params = this.getURLPathParams();
-            if(url_path_params) {
-                entity_config.data_config.url = this.formatURL(entity_config.data_config.url, url_path_params);
-            }
-        }
-        return entity_config;
-    }
-
-    /**
-     * @function
-     * @instance
-     * @returns Adhara style entity config for entity mapped with this view
-     * */
-    get entityConfig(){
-        let entity_name = Adhara.getViewContext(this);
-        if(!entity_name){
-            return null;
-        }
-        return this.formatEntityConfig(Adhara.app.getEntityConfig(entity_name));
-    }
-
-    /**
-     * @function
-     * @instance
-     * @returns Add dynamic input data to API calls made to server
-     * @description intermediate function that can be overridden by other generic views
-     * */
-    getPayload(){
-        return this.payload;
-    }
-
-    /**
-     * @getter
-     * @instance
-     * @returns {Object} state object of the current View
-     * */
-    get state(){
-        return this._state;
+        return this.fetching_data?this.fetchingDataTemplate:(this.errors?(this.errorTemplate||this.template):this.template);
     }
 
     get isImmortal(){
         return false;
     }
 
-    create(parentViewInstance){
-        if(parentViewInstance && AdharaView.isPrototypeOf(parentViewInstance.constructor)){
-            this._parentViewInstance = parentViewInstance;
-        }
-        Adhara.addToActiveViews(this);
-        this.is_active = true;
-        this.fetchData();
-    }
-
     isActive(){
         return Adhara.isActiveView(this) && this.is_active;
+    }
+
+    create(){
+        Adhara.addToActiveViews(this);
+        this.is_active = true;
+        this.fetch().then(()=>{this.render();});
+        this.render();
+    }
+
+    async fetch(){
+        this.fetching_data = true;
+        await this.fetchData();
+        this.fetching_data = false;
     }
 
     /**
@@ -242,110 +123,8 @@ class AdharaView extends AdharaController{
      * @description hook to make API calls, data change event will be triggered on successful API call.
      * By default no API call will be made and dataChange method will be called right away.
      * */
-    fetchData(){
-        this._state.fetching_data = true;
-        let config = this.entityConfig;
-        if(config){
-            if(config.data_config.hasOwnProperty("batch_data_override")){
-                this.render();
-                return this.control(undefined, config);
-            }
-            if(Adhara.dataInterface.getHTTPMethod(config.data_config.default_query_type)==="get"){
-                this.render();
-                return this.control(config.data_config.default_query_type, config, this.getPayload());
-            }
-            return this.handleDataChange();
-        }
-        this.handleDataChange();
-    }
+    async fetchData(){
 
-    /**
-     * @function
-     * @protected
-     * @param {DataBlob|Array<DataBlob>} [new_data=null] - Data in the form of DataBlob instance to be updated in view
-     * */
-    handleDataChange(new_data){
-        if(!this.isActive()){return;}
-        this.dataChange(new_data);
-        this._state.fetching_data = false;
-        this.render();
-    }
-
-    /**
-     * @function
-     * @private
-     * @param {*} error - Error to be updated in view
-     * */
-    handleDataError(error){
-        if(!this.isActive()){return;}
-        this.dataError(error);
-        this._state.fetching_data = false;
-        this.render();
-    }
-
-    /**
-     * @function
-     * @private
-     * @param {Object<String, Object<String, DataBlob|*>>} map - Data/Error to be updated in view. Map of {String} identifier vs {Object<success:response|error:error>}
-     * */
-    handleBatchData(map){
-        if(!this.isActive()){return;}
-        let errors = {};
-        let success = {};
-        for(let identifier in map){
-            if(map.hasOwnProperty(identifier)){
-                if(map[identifier].hasOwnProperty("error")){
-                    errors[identifier] = map[identifier];
-                }else{
-                    success[identifier] = map[identifier].success;
-                }
-            }
-        }
-        if(Object.keys(success).length){
-            this.dataChange(success);
-        }
-        if(Object.keys(errors).length){
-            this.dataError(errors);
-        }
-        this._state.fetching_data = false;
-        this.render();
-    }
-
-    /**
-     * @function
-     * @instance
-     * @param {DataBlob|*} new_data - Data in the form of DataBlob instance to be set in view
-     * */
-    dataChange(new_data){
-        this._data = new_data;
-        this._error = null;
-    }
-
-    /**
-     * @function
-     * @instance
-     * @param {*} error - Error to be set in view
-     * */
-    dataError(error){
-        this._error = error;
-    }
-
-    /**
-     * @method
-     * @getter
-     * @returns {*} View errors, that can be consumed by the template.
-     * */
-    get errors(){
-        return this._error;
-    }
-
-    /**
-     * @method
-     * @getter
-     * @returns {*} View data, that can be consumed by the template.
-     * */
-    get data(){
-        return this._data;
     }
 
     _getHTML(template){
@@ -355,24 +134,16 @@ class AdharaView extends AdharaController{
         );
     }
 
-    get parentView(){
-        return this._parentViewInstance || Adhara.getView(Adhara.app.containerView);
-    }
-
-    _getParentContainer(){
-        let container = this.parentView.contentContainer;
-        if(typeof container === "string"){
-            return container;
-        }
-        return container[this.constructor.name]||container["*"];
+    /**
+     * @param {Context} context - current view context from which this class instance is to be looked up in the tree
+     * @param {String} [tag] - instance tag
+     * */
+    static of(context, tag){
+        return context.getViewFromRenderTree(this, tag);
     }
 
     getParentContainerElement(){
-        return document.querySelector(this._getParentContainer());
-    }
-
-    _render(){
-
+        return document.querySelector(this.parentContainer);
     }
 
     render(){
@@ -382,7 +153,7 @@ class AdharaView extends AdharaController{
             return;
         }
         container.innerHTML = this._getHTML();
-        if(this.state.fetching_data){
+        if(this.fetching_data){
             return;
         }
         this.trigger("ViewRendered");
@@ -405,15 +176,9 @@ class AdharaView extends AdharaController{
     }
 
     /**
-     * @typedef {Object} SubView - Sub view configuration
-     * @property {String} container_selector - container's CSS selector
-     * @property {class} view - view class reference of the sub view
-     * */
-
-    /**
      * @function
      * @instance
-     * @returns Array<SubView>
+     * @returns Array<AdharaView>
      * */
     get subViews(){
         return [];
@@ -421,16 +186,16 @@ class AdharaView extends AdharaController{
 
     renderSubViews(){
         for(let sub_view of (this.subViews || [])){
-            Adhara.createView(Adhara.getView(sub_view, this), this);
+            Adhara.createView(sub_view, this);
         }
     }
 
     _format(container){
         for(let action of [ "click", "change", "blur", "focus", "scroll", "contextmenu", "copy", "cut",
-                            "dblclick", "drag", "dragend", "dragenter", "dragleave", "dragover", "dragstart",
-                            "drop", "focus", "focusin", "focusout", "input", "invalid", "mousedown", "mouseenter",
-                            "mouseleave", "mouseover", "mouseout", "mouseup", "paste", "scroll", "show",
-                            "toggle", "wheel", "keyup", "keydown", "keypress" ]){
+            "dblclick", "drag", "dragend", "dragenter", "dragleave", "dragover", "dragstart",
+            "drop", "focus", "focusin", "focusout", "input", "invalid", "mousedown", "mouseenter",
+            "mouseleave", "mouseover", "mouseout", "mouseup", "paste", "scroll", "show",
+            "toggle", "wheel", "keyup", "keydown", "keypress" ]){
             let onActionElements = container.querySelectorAll(`[data-on${action}]`);
             for(let actionElement of onActionElements){
                 if(actionElement.dataset[`_ae_${action}_`] === "true"){

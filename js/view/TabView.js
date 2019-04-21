@@ -16,6 +16,15 @@ class AdharaTabView extends AdharaView{
         return "nav";
     }
 
+    /**
+     * @typedef {Object} TabObject
+     * @property {String} id
+     * @property {AdharaView} instance of adhara view
+     * */
+
+    /**
+     * @returns {Array<TabObject>} list of tab objects
+     * */
     get tabs(){
         return [];
     }
@@ -72,7 +81,7 @@ class AdharaTabView extends AdharaView{
     }
 
     renderSubViews(){
-        Adhara.createView(Adhara.getView(this.currentTab.view, this));
+        Adhara.createView(this.currentTab.view, this);
     }
 
 }

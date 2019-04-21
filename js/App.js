@@ -174,15 +174,6 @@ class AdharaApp{
     /**
      * @function
      * @instance
-     * @returns {String} A css selector in which app is to be rendered.
-     * */
-    get DOMSelector(){
-        return "app";   //=> search DOM for `<app></app>`
-    }
-
-    /**
-     * @function
-     * @instance
      * @returns {String} API Server URL. Either the base path or a full url till base path.
      * */
     get apiServerURL(){

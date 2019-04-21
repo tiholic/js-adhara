@@ -51,6 +51,10 @@ module.exports = {
         "js/Blobs/DataBlob.js",
         //Controller for controllable views
         "js/DataInterface/Controller.js",
+        //Context
+        "js/Context.js",
+        //Event Handler
+        "js/EventHandler.js",
         //basic view
         "js/view/View.js",
         //component views

@@ -12,8 +12,4 @@ class AdharaContainerView extends AdharaView{
         return "main";
     }
 
-    _getParentContainer(){
-        return Adhara.app.DOMSelector;
-    }
-
 }

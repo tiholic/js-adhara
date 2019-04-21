@@ -41,6 +41,7 @@ function registerConfigUtils(){
     Adhara.configUtils = {
         getViewInstance(entity_config){
             try{
+                //TODO handle this!!!
                 return Adhara.getView(entity_config.view);
             }catch (e){
                 return false;
