@@ -93,8 +93,8 @@ class AdharaListView extends AdharaView{
 
     /**
      * @typedef {Object} ColumnConfig
-     * @property {String} key - column key
-     * @property {String} name - column name that is to be rendered
+     * @property {String} name - column key for lookup in objects
+     * @property {String} display_name - column name that is to be rendered
      * @property {Boolean} trust_as_html - whether to render as text content or HTML content
      * @example
      * {
@@ -125,6 +125,10 @@ class AdharaListView extends AdharaView{
      * */
     get menuTemplate(){
         return "adhara-list-menu";
+    }
+
+    get footerTemplate(){
+        return "adhara-list-footer";
     }
 
     /**
@@ -180,7 +184,7 @@ class AdharaListView extends AdharaView{
      * */
     get isLastPage(){
         //Assumption: this.data is the only has the data for the current page
-        return this.data.length < this.rowCount;
+        return this.rows.length < this.rowCount;
     }
 
     /**
@@ -218,8 +222,9 @@ class AdharaListView extends AdharaView{
      * @description will be called on page change
      * */
     pageChange(){
-        this.fetchData();
+        this.fetch();
     }
+
 
     getPayload(){
         if(this.isPaginationRequired){

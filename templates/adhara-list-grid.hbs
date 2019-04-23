@@ -7,14 +7,14 @@
     </tr>
     </thead>
     <tbody>
-    {{#each data as |datum index|}}
+    {{#each rows as |row index|}}
         <tr adhara-datum-row="{{index}}">
             {{#each ../columns as |column value|}}
                 <td adhara-datum-col="{{index}}-{{column.name}}" align="{{column.align}}">
                     {{#if column.trust_as_html}}
-                        {{{get datum column.name}}}
+                        {{{get row column.name}}}
                     {{else}}
-                        {{get datum column.name}}
+                        {{get row column.name}}
                     {{/if}}
                 </td>
             {{/each}}

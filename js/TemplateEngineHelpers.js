@@ -306,7 +306,36 @@ class TemplateEngineHelpers{
                     str_buf += options.fn(i);
                 }
                 return str_buf;
-            }
+            },
+            /*
+            TODO handle better!
+            'generate': function(context, options){
+                let generatorInstance = context(),
+                    ret = '', done = false, index = 0,
+                    data = {};
+
+                function execIteration(field, index, last) {
+                    if (data) {
+                        data.key = field;
+                        data.index = index;
+                        data.first = index === 0;
+                        data.last = !!last;
+                    }
+
+                    ret = ret + options.fn(context[field], {
+                        data: data,
+                        // blockParams: _utils.blockParams([context[field], field], [contextPath + field, null])
+                    });
+                }
+
+                do{
+                    let yi = generatorInstance.next();
+                    done = yi.done;
+                    execIteration(yi.value, ++index, done===true);
+                }while(done===false);
+                console.log(context, options);
+                return ret;
+            }*/
         };
     }
 

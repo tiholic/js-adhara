@@ -1,4 +1,4 @@
-<div id="adharaTable_{{title}}" class="adhara-table-container" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
+<div id="adharaTable_{{title}}" {{addAttr containerAttributes '{"class":"adhara-table-container"}'}}>
     {{include menuTemplate this}}
     <div class="adhara-list-wrapper adhara-{{listType}}-list">
         {{#if state.fetching_data}}
@@ -15,7 +15,7 @@
                 </div>
             {{/if}}
         <div class="list-contents">
-            {{#if data}}
+            {{#if rows}}
                 {{include listTemplate this}}
             {{else}}
                 {{include noDataTemplate this}}
@@ -23,4 +23,5 @@
         {{/if}}
         </div>
     </div>
+    {{include footerTemplate this}}
 </div>

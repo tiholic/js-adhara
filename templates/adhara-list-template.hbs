@@ -6,10 +6,10 @@
         </tr>
         </thead>
         <tbody>
-        {{#each data as |datum index|}}
+        {{#each rows as |row index|}}
             <tr adhara-datum-row="{{index}}">
                 <td adhara-datum-col="{{index}}-{{column}}">
-                    {{include ../itemTemplate datum}}
+                    {{include ../itemTemplate row}}
                 </td>
             </tr>
         {{/each}}
