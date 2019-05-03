@@ -133,14 +133,14 @@ class NetworkProvider {
         return new Promise((resolve, reject)=>{
             o.url = this.formatURL(o.url);
             o.success = (d,s,x) => {
-                RestAPI.handle_api_success((d, s)=>{
+                this.handleSuccess((d, s)=>{
                     resolve([d, x]);
                 },(d, x)=>{
                     reject([d, x]);
                 },d,s,x,o.handleError,o.successMessage);
             };
             o.error = (x,s,e) => {
-                RestAPI.handle_api_failure((e, x)=>{
+                this.handleFailure((e, x)=>{
                     reject([e, x]);
                 },x,s,e);
             };

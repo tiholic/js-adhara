@@ -24,42 +24,6 @@ class AdharaFormView extends AdharaView{
 
     /**
      * @getter
-     * @returns {String|null} action, URL to be called to post data to.
-     * */
-    get action(){
-        return this.formElement?( this.formElement.action.split(window.location.host)[1] ): "";
-    }
-
-    get method(){
-        return this.formElement?( this.formElement.getAttribute('api-method') || "post" ): "post";
-    }
-
-    get formEntityConfig(){
-        let form = this.formElement;
-        return Adhara.app.getEntityConfigFromContext({
-            data_config: {
-                url: this.formatURL(this.action, this.getURLPathParams()),
-                allowed_query_types: [this.method],
-                default_query_type: this.method
-            },
-            processor: {
-                success: (query_type, entity_config, response)=>{
-                    if(this.clearFormOnSuccess) {
-                        form.reset();
-                    }
-                    this.updateFormState(false);
-                    this.onSuccess(response);
-                },
-                error: (query_type, entity_config, error)=>{
-                    this.updateFormState(false);
-                    this.onError(error);
-                }
-            }
-        });
-    }
-
-    /**
-     * @getter
      * @instance
      * @returns {Boolean} whether duplicate submissions are to be allowed
      * */
@@ -111,12 +75,7 @@ class AdharaFormView extends AdharaView{
      * @param {Object} data - Form data
      * @returns {Boolean} Whether the data is valid or not
      * */
-    validate(data){
-        let validate_fn = this.formElement.getAttribute('validate-data');
-        if(validate_fn) {
-            return !!call_fn(validate_fn, data);
-        }
-    }
+    validate(data){}
 
     /**
      * @function
@@ -125,10 +84,6 @@ class AdharaFormView extends AdharaView{
      * @returns {Object} Modified/Formatted data
      * */
     formatData(data){
-        let format_fn = this.formElement.getAttribute('format-data');
-        if(format_fn) {
-            data = call_fn(format_fn, data);
-        }
         return data;
     }
 
@@ -148,7 +103,7 @@ class AdharaFormView extends AdharaView{
     }
 
     /**
-     * @funciton
+     * @function
      * @instance
      * @returns {*} Field data
      * */
@@ -163,7 +118,7 @@ class AdharaFormView extends AdharaView{
     }
 
     /**
-     * @funciton
+     * @function
      * @instance
      * @returns {*} Field data
      * */
@@ -240,10 +195,19 @@ class AdharaFormView extends AdharaView{
 
     /**
      * @getter
+     * @param {*} data to be submitted destination
+     * @returns {Promise} response on submission.
+     * */
+    async submitData(data){
+        throw new Error("Must override `submitData`");
+    }
+
+    /**
+     * @getter
      * @private
      * @description handle making API call on behalf of the form
      * */
-    _handleForm(){
+    async _handleForm(){
         let form = this.formElement;
         if(!form.checkValidity()){
             return form.reportValidity();
@@ -259,7 +223,7 @@ class AdharaFormView extends AdharaView{
         }
         apiData = this.formatData(apiData);
         this.updateFormState(true);
-        this.controller.control(this.method, this.formEntityConfig, apiData);
+        await this.submitData(apiData);
         return true;
     }
 
@@ -279,11 +243,13 @@ class AdharaFormView extends AdharaView{
     }
 
     reSubmitIfRequired(){
-        this.re_submit = this.duplicateSubmissions && this.re_submit && !this._handleForm();
+        if(this.duplicateSubmissions && this.re_submit){
+            this._handleForm().then(_ => this.re_submit = !_);
+        }
     }
 
     submit(){
-        this.re_submit = !this._handleForm();
+        this._handleForm().then(_ => this.re_submit = !_);
     }
 
     get subViews(){
