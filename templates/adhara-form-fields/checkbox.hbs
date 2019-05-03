@@ -1,0 +1,6 @@
+<label for="{{name}}" {{addAttr labelAttributes}} {{addProps labelProperties}}>
+    <input type="checkbox"
+        {{addAttr fieldAttributes}} {{addProps fieldProperties}}
+        {{#if value}}checked{{/if}}/>
+    <span class="ml-2">{{displayName}}</span>
+</label>

@@ -4,6 +4,10 @@ class InputField extends FormField{
         return "adhara-form-fields/input";
     }
 
+    get inputType(){
+        return this.config.input_type || "text";
+    }
+
     getValue(){
         console.log(this.getParentContainerElement());
     }

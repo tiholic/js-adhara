@@ -168,6 +168,14 @@ class NetworkProvider {
         this.postResponseIntercept(method, url, data, response);
     }
 
+    postErrorResponseIntercept(method, url, data, response){
+        //    Override if required
+    }
+
+    _postErrorResponseIntercept(method, url, data, response){
+        this.postErrorResponseIntercept(method, url, data, response);
+    }
+
     async _send(method, url, data, options){
         url = this.formatURL(url);
         this._preFlightIntercept(method, url, null);
@@ -181,8 +189,9 @@ class NetworkProvider {
             this._postResponseIntercept(method, url, null, r);
             return this.extractResponse(r);
         } catch (e) {
-        //    TODO handle
             console.log("API errored out::", e);
+            this._postErrorResponseIntercept(method, url, data, e[0]);
+            throw(e[0]);
         }
     }
 

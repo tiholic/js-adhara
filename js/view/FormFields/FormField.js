@@ -54,7 +54,6 @@ class FormField extends AdharaView{
         return Object.assign({
             id: this.name,
             name: this.name,
-            class: "form-control",
             placeholder: Adhara.i18n.get(`${this.form_name}.${this.name}.placeholder`)
         }, this.config.attributes || {});
     }

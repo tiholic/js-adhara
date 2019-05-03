@@ -223,7 +223,12 @@ class AdharaFormView extends AdharaView{
         }
         apiData = this.formatData(apiData);
         this.updateFormState(true);
-        await this.submitData(apiData);
+        try{
+            await this.submitData(apiData);
+        }catch(e){
+            this.updateFormState(false);
+            return false;
+        }
         return true;
     }
 

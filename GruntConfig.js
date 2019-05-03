@@ -66,6 +66,9 @@ module.exports = {
         "js/view/FormFields/FormField.js",
         "js/view/FormFields/InputField.js",
         "js/view/FormFields/TextArea.js",
+        "js/view/FormFields/SelectField.js",
+        "js/view/FormFields/RadioField.js",
+        "js/view/FormFields/CheckboxField.js",
         //dependent component views
         "js/view/GridView.js",
         "js/view/TemplateView.js",
