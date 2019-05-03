@@ -42,7 +42,7 @@ module.exports = {
         "js/Utils.js",
         "js/Ticker.js",
         "js/Router.js",
-        "js/RestAPI.js",
+        // "js/RestAPI.js",
         "js/components/Toast.js",
         // "js/py.js",
         // "js/templates.js",   //Commenting out assuming it is not required. TODO check here in case of any template issues
@@ -50,7 +50,9 @@ module.exports = {
         "js/Blobs/Serializable.js",
         "js/Blobs/DataBlob.js",
         //Controller for controllable views
-        "js/DataInterface/Controller.js",
+        // "js/DataInterface/Controller.js",
+        "js/dataproviders/NetworkProvider.js",
+        "js/dataproviders/DataInterface.js",
         //Context
         "js/Context.js",
         //Event Handler
@@ -60,6 +62,10 @@ module.exports = {
         //component views
         "js/view/ListView.js",
         "js/view/FormView.js",
+        //Dorm components
+        "js/view/FormFields/FormField.js",
+        "js/view/FormFields/InputField.js",
+        "js/view/FormFields/TextArea.js",
         //dependent component views
         "js/view/GridView.js",
         "js/view/TemplateView.js",
@@ -75,10 +81,10 @@ module.exports = {
         "js/Storage/DBStorage.js",
         "js/Storage/CacheStorage.js",
         //Data Interface & Processor
-        "js/DataInterface/DataInterface.js",
-        "js/DataInterface/Processors.js",
-        //Web Sockets
-        "js/DataInterface/WebSocket.js",
+        // "js/DataInterface/DataInterface.js",
+        // "js/DataInterface/Processors.js",
+        // //Web Sockets
+        // "js/DataInterface/WebSocket.js",
         //Adhara
         "js/App.js",
         "js/Adhara.js",

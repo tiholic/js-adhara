@@ -1,5 +1,27 @@
 class AdharaFormView extends AdharaView{
 
+    constructor(settings){
+        super(settings);
+    }
+
+    get formName(){
+        return "";
+    }
+
+    /**
+     * @example
+     * get fields(){
+     *  return [
+     *      InputField("question", {}, {}),
+     *      TextArea("answer", {}, {})
+     *  ];
+     * }
+     * returns {Array<FormField>>}
+     * */
+    get fields(){
+        return [];
+    }
+
     /**
      * @getter
      * @returns {String|null} action, URL to be called to post data to.
@@ -237,7 +259,7 @@ class AdharaFormView extends AdharaView{
         }
         apiData = this.formatData(apiData);
         this.updateFormState(true);
-        this.control(this.method, this.formEntityConfig, apiData);
+        this.controller.control(this.method, this.formEntityConfig, apiData);
         return true;
     }
 
@@ -262,6 +284,13 @@ class AdharaFormView extends AdharaView{
 
     submit(){
         this.re_submit = !this._handleForm();
+    }
+
+    get subViews(){
+        return this.fields.map(f => {
+            f.form_name = this.formName;
+            return f;
+        });
     }
 
 }

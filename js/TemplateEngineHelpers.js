@@ -59,8 +59,7 @@ class TemplateEngineHelpers{
             },
             'addProps': function(){
                 let properties = Array.prototype.slice.call(arguments);
-                properties = properties.splice(1, subs.length-2);
-                return properties.join(" ");
+                return properties.splice(0, properties.length-1).join(' ');
             },
             'selectedClass': function(selected,selectedClassName){
                 if(selected === true){

@@ -37,53 +37,7 @@ function handleForm(form){
     });
 }
 
-function registerConfigUtils(){
-    Adhara.configUtils = {
-        getViewInstance(entity_config){
-            try{
-                //TODO handle this!!!
-                return Adhara.getView(entity_config.view);
-            }catch (e){
-                return false;
-            }
-        },
-        getProcessor(entity_config){
-            return entity_config.processor || Processor.fallback;
-        },
-        getController(entity_config){
-            return entity_config.controller || Adhara.restAPI;
-        },
-        getDataConfig(entity_config){
-            return entity_config.data_config;
-        },
-        getBlobClass(entity_config){
-            return entity_config.data_config.blob || entity_config.blob || DataBlob;
-        },
-        getSimilarDataConfigs(data_config){
-            let res = [];
-            let app_config = Adhara.app.config;
-            for(let entity_name in app_config){
-                if(app_config.hasOwnProperty(entity_name)){
-                    let entity_config = Adhara.app.getEntityConfig(entity_name);
-                    if(
-                        ( data_config._url === Adhara.configUtils.getDataConfig(entity_config)._url
-                            && (
-                                !data_config.blob || data_config.blob === Adhara.configUtils.getBlobClass(entity_config)
-                            ) )
-                        || JSON.stringify(data_config) === JSON.stringify(entity_config.data_config)
-                    ){
-                        res.push(entity_config);
-                    }
-                }
-            }
-            return res;
-        }
-    };
-}
-
 function registerAdharaUtils(){
-    //config utils
-    registerConfigUtils();
     //Register templateEngine helpers
     Adhara.templateEngine.helpersHandler.registerHelpers();
     //Form listeners
@@ -475,8 +429,11 @@ class Internationalize{
      * */
     getValue(key, subs, default_value){
         if(!key){return;}
-        let value = this.key_map[key] || getValueFromJSON(this.key_map, key);
-        if(!value){
+        let value = this.key_map[key];
+        if(value===undefined){
+            value = getValueFromJSON(this.key_map, key);
+        }
+        if(value===undefined){
             return default_value;
         }
         subs = subs || [];

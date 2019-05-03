@@ -18,7 +18,6 @@ class AdharaView extends AdharaEventHandler{
         Adhara.addViewToInstances(this);
         this.is_active = false;
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
-        this.controller = new AdharaController();
         this.fetching_data = false;
         this.onInit();
     }

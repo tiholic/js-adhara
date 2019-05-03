@@ -12,6 +12,17 @@ class AdharaApp{
         );
     }
 
+    get dataInterface(){
+        return DataInterface();
+    }
+
+    get d(){
+        if(!this._d){
+            this._d = this.dataInterface;
+        }
+        return this.dataInterface;
+    }
+
     /**
      * @function
      * @instance
@@ -48,88 +59,6 @@ class AdharaApp{
     get containerView(){ }
 
     /**
-     * @function
-     * @instance
-     * @return {Object} Adhara style app config
-     * */
-    get config(){ return {}; }
-
-    /**
-     * @function
-     * @instance
-     * @return {Object} Adhara style entity config from crude entity config
-     * */
-    getEntityConfigFromContext(context){
-        let allowed_query_types = context.data_config.allowed_query_types?context.data_config.allowed_query_types.slice():[];
-        let data_config;
-        if(context.data_config.hasOwnProperty("batch_data_override")){
-            data_config = {
-                batch_data_override: context.data_config.batch_data_override.map(batch_data_config => {
-                    if(!batch_data_config.reuse){
-                        batch_data_config.reuse = {};
-                    }
-                    return {
-                        _url: batch_data_config.url,
-                        url: batch_data_config.url,
-                        query_type: batch_data_config.query_type,
-                        identifier: batch_data_config.identifier,
-                        reuse: {
-                            enable: batch_data_config.reuse.enable,
-                            timeout: batch_data_config.reuse.timeout,
-                            scope: batch_data_config.reuse.scope,
-                            handler: batch_data_config.reuse.handler,
-                        },
-                        blob: batch_data_config.blob
-                    }
-                })
-            }
-        }else{
-            if(!context.data_config.reuse){
-                context.data_config.reuse = {};
-            }
-            data_config = {
-                _url: context.data_config.url,
-                url: context.data_config.url,
-                allowed_query_types: allowed_query_types,
-                default_query_type: context.data_config.default_query_type || allowed_query_types[0],
-                socket_tag: context.data_config.socket_tag,
-                reuse: {
-                    enable: context.data_config.reuse.enable,
-                    timeout: context.data_config.reuse.timeout,
-                    scope: context.data_config.reuse.scope,
-                    handler: context.data_config.reuse.handler,
-                },
-                blob: context.data_config.blob
-            }
-        }
-        let processor = {
-            success: ( context.processor && context.processor.success ) || Processor.fallback.success,
-            error: ( context.processor && context.processor.error ) || Processor.fallback.error
-        };
-        let controller = {
-            get: ( context.controller && context.controller.get ) || Adhara.restAPI.get,
-            put: ( context.controller && context.controller.put ) || Adhara.restAPI.put,
-            post: ( context.controller && context.controller.post ) || Adhara.restAPI.post,
-            delete: ( context.controller && context.controller.delete ) || Adhara.restAPI.delete
-        };
-        return {
-            data_config,
-            view: context.view,
-            controller,
-            processor
-        }
-    }
-
-    /**
-     * @function
-     * @instance
-     * @return {Object} Adhara style entity config
-     * */
-    getEntityConfig(context_name){
-        return this.getEntityConfigFromContext(this.config[context_name]);
-    }
-
-    /**
      * @getter
      * @instance
      * @returns {Object} Custom global view configurations
@@ -148,19 +77,6 @@ class AdharaApp{
     /**
      * @function
      * @instance
-     * @returns {Array<String>} list of http methods to be allowed by the application.
-     * @description This getter can be configured to return allowed methods based on the current network state.
-     * Say if offline, it can be configured to just return `["get"]` method which will restrict DataInterface from making
-     * other service API calls such as "post", "delete", etc...
-     * */
-    get allowedHttpMethods() {
-        return ['get', 'post', 'put', 'delete'];  // all available API methods
-        // offline mode will switch a few of these off (post, put and delete)
-    }
-
-    /**
-     * @function
-     * @instance
      * @return {AdharaRouterConfiguration} Adhara style routing config
      * */
     get routerConfiguration(){
@@ -169,15 +85,6 @@ class AdharaApp{
             on_route_listeners: {},
             middlewares: []
         }
-    }
-
-    /**
-     * @function
-     * @instance
-     * @returns {String} API Server URL. Either the base path or a full url till base path.
-     * */
-    get apiServerURL(){
-        return "/api";
     }
 
     /**
@@ -239,25 +146,6 @@ class AdharaApp{
         return {
             global : window // the global scope
         }
-    }
-
-    /**
-     * @function
-     * @instance
-     * @description modify the response even before being utilized by the DataInterface
-     * */
-    responseMiddleWare(entity_config, success, response, xhr){
-        return response;
-    }
-
-    /**
-     * @function
-     * @instance
-     * @description modify the data with respect to the URL and method name and
-     * return formatted data to be posted or queried to/from the server
-     * */
-    requestMiddleWare(url, method_name, data){
-        return data;
     }
 
     /**
