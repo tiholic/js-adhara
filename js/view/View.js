@@ -145,6 +145,11 @@ class AdharaView extends AdharaEventHandler{
         return document.querySelector(this.parentContainer);
     }
 
+    setState(fn){
+        fn?fn():null;
+        this.render();
+    }
+
     render(){
         let container = this.getParentContainerElement();
         if(!container){

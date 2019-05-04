@@ -38,7 +38,7 @@ class AdharaListView extends AdharaView{
 
     changeViewType(event, data){
         this._listType = data.viewtype;
-        this.refresh();
+        this.setState();
         this.onViewTypeChanged(this.listType);
     }
 

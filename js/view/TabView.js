@@ -37,7 +37,7 @@ class AdharaTabView extends AdharaView{
     get currentTab(){
         let current_tab_link_from_url = Adhara.router.getCurrentURL();
         let current_Tab = this.tabs.filter(tab=>tab.link===current_tab_link_from_url);
-        return current_Tab.length?current_Tab[0]:this.tabs[0];
+        return current_Tab.length?current_Tab[0]:(this._current_Tab || this.tabs[0]);
     }
 
     get tabsList(){
@@ -46,6 +46,17 @@ class AdharaTabView extends AdharaView{
             tab.className = (tab.id === current_tab_id)?"active":"";
             return tab;
         });
+    }
+
+    changeCurrentTab(tabId){
+        console.log(this.tabs, tabId);
+        this._current_Tab = this.tabs.filter(tab=>tab.id===tabId)[0];
+        console.log(this._current_Tab);
+        this.setState();
+    }
+
+    onLinklessTabClick(event, data){
+        this.changeCurrentTab(data.tabid);
     }
 
     get nextSelector(){
