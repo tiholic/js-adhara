@@ -1,4 +1,4 @@
-<select {{addAttr fieldAttributes}} {{addProps fieldProperties}}>
+<select {{addAttr fieldAttributes}} {{addProps fieldProperties}} data-onchange="onDataChange">
     {{#each options}}
         <option value="{{value}}">{{display}}</option>
     {{/each}}

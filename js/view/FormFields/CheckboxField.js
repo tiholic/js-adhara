@@ -4,4 +4,8 @@ class CheckboxField extends InputField{
         return "adhara-form-fields/checkbox";
     }
 
+    queryValue(target){
+        return (target || this.getField()).checked;
+    }
+
 }

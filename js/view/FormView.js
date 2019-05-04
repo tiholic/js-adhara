@@ -259,9 +259,13 @@ class AdharaFormView extends AdharaView{
 
     get subViews(){
         return this.fields.map(f => {
-            f.form_name = this.formName;
+            f.form = this;
             return f;
         });
+    }
+
+    onFieldChange(field_name, value){
+        console.log(field_name, value);
     }
 
 }

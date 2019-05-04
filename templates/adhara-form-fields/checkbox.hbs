@@ -1,5 +1,5 @@
 <label for="{{name}}" {{addAttr labelAttributes}} {{addProps labelProperties}}>
-    <input type="checkbox"
+    <input type="checkbox" data-onchange="onDataChange"
         {{addAttr fieldAttributes}} {{addProps fieldProperties}}
         {{#if value}}checked{{/if}}/>
     <span class="ml-2">{{displayName}}</span>

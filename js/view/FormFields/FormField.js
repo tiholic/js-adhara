@@ -21,7 +21,10 @@ class FormField extends AdharaView{
         super(settings);
         this.name = name;
         this.value = value;
-        this.form_name = "";
+        /**
+         * {AdharaFormView} form
+         * */
+        this.form = undefined;
         this.config = config || {};
     }
 
@@ -42,7 +45,7 @@ class FormField extends AdharaView{
     }
 
     get displayName(){
-        return this.config.field_display_name || Adhara.i18n.get(`${this.form_name}.${this.name}.label`);
+        return this.config.field_display_name || Adhara.i18n.get(`${this.form.formName}.${this.name}.label`);
     }
 
     get labelAttributes() {
@@ -56,14 +59,14 @@ class FormField extends AdharaView{
     }
 
     get placeholder(){
-        return Adhara.i18n.get(`${this.form_name}.${this.name}.placeholder`);
+        return Adhara.i18n.get(`${this.form.formName}.${this.name}.placeholder`);
     }
 
     get fieldAttributes() {
         return Object.assign({
             id: this.name,
             name: this.name,
-            placeholder: Adhara.i18n.get(`${this.form_name}.${this.name}.placeholder`)
+            placeholder: Adhara.i18n.get(`${this.form.formName}.${this.name}.placeholder`)
         }, this.config.attributes || {});
     }
 
@@ -71,12 +74,29 @@ class FormField extends AdharaView{
         return this.config.properties || [];
     }
 
-    getValue(){
-        return this.value;
-    }
-
     get isNullable(){
         return this.config.nullable || false;
+    }
+
+    getField(){
+        return document.querySelector(this.parentContainer+" [name='"+this.name+"']");
+    }
+
+    queryValue(target){
+        return (target || this.getField()).value;
+    }
+
+    onDataChange(event, data){
+        console.log(this.queryValue(event.target));
+    }
+
+    setValue(_){
+        this.value = _;
+        this.setState();
+    }
+
+    getValue(){
+        return this.queryValue();
     }
 
 }
