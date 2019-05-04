@@ -10,8 +10,7 @@ class AdharaView extends AdharaEventHandler{
      * @param {String} settings.key - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
      * */
-    constructor(settings){
-        let {key, c} = settings || {};
+    constructor({key, c} = {}){
         super();
         this.context = new Context(key, this);
         this.parentContainer = c;

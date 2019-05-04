@@ -1,9 +1,8 @@
-<div class="{{containerClass}}">
+<div class="{{containerClass}}" id="{{containerId}}">
     <div class="{{tabNavClass}}">
         <ul class="{{tabListClass}}">
             {{#each tabsList}}
                 <li class="{{className}} nav-item">
-                    {{log link id}}
                     {{#if link}}
                         <a class="nav-link" href="{{link}}">{{name}}</a>
                     {{else}}

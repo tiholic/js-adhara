@@ -9,14 +9,18 @@ class SelectField extends FormField{
      * @example:
      * get options(){
      *      return [
-     *          {"value": "H", "display_value: "High"},
-     *          {"value": "M", "display_value: "Medium"},
-     *          {"value": "L", "display_value: "Low"}
+     *          {"value": "H", "display: "High"},
+     *          {"value": "M", "display: "Medium"},
+     *          {"value": "L", "display: "Low"}
      *      ];
      * }
      * */
     get options(){
-        return this.config.options || [];
+        let _o = this.config.options || [];
+        if(this.isNullable){
+            _o.unshift({value: null, display: this.placeholder})
+        }
+        return _o;
     }
 
 }

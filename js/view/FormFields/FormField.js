@@ -10,6 +10,7 @@ class FormField extends AdharaView{
      * @param {Map} config.attributes
      * @param {Array} config.properties
      * @param {String} config.field_display_name - display name of the field
+     * @param {boolean} config.nullable - whether the field is nullable or not
      * @param {Object} [settings={}]
      * @param {String} settings.key - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
@@ -36,6 +37,10 @@ class FormField extends AdharaView{
 
     }
 
+    get showLabel(){
+        return this.config.label !== false;
+    }
+
     get displayName(){
         return this.config.field_display_name || Adhara.i18n.get(`${this.form_name}.${this.name}.label`);
     }
@@ -48,6 +53,10 @@ class FormField extends AdharaView{
 
     get labelProperties() {
         return this.config.label_properties || [];
+    }
+
+    get placeholder(){
+        return Adhara.i18n.get(`${this.form_name}.${this.name}.placeholder`);
     }
 
     get fieldAttributes() {
@@ -64,6 +73,10 @@ class FormField extends AdharaView{
 
     getValue(){
         return this.value;
+    }
+
+    get isNullable(){
+        return this.config.nullable || false;
     }
 
 }

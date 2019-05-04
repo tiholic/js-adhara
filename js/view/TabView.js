@@ -1,5 +1,9 @@
 class AdharaTabView extends AdharaView{
 
+    onInit(){
+        this.containerId = `d${Date.now()}`;
+    }
+
     get template(){
         return "adhara-tab-view";
     }
@@ -49,9 +53,7 @@ class AdharaTabView extends AdharaView{
     }
 
     changeCurrentTab(tabId){
-        console.log(this.tabs, tabId);
         this._current_Tab = this.tabs.filter(tab=>tab.id===tabId)[0];
-        console.log(this._current_Tab);
         this.setState();
     }
 
@@ -91,8 +93,14 @@ class AdharaTabView extends AdharaView{
         return ".tab-content .tab-pane";
     }
 
-    renderSubViews(){
-        Adhara.createView(this.currentTab.view, this);
+    get subViews(){
+        let cTab = this.currentTab.view;
+        cTab.parentContainer = `#${this.containerId} .tab-content .tab-pane.active`;
+        return [cTab];
     }
+
+    // renderSubViews(){
+    //     Adhara.createView(this.currentTab.view, this);
+    // }
 
 }
