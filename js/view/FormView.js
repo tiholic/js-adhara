@@ -3,9 +3,6 @@ class AdharaFormView extends AdharaView{
     onInit(){
         this._form_data = {};
         this.fieldMap = {};
-        for(let field of this.formFields){
-            this.fieldMap[field.name] = field;
-        }
     }
 
     get formName(){
@@ -48,6 +45,7 @@ class AdharaFormView extends AdharaView{
 
     _onFieldValueChanged(field_name, value, old_value){
         setValueToJson(this._form_data, this.fieldMap[field_name].key, value);
+        this.onFieldValueChanged(field_name, value, old_value);
         this.onFormDataChanged();
     }
 
@@ -278,6 +276,7 @@ class AdharaFormView extends AdharaView{
 
     get subViews(){
         return this.formFields.map(f => {
+            this.fieldMap[f.name] = f;
             f.form = this;
             f.value = this.getFieldValue(f.name);
             return f;
