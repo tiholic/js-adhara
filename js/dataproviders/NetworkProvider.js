@@ -196,6 +196,9 @@ class NetworkProvider {
     }
 
     async get(url, data, options){
+        if(typeof data === "object"){
+            data = Object.entries(data).map(([k, v]) => `${k}=${v}`).join("&");
+        }
         return await this._send(NetworkMethods.GET, url, data, options);
     }
 

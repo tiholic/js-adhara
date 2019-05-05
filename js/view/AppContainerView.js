@@ -1,7 +1,7 @@
-class AdharaContainerView extends AdharaView{
+class AdharaAppContainerView extends AdharaView{
 
     get template(){
-        return "container";
+        return "app-container";
     }
 
     get isImmortal(){

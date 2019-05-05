@@ -75,7 +75,7 @@ module.exports = {
         "js/view/CardView.js",
         "js/view/DialogView.js",
         "js/view/TabView.js",
-        "js/view/ContainerView.js",
+        "js/view/AppContainerView.js",
         //mixins
         "js/view/DialogFormView.js",
         //Client DB Storage

@@ -8,8 +8,4 @@ class InputField extends FormField{
         return this.config.input_type || "text";
     }
 
-    getValue(){
-        console.log(this.getParentContainerElement());
-    }
-
 }

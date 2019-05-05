@@ -19,6 +19,8 @@ class AdharaView extends AdharaEventHandler{
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
         this.fetching_data = false;
         this.onInit();
+        this.rendered = false;
+        this.initialized = true;
     }
 
     /**
@@ -167,6 +169,7 @@ class AdharaView extends AdharaEventHandler{
         }, 0);
         this.renderSubViews();
         this.trigger("SubViewsRendered");
+        this.rendered = true;
     }
 
     /**

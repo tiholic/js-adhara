@@ -1,5 +1,5 @@
 <select {{addAttr fieldAttributes}} {{addProps fieldProperties}} data-onchange="onDataChange">
     {{#each options}}
-        <option value="{{value}}">{{display}}</option>
+        <option value="{{value}}" {{#if ../value '===' value}}selected{{/if}}>{{display}}</option>
     {{/each}}
 </select>

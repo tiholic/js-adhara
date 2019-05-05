@@ -81,7 +81,7 @@ let Adhara = null;
 
         get viewHierarchy(){
             return [
-                AdharaContainerView,
+                AdharaAppContainerView,
                 AdharaDialogView,
                 AdharaTemplateView,
                 AdharaCardView,

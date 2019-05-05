@@ -1,7 +1,11 @@
 class AdharaFormView extends AdharaView{
 
-    constructor(settings){
-        super(settings);
+    onInit(){
+        this._form_data = {};
+        this.fieldMap = {};
+        for(let field of this.formFields){
+            this.fieldMap[field.name] = field;
+        }
     }
 
     get formName(){
@@ -20,6 +24,50 @@ class AdharaFormView extends AdharaView{
      * */
     get fields(){
         return [];
+    }
+
+    get formFields(){
+        return this.fields.filter(f => f instanceof FormField);
+    }
+
+    set formData(_){
+        this._form_data = _;
+    }
+
+    get formData(){
+        return this._form_data;
+    }
+
+    onFormDataChanged(){
+        //    Can override if required...
+    }
+
+    onFieldValueChanged(field_name, value, old_value){
+        //    can override as required
+    }
+
+    _onFieldValueChanged(field_name, value, old_value){
+        setValueToJson(this._form_data, this.fieldMap[field_name].key, value);
+        this.onFormDataChanged();
+    }
+
+    /**
+     * @returns {*} Field data
+     * */
+    getFieldValue(field_name){
+        return getValueFromJSON(this.formData, this.fieldMap[field_name].key);
+    }
+
+    /**
+     * @returns {*} Field data
+     * */
+    setFieldValue(field_name, value){
+        let field = this.formElement[field_name];
+        if(field.type==="checkbox"){
+            field.checked = true;
+        }else{
+            field.value = value;
+        }
     }
 
     /**
@@ -100,35 +148,6 @@ class AdharaFormView extends AdharaView{
             throw new Error("No from element discovered!");
         }
         return this._formElement;
-    }
-
-    /**
-     * @function
-     * @instance
-     * @returns {*} Field data
-     * */
-    getFieldValue(field_name){
-        let field = this.formElement[field_name];
-        if(field.type==="number"){
-            return +field.value;
-        }else if(field.type==="checkbox"){
-            return field.checked;
-        }
-        return field.value;
-    }
-
-    /**
-     * @function
-     * @instance
-     * @returns {*} Field data
-     * */
-    setFieldValue(field_name, value){
-        let field = this.formElement[field_name];
-        if(field.type==="checkbox"){
-            field.checked = true;
-        }else{
-            field.value = value;
-        }
     }
 
     /**
@@ -258,14 +277,11 @@ class AdharaFormView extends AdharaView{
     }
 
     get subViews(){
-        return this.fields.map(f => {
+        return this.formFields.map(f => {
             f.form = this;
+            f.value = this.getFieldValue(f.name);
             return f;
         });
-    }
-
-    onFieldChange(field_name, value){
-        console.log(field_name, value);
     }
 
 }

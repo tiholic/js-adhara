@@ -5,12 +5,13 @@ class FormField extends AdharaView{
      * @param {String} name - field name
      * @param {*} [value] - A value consumable by form field. A string for input type text and a number for input type number
      * @param {Object} [config={}]
-     * @param {Map} config.label_attributes
-     * @param {Array} config.label_properties
-     * @param {Map} config.attributes
-     * @param {Array} config.properties
-     * @param {String} config.field_display_name - display name of the field
-     * @param {boolean} config.nullable - whether the field is nullable or not
+     * @param {String} [config.key=name] - a key to get field data from form data
+     * @param {Map} [config.label_attribute{}]
+     * @param {Array} [config.label_properties=[]]
+     * @param {Map} [config.attributes={}]
+     * @param {Array} [config.properties=[]]
+     * @param {String} [config.field_display_name=<i18n of form_name.field_name.label>] - display name of the field
+     * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {Object} [settings={}]
      * @param {String} settings.key - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
@@ -20,7 +21,8 @@ class FormField extends AdharaView{
         settings.c = settings.c || `[data-field="${name}"]`;
         super(settings);
         this.name = name;
-        this.value = value;
+        this.key = config.key || name;
+        this._value = value;
         /**
          * {AdharaFormView} form
          * */
@@ -87,16 +89,19 @@ class FormField extends AdharaView{
     }
 
     onDataChange(event, data){
-        console.log(this.queryValue(event.target));
+        let old_value = this.value;
+        this.value = this.queryValue(event.target);
+        this.form._onFieldValueChanged(this.name, this.value, old_value);
     }
 
-    setValue(_){
-        this.value = _;
-        this.setState();
+    set value(_){
+        this._value = _;
     }
 
-    getValue(){
-        return this.queryValue();
+    get value(){
+        // if(!this.rendered)
+        return this._value;
+        // return this.queryValue();
     }
 
 }
