@@ -400,8 +400,9 @@ let AdharaRouter = null;
          * @param {String} pattern - URL Pattern that is to be registered.
          * @param {String} view_name - Name of the view that is mapped to this URL.
          * @param {ViewFunction|Adhara} fn - View function that will be called when the pattern matches window URL.
+         * @param {Object} meta - Route meta which can be accessible for current route. This can be used for miscellaneous operations like finding which tab to highlight on a sidebar.
          * */
-        static register_one(pattern, view_name, fn){
+        static register_one(pattern, view_name, fn, meta){
             let path_param_keys = [];
             let regex = /{{([a-zA-Z$_][a-zA-Z0-9$_]*)}}/g;
             let match = regex.exec(pattern);
@@ -414,7 +415,7 @@ let AdharaRouter = null;
 
             pattern = "^"+this.transformURL(pattern.substring(1));
             pattern = pattern.replace(/[?]/g, '\\?');   //Converting ? to \? as RegExp(pattern) dosen't handle that
-            registeredUrlPatterns[pattern] = { view_name, fn, path_param_keys };
+            registeredUrlPatterns[pattern] = { view_name, fn, path_param_keys, meta };
         }
 
         /**
@@ -447,7 +448,7 @@ let AdharaRouter = null;
          * */
         static register(list){
             for(let conf of list){
-                this.register_one(conf.url, conf.view_name, conf.view);
+                this.register_one(conf.url, conf.view_name, conf.view, conf.meta);
             }
         }
 
