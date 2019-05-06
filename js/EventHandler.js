@@ -54,7 +54,7 @@ class AdharaEventHandler{
 
     trigger(event_name, ...data){
         for(let event_handler of this._event_listeners[event_name]){
-            event_handler(data);
+            event_handler.apply(event_handler, data);
         }
     }
 

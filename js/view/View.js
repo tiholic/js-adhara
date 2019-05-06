@@ -7,7 +7,7 @@ class AdharaView extends AdharaEventHandler{
     /**
      * @constructor
      * @param {Object} [settings]
-     * @param {String} settings.key - Instance key
+     * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
      * */
     constructor({key, c} = {}){
