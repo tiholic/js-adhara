@@ -3,6 +3,7 @@ class AdharaFormView extends AdharaView{
     onInit(){
         this._form_data = {};
         this.fieldMap = {};
+        this.rendered_fields = [];
     }
 
     get formName(){
@@ -191,7 +192,7 @@ class AdharaFormView extends AdharaView{
         }
     }
 
-    getFormData(){
+    /*getFormData(){
         let form = this.formElement;
         let fileElements = Array.prototype.slice.apply(form.querySelectorAll('input[type="file"]')).filter(fileElement => !fileElement.disabled);
         if(this.handleFileUploads && !!fileElements.length){ // ~ if(hasFiles){
@@ -208,6 +209,14 @@ class AdharaFormView extends AdharaView{
             }
             return apiData;
         }
+    }*/
+
+    getFormData(){
+        let data = {};
+        for(let field of this.rendered_fields){
+            setValueToJson(data, field.key, field.serialize());
+        }
+        return data;
     }
 
     /**
@@ -275,12 +284,14 @@ class AdharaFormView extends AdharaView{
     }
 
     get subViews(){
-        return this.formFields.map(f => {
+        let fields = this.formFields.map(f => {
             this.fieldMap[f.name] = f;
             f.form = this;
             f.value = this.getFieldValue(f.name);
             return f;
         });
+        this.rendered_fields = fields.slice();
+        return fields;
     }
 
 }

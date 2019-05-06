@@ -80,6 +80,9 @@ class FormField extends AdharaView{
         return this.config.nullable || false;
     }
 
+    /**
+     * @returns {HTMLElement} dom element of the field that is rendered by the fieldTemplate
+     * */
     getField(){
         return document.querySelector(this.parentContainer+" [name='"+this.name+"']");
     }
@@ -102,6 +105,10 @@ class FormField extends AdharaView{
         // if(!this.rendered)
         return this._value;
         // return this.queryValue();
+    }
+
+    serialize(){
+        return this.value;
     }
 
 }
