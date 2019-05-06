@@ -131,7 +131,6 @@ class NetworkProvider {
 
     async send(o){
         return new Promise((resolve, reject)=>{
-            o.url = this.formatURL(o.url);
             o.success = (d,s,x) => {
                 this.handleSuccess((d, s)=>{
                     resolve([d, x]);
