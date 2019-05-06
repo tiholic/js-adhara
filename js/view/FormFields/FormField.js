@@ -3,9 +3,9 @@ class FormField extends AdharaView{
     /**
      * @constructor
      * @param {String} name - field name
-     * @param {*} [value] - A value consumable by form field. A string for input type text and a number for input type number
      * @param {Object} [config={}]
      * @param {String} [config.key=name] - a key to get field data from form data
+     * @param {*} [config.value] - A value consumable by form field. A string for input type text and a number for input type number
      * @param {Map} [config.label_attribute{}]
      * @param {Array} [config.label_properties=[]]
      * @param {Map} [config.attributes={}]
@@ -16,13 +16,13 @@ class FormField extends AdharaView{
      * @param {String} settings.key - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
      * */
-    constructor(name, value, config, settings){
+    constructor(name, config, settings){
         settings = settings || {};
         settings.c = settings.c || `[data-field="${name}"]`;
         super(settings);
         this.name = name;
         this.key = config.key || name;
-        this._value = value;
+        this._value = config.value;
         /**
          * {AdharaFormView} form
          * */
