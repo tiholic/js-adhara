@@ -1,5 +1,9 @@
-<select {{addAttr fieldAttributes}} {{addProps fieldProperties}} data-onchange="onDataChange">
-    {{#each options}}
-        <option value="{{value}}" {{#if ../value '===' value}}selected{{/if}}>{{display}}</option>
-    {{/each}}
-</select>
+{{#if readonly}}
+    {{include 'adhara-form-fields/readonly' this}}
+{{else}}
+    <select {{addAttr fieldAttributes}} {{addProps fieldProperties}} data-onchange="onDataChange">
+        {{#each options}}
+            <option value="{{value}}" {{#if ../value '===' value}}selected{{/if}}>{{display}}</option>
+        {{/each}}
+    </select>
+{{/if}}

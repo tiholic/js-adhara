@@ -1,6 +1,12 @@
-<label for="{{name}}" {{addAttr labelAttributes}} {{addProps labelProperties}}>
-    <input type="checkbox" data-onchange="onDataChange"
-        {{addAttr fieldAttributes}} {{addProps fieldProperties}}
-        {{#if value}}checked{{/if}}/>
-    <span class="ml-2">{{displayName}}</span>
-</label>
+{{#if readonly}}
+    <div {{addAttr fieldAttributes}} {{addProps fieldProperties}}>
+        {{#if value}}{{i18n 'common.yes'}}{{else}}{{i18n 'common.no'}}{{/if}}
+    </div>
+{{else}}
+    <label for="{{name}}" {{addAttr labelAttributes}} {{addProps labelProperties}}>
+        <input type="checkbox" data-onchange="onDataChange"
+            {{addAttr fieldAttributes}} {{addProps fieldProperties}}
+            {{#if value}}checked{{/if}}/>
+        <span class="ml-2">{{displayName}}</span>
+    </label>
+{{/if}}

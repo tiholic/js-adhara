@@ -1,2 +1,7 @@
-<textarea {{addAttr fieldAttributes}} {{addProps fieldProperties}}
-        data-onchange="onDataChange" data-onpaste="onDataChange" data-onkeyup="onDataChange">{{value}}</textarea>
+{{#if readonly}}
+    {{include 'adhara-form-fields/readonly' this}}
+{{else}}
+    <textarea {{addAttr fieldAttributes}} {{addProps fieldProperties}}
+            data-onchange="onDataChange" data-onpaste="onDataChange" data-onkeyup="onDataChange">{{value}}</textarea>
+
+{{/if}}

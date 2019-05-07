@@ -61,7 +61,9 @@ module.exports = {
         "js/view/View.js",
         //component views
         "js/view/ListView.js",
+        "js/view/MutableView.js",
         "js/view/FormView.js",
+        "js/view/DetailView.js",
         //Dorm components
         "js/view/FormFields/FormField.js",
         "js/view/FormFields/InputField.js",

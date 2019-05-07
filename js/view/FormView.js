@@ -1,73 +1,4 @@
-class AdharaFormView extends AdharaView{
-
-    onInit(){
-        this._form_data = {};
-        this.fieldMap = {};
-        this.rendered_fields = [];
-    }
-
-    get formName(){
-        return "";
-    }
-
-    /**
-     * @example
-     * get fields(){
-     *  return [
-     *      InputField("question", {}, {}),
-     *      TextArea("answer", {}, {})
-     *  ];
-     * }
-     * returns {Array<FormField>>}
-     * */
-    get fields(){
-        return [];
-    }
-
-    get formFields(){
-        return this.fields.filter(f => f instanceof FormField);
-    }
-
-    set formData(_){
-        this._form_data = _;
-    }
-
-    get formData(){
-        return this._form_data;
-    }
-
-    onFormDataChanged(){
-        //    Can override if required...
-    }
-
-    onFieldValueChanged(field_name, value, old_value){
-        //    can override as required
-    }
-
-    _onFieldValueChanged(field_name, value, old_value){
-        setValueToJson(this._form_data, this.fieldMap[field_name].key, value);
-        this.onFieldValueChanged(field_name, value, old_value);
-        this.onFormDataChanged();
-    }
-
-    /**
-     * @returns {*} Field data
-     * */
-    getFieldValue(field_name){
-        return getValueFromJSON(this.formData, this.fieldMap[field_name].key);
-    }
-
-    /**
-     * @returns {*} Field data
-     * */
-    setFieldValue(field_name, value){
-        let field = this.formElement[field_name];
-        if(field.type==="checkbox"){
-            field.checked = true;
-        }else{
-            field.value = value;
-        }
-    }
+class AdharaFormView extends AdharaMutableView{
 
     /**
      * @getter
@@ -211,23 +142,6 @@ class AdharaFormView extends AdharaView{
         }
     }*/
 
-    getFormData(){
-        let data = {};
-        for(let field of this.rendered_fields){
-            setValueToJson(data, field.key, field.serialize());
-        }
-        return data;
-    }
-
-    /**
-     * @getter
-     * @param {*} data to be submitted destination
-     * @returns {Promise} response on submission.
-     * */
-    async submitData(data){
-        throw new Error("Must override `submitData`");
-    }
-
     /**
      * @getter
      * @private
@@ -241,7 +155,7 @@ class AdharaFormView extends AdharaView{
         if(form.submitting){
             return false;
         }
-        let apiData = this.getFormData();
+        let apiData = this.getMutatedData();
         try{
             this.validate(apiData);
         }catch(e){
@@ -281,17 +195,6 @@ class AdharaFormView extends AdharaView{
 
     submit(){
         this._handleForm().then(_ => this.re_submit = !_);
-    }
-
-    get subViews(){
-        let fields = this.formFields.map(f => {
-            this.fieldMap[f.name] = f;
-            f.form = this;
-            f.value = this.getFieldValue(f.name);
-            return f;
-        });
-        this.rendered_fields = fields.slice();
-        return fields;
     }
 
 }

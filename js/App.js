@@ -163,7 +163,9 @@ class AdharaApp{
         return {
             "list_view.navigation.previous": "Previous",
             "list_view.navigation.next": "Next",
-            "form.processing": "Processing..."
+            "form.processing": "Processing...",
+            "common.yes": "Yes",
+            "common.no": "No",
         };
     }
 

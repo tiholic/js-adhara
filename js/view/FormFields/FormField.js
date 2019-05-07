@@ -10,6 +10,7 @@ class FormField extends AdharaView{
      * @param {Array} [config.label_properties=[]]
      * @param {Map} [config.attributes={}]
      * @param {Array} [config.properties=[]]
+     * @param {Boolean} [config.readonly=false]
      * @param {String} [config.field_display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {Object} [settings={}]
@@ -25,7 +26,8 @@ class FormField extends AdharaView{
         /**
          * {AdharaFormView} form
          * */
-        this.form = undefined;
+        this.mutator = undefined;
+        this.readonly = config.readonly;
         this.config = config || {};
     }
 
@@ -50,7 +52,7 @@ class FormField extends AdharaView{
     }
 
     get displayName(){
-        return this.config.field_display_name || Adhara.i18n.get(`${this.form?this.form.formName:''}.${this.name}.label`);
+        return this.config.field_display_name || Adhara.i18n.get(`${this.mutator?this.mutator.name:''}.${this.name}.label`);
     }
 
     get labelAttributes() {
@@ -68,7 +70,7 @@ class FormField extends AdharaView{
             if(typeof this.config.placeholder === "string"){
                 return this.config.placeholder;
             }
-            return Adhara.i18n.get([this.form?this.form.formName:'', this.name, 'placeholder'].filter(_=>_).join('.'));
+            return Adhara.i18n.get([this.mutator?this.mutator.name:'', this.name, 'placeholder'].filter(_=>_).join('.'));
         }
     }
 
@@ -102,7 +104,7 @@ class FormField extends AdharaView{
     onDataChange(event, data){
         let old_value = this.value;
         this.value = this.queryValue(event && event.target);
-        this.form._onFieldValueChanged(this.name, this.value, old_value);
+        this.mutator._onFieldValueChanged(this.name, this.value, old_value);
     }
 
     set value(_){

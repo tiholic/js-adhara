@@ -1,2 +1,6 @@
-<input type="{{inputType}}" {{addAttr fieldAttributes}} {{addProps fieldProperties}} value="{{value}}"
-       data-onchange="onDataChange" data-onpaste="onDataChange" data-onkeyup="onDataChange"/>
+{{#if readonly}}
+    {{include 'adhara-form-fields/readonly' this}}
+{{else}}
+    <input type="{{inputType}}" {{addAttr fieldAttributes}} {{addProps fieldProperties}} value="{{value}}"
+           data-onchange="onDataChange" data-onpaste="onDataChange" data-onkeyup="onDataChange"/>
+{{/if}}
