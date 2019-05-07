@@ -1,4 +1,2 @@
-{{#if showLabel}}
-    <label for="{{name}}" {{addAttr labelAttributes}} {{addProps labelProperties}}>{{displayName}}</label>
-{{/if}}
+{{include labelTemplate this}}
 {{include fieldTemplate this}}

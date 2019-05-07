@@ -32,6 +32,10 @@ class FormField extends AdharaView{
         return "adhara-form-fields/index";
     }
 
+    get labelTemplate(){
+        return 'adhara-form-fields/label';
+    }
+
     /**
      * @getter
      * @returns {HandlebarTemplate} - template for the field
@@ -45,7 +49,7 @@ class FormField extends AdharaView{
     }
 
     get displayName(){
-        return this.config.field_display_name || Adhara.i18n.get(`${this.form.formName}.${this.name}.label`);
+        return this.config.field_display_name || Adhara.i18n.get(`${this.form?this.form.formName:''}.${this.name}.label`);
     }
 
     get labelAttributes() {
@@ -59,14 +63,19 @@ class FormField extends AdharaView{
     }
 
     get placeholder(){
-        return Adhara.i18n.get(`${this.form.formName}.${this.name}.placeholder`);
+        if(this.config.placeholder){
+            if(typeof this.config.placeholder === "string"){
+                return this.config.placeholder;
+            }
+            return Adhara.i18n.get([this.form?this.form.formName:'', this.name, 'placeholder'].filter(_=>_).join('.'));
+        }
     }
 
     get fieldAttributes() {
         return Object.assign({
             id: this.name,
             name: this.name,
-            placeholder: Adhara.i18n.get(`${this.form.formName}.${this.name}.placeholder`)
+            placeholder: this.placeholder || "",
         }, this.config.attributes || {});
     }
 
