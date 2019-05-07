@@ -490,7 +490,7 @@ function MutateViews(baseClass, ...mixins){
 
 class Time{
 
-    static async delay(millis){
+    static async sleep(millis){
         return new Promise((resolve, reject)=>{
             setTimeout(resolve, millis);
         })
