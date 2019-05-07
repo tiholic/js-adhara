@@ -5,7 +5,7 @@ class FormField extends AdharaView{
      * @param {String} name - field name
      * @param {Object} [config={}]
      * @param {String} [config.key=name] - a key to get field data from form data
-     * @param {*} [config.value] - A value consumable by form field. A string for input type text and a number for input type number
+     * @param {*} [config.value=undefined] - A value consumable by form field. A string for input type text and a number for input type number
      * @param {Map} [config.label_attributes={}]
      * @param {Array} [config.label_properties=[]]
      * @param {Map} [config.attributes={}]
@@ -21,6 +21,7 @@ class FormField extends AdharaView{
         this.name = name;
         this.key = config.key || name;
         this._value = config.value;
+        this.ts = `d${performance.now().toString().replace(".", '-')}`;
         /**
          * {AdharaFormView} form
          * */
@@ -100,7 +101,7 @@ class FormField extends AdharaView{
 
     onDataChange(event, data){
         let old_value = this.value;
-        this.value = this.queryValue(event.target);
+        this.value = this.queryValue(event && event.target);
         this.form._onFieldValueChanged(this.name, this.value, old_value);
     }
 
