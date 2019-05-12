@@ -58,6 +58,14 @@ let AdharaRouter = null;
 
     /**
      * @private
+     * @member {String}
+     * @description
+     * Stores base URI for regex matches
+     * */
+    let baseURI = "";
+
+    /**
+     * @private
      * @member {Object<String, String>}
      * @description
      * Stores the current URL's search query parameters.
@@ -381,7 +389,10 @@ let AdharaRouter = null;
          * modified the URL and returns the new value. Default transformer just returns the passed url/path.
          * */
         static transformURL(url){
-            return url;
+            if(url.startsWith(baseURI)){
+                return url;
+            }
+            return baseURI+url;
         }
 
         /**
@@ -401,7 +412,7 @@ let AdharaRouter = null;
          * @param {String} view_name - Name of the view that is mapped to this URL.
          * @param {ViewFunction|Adhara} fn - View function that will be called when the pattern matches window URL.
          * @param {Object} meta - Route meta which can be accessible for current route. This can be used for miscellaneous operations like finding which tab to highlight on a sidebar.
-         * */
+         routes         * */
         static register_one(pattern, view_name, fn, meta){
             let path_param_keys = [];
             let regex = /{{([a-zA-Z$_][a-zA-Z0-9$_]*)}}/g;
@@ -455,6 +466,8 @@ let AdharaRouter = null;
         /**
          * @typedef {Object} AdharaRouterConfiguration - Adhara router configuration
          * @property {Array<RouterURLConf>} routes - Route configurations
+         * @property {String} base_uri - base url after which the matches will be taken care of.
+         * For example, if '/ui' is given as base URL, then /ui/home will match a route regex with '/home' only
          * @property {Object<String, Function>} on_route_listeners - On Route listeners
          * @property {Array<AdharaRouterMiddleware>} middlewares - Middleware functions
          * */
@@ -465,6 +478,9 @@ let AdharaRouter = null;
          * @param {AdharaRouterConfiguration} router_configuration
          * */
         static configure(router_configuration){
+            if(router_configuration.base_uri){
+                baseURI = router_configuration.base_uri;
+            }
             if(router_configuration.routes){
                 Router.register(router_configuration.routes);
             }
@@ -850,7 +866,7 @@ let AdharaRouter = null;
 
         function routeHandler(event){
             let re = getRoutingElement(event);
-            if ((AdharaRouter.enableAllAnchors || hasAttribute(re, "route")) && hasAttribute(re, "href")) {
+            if ((AdharaRouter.enableAllAnchors || hasAttribute(re, "route")) && hasAttribute(re, "href") && !hasAttribute(re, "skiprouting")) {
                 let target = this.getAttribute("target");
                 let miniURL = this.getAttribute('href').trim();
                 let isHash = miniURL.indexOf("#") === 0;
@@ -864,16 +880,16 @@ let AdharaRouter = null;
                         return;
                     }
                 }catch(e){/*Do nothing. Try catches the invalid url on new ULR(...)*/}
-                if (url) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
                 let go_back = this.getAttribute("data-back");
                 let force = this.getAttribute("data-force") !== "false";
                 if (go_back) {
                     return AdharaRouter.goBack(url);
                 }
                 AdharaRouter.navigateTo(url, force);
+                if (url) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
             }
         }
 
