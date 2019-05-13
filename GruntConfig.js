@@ -71,6 +71,7 @@ module.exports = {
         "js/view/FormFields/SelectField.js",
         "js/view/FormFields/RadioField.js",
         "js/view/FormFields/CheckboxField.js",
+        "js/view/FormFields/FieldSetRepeater.js",
         //dependent component views
         "js/view/GridView.js",
         "js/view/TemplateView.js",

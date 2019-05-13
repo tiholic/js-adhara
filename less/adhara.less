@@ -81,3 +81,49 @@
 .tab-content{
   margin-top: 1rem;
 }
+
+.repeater{
+  .repeater-fieldset-container{
+    &:first-child{
+      .modifiers {
+        &:nth-child(2) {
+          margin-top: 1.5rem;
+        }
+      }
+    }
+    .repeater-fieldset{
+      padding-right: 16px;
+    }
+    .modifiers {
+      justify-content: center;
+      align-items: center;
+      .modifier {
+        width: 20px;
+        height: 20px;
+        margin: 1px;
+        cursor: pointer;
+        &:after{
+          background: #e5e5e5;
+          width: 16px;
+          height: 16px;
+          font-size: 13px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 1px;
+          cursor: pointer;
+        }
+        &.add{
+          &:after{
+            content: "+";
+          }
+        }
+        &.remove{
+          &:after{
+            content: "-";
+          }
+        }
+      }
+    }
+  }
+}

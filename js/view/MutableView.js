@@ -1,5 +1,20 @@
 class AdharaMutableView extends AdharaView{
 
+    /**
+     * @constructor
+     * @param {Object} [settings]
+     * @param {String} [settings.name] - field name
+     * @param {String} [settings.key=undefined] - Instance key
+     * @param {String} settings.c - CSS Selector from parent view to place content of this class
+     * @param {String} settings.fields - CSS Selector from parent view to place content of this class
+     * */
+    constructor(settings = {}) {
+        super(settings);
+        this._name = settings.name;
+        this._fields = settings.fields;
+        this.mutator = null;
+    }
+
     onInit(){
         this._mutable_data = {};
         this.fieldMap = {};
@@ -7,7 +22,19 @@ class AdharaMutableView extends AdharaView{
     }
 
     get name(){
-        return "";
+        return this._name || "";
+    }
+
+    get fullName(){
+        return ((this.mutator&&this.mutator.name)?(this.mutator.name+"."):"")+this.name;
+    }
+
+    get safeName(){
+        return this.name.replace('.', '-');
+    }
+
+    get key(){
+        return this.name;
     }
 
     /**
@@ -18,14 +45,14 @@ class AdharaMutableView extends AdharaView{
      *      TextArea("answer", {}, {})
      *  ];
      * }
-     * returns {Array<FormField>>}
+     * returns {Array<FormField>}
      * */
     get fields(){
-        return [];
+        return this._fields || [];
     }
 
     get mutableFields(){
-        return this.fields.filter(f => f instanceof FormField);
+        return this.fields.filter(f => (f instanceof FormField || f instanceof AdharaMutableView));
     }
 
     set mutableData(_){
@@ -40,7 +67,7 @@ class AdharaMutableView extends AdharaView{
      * @returns {*} Field data
      * */
     getFieldValue(field_name){
-        return getValueFromJSON(this.formData, this.fieldMap[field_name].key);
+        return getValueFromJSON(this.mutableData, this.fieldMap[field_name].name);
     }
 
     /**
@@ -58,7 +85,7 @@ class AdharaMutableView extends AdharaView{
     getMutatedData(){
         let data = {};
         for(let field of this.rendered_fields){
-            setValueToJson(data, field.key, field.serialize());
+            setValueToJson(data, field.name, field.serialize());
         }
         return data;
     }
@@ -72,14 +99,18 @@ class AdharaMutableView extends AdharaView{
         throw new Error("Must override `submitData`");
     }
 
+    /**
+     * @param {FormField} field
+     * */
+    enhanceFieldForSubViewRendering(field){
+        this.fieldMap[field.name] = field;
+        field.mutator = this;
+        field.value = this.getFieldValue(field.name);
+        return field;
+    }
+
     get subViews(){
-        let fields = this.mutableFields.map(f => {
-            this.fieldMap[f.name] = f;
-            f.mutator = this;
-            f.value = this.getFieldValue(f.name);
-            f.readonly = this.isMutationReadonly || false;
-            return f;
-        });
+        let fields = this.mutableFields.map((_) => this.enhanceFieldForSubViewRendering(_));
         this.rendered_fields = fields.slice();
         return fields;
     }
@@ -93,7 +124,7 @@ class AdharaMutableView extends AdharaView{
     }
 
     _onFieldValueChanged(field_name, value, old_value){
-        setValueToJson(this._mutable_data, this.fieldMap[field_name].key, value);
+        setValueToJson(this._mutable_data, this.fieldMap[field_name].name, value);
         this.onFieldValueChanged(field_name, value, old_value);
         this.onMutableDataChanged();
     }

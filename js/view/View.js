@@ -10,10 +10,12 @@ class AdharaView extends AdharaEventHandler{
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
      * */
-    constructor({key, c} = {}){
+    constructor(settings = {}){
         super();
+        this.settings = settings;
+        let {key, c} = this.settings;
         this.context = new Context(key, this);
-        this.parentContainer = c;
+        this._parentContainer = c;
         Adhara.addViewToInstances(this);
         this.is_active = false;
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
@@ -48,6 +50,14 @@ class AdharaView extends AdharaEventHandler{
                 return className;
             }
         }
+    }
+
+    get parentContainer(){
+        return this._parentContainer;
+    }
+
+    set parentContainer(_){
+        this._parentContainer = _;
     }
 
     getCustomTemplate(type){
@@ -142,6 +152,12 @@ class AdharaView extends AdharaEventHandler{
         return context.getViewFromRenderTree(this, tag);
     }
 
+    get r(){
+        return {
+            d: Adhara.app.d
+        };
+    }
+
     getParentContainerElement(){
         return document.querySelector(this.parentContainer);
     }
@@ -154,7 +170,7 @@ class AdharaView extends AdharaEventHandler{
     render(){
         let container = this.getParentContainerElement();
         if(!container){
-            console.warn("No container defined/available", this.constructor.name);
+            console.warn(`No container defined/available for ${this.constructor.name}, selecting with ${this.parentContainer}`);
             return;
         }
         container.innerHTML = this._getHTML();

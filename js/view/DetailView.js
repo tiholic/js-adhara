@@ -10,10 +10,6 @@ class AdharaDetailView extends AdharaMutableView{
         return [];
     }
 
-    get isMutationReadonly(){
-        return true;
-    }
-
     set entityData(_){
         this._entityData = _;
     }
@@ -30,16 +26,10 @@ class AdharaDetailView extends AdharaMutableView{
         return this.fields.filter(f => f instanceof FormField);
     }
 
-    get subViews(){
-        let fields = this.formFields.map(f => {
-            this.fieldMap[f.name] = f;
-            f.parent = this;
-            f.value = this.getFieldValue(f.name);
-            f.readonly = true;
-            return f;
-        });
-        this.rendered_fields = fields.slice();
-        return fields;
+    enhanceFieldForSubViewRendering(field){
+        field = super.enhanceFieldForSubViewRendering(field);
+        field.readonly = true;
+        return field;
     }
 
     _onFieldValueChanged(name, value, old_value){
