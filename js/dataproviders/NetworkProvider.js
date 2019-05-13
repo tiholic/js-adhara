@@ -33,14 +33,6 @@ class NetworkProvider {
         return cookieValue;
     };
 
-    extractResponse(response) {
-        try {
-            return this.formatResponse(JSON.parse(response));
-        } catch (e) {
-            return response;
-        }
-    }
-
     get headers() {
         return {
             "Content-Type": "application/json"
@@ -74,11 +66,6 @@ class NetworkProvider {
             if (x.getResponseHeader('Content-Disposition')) {
                 return call_fn(fns, d, x);
             } else {
-                if(typeof d === "string"){
-                    try{
-                        d = JSON.parse(d);
-                    }catch(e){ /*DO NOTHING*/ }
-                }
                 return call_fn(fns, d, x);
             }
         }
@@ -186,7 +173,7 @@ class NetworkProvider {
                 data
             }, options));
             this._postResponseIntercept(method, url, null, r);
-            return this.extractResponse(r);
+            return this.formatResponse(r);
         } catch (e) {
             console.log("API errored out::", e);
             this._postErrorResponseIntercept(method, url, data, e[0]);
