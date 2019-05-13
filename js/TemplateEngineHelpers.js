@@ -306,6 +306,9 @@ class TemplateEngineHelpers{
                 }
                 return str_buf;
             },
+            'route': function(url){
+                return new Handlebars.SafeString(`href="${Adhara.router.transformURL(url)}" route`);
+            }
             /*
             TODO handle better!
             'generate': function(context, options){
