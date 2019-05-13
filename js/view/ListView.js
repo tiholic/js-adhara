@@ -4,6 +4,7 @@ class AdharaListView extends AdharaView{
         super(parentViewInstance);
         this._page_number = 1;
         this.searchText = null;
+        this._rows = [];
     }
 
     get template(){
@@ -111,6 +112,14 @@ class AdharaListView extends AdharaView{
      * */
     get columns(){
         return [];
+    }
+
+    set rows(_){
+        this._rows = _;
+    }
+
+    get rows(){
+        return this._rows;
     }
 
     get noDataAvailable(){
