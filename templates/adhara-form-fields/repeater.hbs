@@ -1,8 +1,8 @@
 <div class="repeater">
-    {{#each field_set_data as |datum index|}}
+    {{#each mutableData as |datum index|}}
         <div class="d-flex repeater-fieldset-container" id="fieldset-{{@index}}-{{../safeName}}">
             <div class="repeater-fieldset flex-1">
-                {{include ../fieldSetTemplate this}}
+                {{include ../settings.fieldSetTemplate this}}
             </div>
             <div class="modifiers d-flex mb-3">
                 <div class="remove modifier" data-idx='{{@index}}' data-onclick="removeFieldSet"></div>
