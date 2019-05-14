@@ -38,7 +38,7 @@ class FormField extends AdharaView{
     }
 
     clone(key){
-        return new (this.constructor)(this.name, Object.assign({}, this.config), Object.assign({}, this.settings, {key}));
+        return new (this.constructor)(this.name, Object.assign({}, cloneObject(this.config)), Object.assign({}, cloneObject(this.settings), {key}));
     }
 
     get template(){

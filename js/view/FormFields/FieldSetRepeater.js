@@ -87,9 +87,6 @@ class FieldSetRepeater extends AdharaMutableView{
 
     _onFieldValueChanged(field_name, value, old_value, {event, data}){
         let index = data.repeaterindex;
-        if(!this.mutableData[index]){
-            this.mutableData[index] = {};
-        }
         setValueToJson(this.mutableData[index], this.fieldSetMap[index][field_name].name, value);
         this.onFieldValueChangedForIndex(field_name, value, old_value, index);
         this.onMutableDataChanged();
