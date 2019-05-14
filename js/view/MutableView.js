@@ -9,7 +9,9 @@ class AdharaMutableView extends AdharaView{
      * @param {String} settings.fields - CSS Selector from parent view to place content of this class
      * */
     constructor(settings = {}) {
+        settings.key = settings.key || settings.name;
         super(settings);
+        this.parentContainer = this.parentContainer || `[data-field="${settings.name}"]`;
         this._name = settings.name;
         this._fields = settings.fields;
         this.mutator = null;
@@ -123,7 +125,7 @@ class AdharaMutableView extends AdharaView{
         //    can override as required
     }
 
-    _onFieldValueChanged(field_name, value, old_value){
+    _onFieldValueChanged(field_name, value, old_value, {event, data}){
         setValueToJson(this._mutable_data, this.fieldMap[field_name].name, value);
         this.onFieldValueChanged(field_name, value, old_value);
         this.onMutableDataChanged();
