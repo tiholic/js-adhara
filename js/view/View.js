@@ -14,7 +14,8 @@ class AdharaView extends AdharaEventHandler{
         super();
         this.settings = settings;
         let {key, c} = this.settings;
-        this.context = new Context(key, this);
+        this.ts = `d${performance.now().toString().replace(".", '-')}`;
+        this.context = new Context(key||this.ts, this);
         this._parentContainer = c;
         Adhara.addViewToInstances(this);
         this.is_active = false;

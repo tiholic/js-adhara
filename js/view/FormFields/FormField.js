@@ -21,7 +21,6 @@ class FormField extends AdharaView{
         super(settings);
         this.name = name;
         this._value = config.value;
-        this.ts = `d${performance.now().toString().replace(".", '-')}`;
         /**
          * {AdharaFormView} form
          * */
@@ -38,8 +37,8 @@ class FormField extends AdharaView{
         super.parentContainer = _;
     }
 
-    clone(){
-        return new (this.constructor)(this.name, Object.assign({}, this.config), Object.assign({}, this.settings));
+    clone(key){
+        return new (this.constructor)(this.name, Object.assign({}, this.config), Object.assign({}, this.settings, {key}));
     }
 
     get template(){
@@ -123,7 +122,7 @@ class FormField extends AdharaView{
     onDataChange(event, data){
         let old_value = this.value;
         this.value = this.queryValue(event && event.target);
-        this.mutator._onFieldValueChanged(this.name, this.value, old_value);
+        this.mutator._onFieldValueChanged(this.name, this.value, old_value, {event, data});
     }
 
     set value(_){
@@ -131,9 +130,7 @@ class FormField extends AdharaView{
     }
 
     get value(){
-        // if(!this.rendered)
         return this._value;
-        // return this.queryValue();
     }
 
     serialize(){
