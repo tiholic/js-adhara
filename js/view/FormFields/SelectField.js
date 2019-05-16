@@ -1,12 +1,5 @@
 class SelectField extends FormField{
 
-    constructor(name, config = {}, settings){
-        super(name, config, settings);
-        if(this.config.options){
-            console.log('ioi', this.config.options);
-        }
-    }
-
     get fieldTemplate(){
         return "adhara-form-fields/select";
     }
