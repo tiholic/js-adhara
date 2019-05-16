@@ -146,20 +146,20 @@ class NetworkProvider {
         this.preFlightIntercept(method, url, data);
     }
 
-    postResponseIntercept(method, url, data, response){
+    postResponseIntercept(method, url, data, response, xhr){
         //    Override if required
     }
 
-    _postResponseIntercept(method, url, data, response){
-        this.postResponseIntercept(method, url, data, response);
+    _postResponseIntercept(method, url, data, response, xhr){
+        this.postResponseIntercept(method, url, data, response, xhr);
     }
 
-    postErrorResponseIntercept(method, url, data, response){
+    postErrorResponseIntercept(method, url, data, response, xhr){
         //    Override if required
     }
 
-    _postErrorResponseIntercept(method, url, data, response){
-        this.postErrorResponseIntercept(method, url, data, response);
+    _postErrorResponseIntercept(method, url, data, response, xhr){
+        this.postErrorResponseIntercept(method, url, data, response, xhr);
     }
 
     async _send(method, url, data, options){
@@ -172,11 +172,11 @@ class NetworkProvider {
                 method,
                 data
             }, options));
-            this._postResponseIntercept(method, url, null, r);
+            this._postResponseIntercept(method, url, null, r, x);
             return this.formatResponse(r);
         } catch (e) {
             console.log("API errored out::", e);
-            this._postErrorResponseIntercept(method, url, data, e[0]);
+            this._postErrorResponseIntercept(method, url, data, e[0], e[1]);
             throw(e[0]);
         }
     }

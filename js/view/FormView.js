@@ -101,6 +101,10 @@ class AdharaFormView extends AdharaMutableView{
         return this.formElement.querySelector('[type="submit"]');
     }
 
+    get cancelButton(){
+        return this.formElement.querySelector('[data-cancel="true"]');
+    }
+
     handleSubmitButton(){
         if(this.duplicateSubmissions){
             return;
@@ -121,6 +125,11 @@ class AdharaFormView extends AdharaMutableView{
             submit_button.innerHTML = submit_button.dataset.tosubmit;
             submit_button.disabled = false;
         }
+    }
+
+    async executeDataSubmission(apiData){
+        await this.submitData(apiData);
+        this.trigger("Saved", apiData);
     }
 
     /*getFormData(){
@@ -164,7 +173,7 @@ class AdharaFormView extends AdharaMutableView{
         apiData = this.formatData(apiData);
         this.updateFormState(true);
         try{
-            await this.submitData(apiData);
+            await this.executeDataSubmission(apiData);
         }catch(e){
             this.updateFormState(false);
             return false;
@@ -184,6 +193,9 @@ class AdharaFormView extends AdharaMutableView{
         this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
             this.submit();
+        });
+        this.cancelButton && this.cancelButton.addEventListener("click", (event) => {
+            this.trigger("Cancelled");
         });
     }
 

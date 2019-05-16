@@ -15,6 +15,7 @@ class AdharaMutableView extends AdharaView{
         this._name = settings.name;
         this._fields = settings.fields;
         this.mutator = null;
+        this._registerEvents(["Saved", "Cancelled"]);
     }
 
     onInit(){
@@ -125,7 +126,7 @@ class AdharaMutableView extends AdharaView{
         //    can override as required
     }
 
-    _onFieldValueChanged(field_name, value, old_value, {event, data}){
+    _onFieldValueChanged(field_name, value, old_value, {event, data}={}){
         setValueToJson(this._mutable_data, this.fieldMap[field_name].name, value);
         this.onFieldValueChanged(field_name, value, old_value);
         this.onMutableDataChanged();

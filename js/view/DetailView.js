@@ -32,8 +32,4 @@ class AdharaDetailView extends AdharaMutableView{
         return field;
     }
 
-    _onFieldValueChanged(name, value, old_value){
-        // TODO implement for inline edit...
-    }
-
 }

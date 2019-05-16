@@ -104,8 +104,8 @@ class FormField extends AdharaView{
         return this.config.properties || [];
     }
 
-    get isNullable(){
-        return this.config.nullable || false;
+    get isNullable() {
+        return this.config.nullable===true;
     }
 
     /**

@@ -489,7 +489,7 @@ function MutateViews(baseClass, ...mixins){
 }
 
 function cloneObject(obj) {
-    let clone = {};
+    let clone = (obj instanceof Array)?[]:{};
     for(let i in obj) {
         if(obj[i] != null &&  typeof(obj[i])==="object"){
             clone[i] = cloneObject(obj[i]);

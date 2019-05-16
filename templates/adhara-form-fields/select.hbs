@@ -3,7 +3,7 @@
 {{else}}
     <select {{addAttr fieldAttributes}} {{addProps fieldProperties}} data-onchange="onDataChange">
         {{#each options}}
-            <option value="{{value}}" {{#if ../value '==' value}}selected{{/if}}>{{display}}</option>
+            <option value="{{value}}" {{#if ../value '==' value}}selected{{/if}} {{addAttr attributes}} {{addProps properties}}>{{display}}</option>
         {{/each}}
     </select>
 {{/if}}

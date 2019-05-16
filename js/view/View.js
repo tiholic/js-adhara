@@ -9,6 +9,7 @@ class AdharaView extends AdharaEventHandler{
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
+     * @param {HandlebarTemplate} settings.t - View template
      * */
     constructor(settings = {}){
         super();
@@ -41,6 +42,7 @@ class AdharaView extends AdharaEventHandler{
      * @returns {HandlebarTemplate} template of the view
      * */
     get template(){
+        if(this.settings.t) return this.settings.t;
         if(Adhara.router.getCurrentPageName()){
             return Adhara.router.getCurrentPageName().replace(/_/g, "-");
         }else{
@@ -163,8 +165,7 @@ class AdharaView extends AdharaEventHandler{
         return document.querySelector(this.parentContainer);
     }
 
-    setState(fn){
-        fn?fn():null;
+    setState(){
         this.render();
     }
 
