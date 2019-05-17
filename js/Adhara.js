@@ -39,17 +39,7 @@ let Adhara = null;
         }
 
         createShortcuts(){
-            //Creating a view_name vs context_name map
-            this.view_config = {};
-            loop(this.app.config, (context_name, configuration)=>{
-                if(configuration.hasOwnProperty("view") && AdharaView.isPrototypeOf(configuration.view)){
-                    this.view_config[configuration.view.name] = context_name;
-                }
-            });
-        }
-
-        getEntityNameFromViewConfig(viewInstance){
-            return this.view_config[viewInstance.constructor.name];
+            //  handle create shortcuts
         }
 
         performSystemChecks(){
