@@ -108,7 +108,14 @@ class AdharaMutableView extends AdharaView{
     enhanceFieldForSubViewRendering(field){
         this.fieldMap[field.name] = field;
         field.mutator = this;
-        field.value = this.getFieldValue(field.name);
+        let _v = this.getFieldValue(field.name);
+        if(field instanceof AdharaMutableView){
+            if(_v && _v instanceof Array && _v.length){
+                field.mutableData = _v;
+            }
+        }else{
+            field.value = _v;
+        }
         return field;
     }
 
