@@ -29,7 +29,6 @@ class SelectField extends FormField{
      * */
     get options(){
         let _o = this.config.options || [];
-        console.log(_o);
         if(this.isNullable){
             _o.unshift({value: null, display: this.placeholder || "----------"});
         }
