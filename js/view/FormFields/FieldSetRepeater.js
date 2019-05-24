@@ -20,6 +20,14 @@ class FieldSetRepeater extends AdharaMutableView{
         return 'adhara-form-fields/repeater';
     }
 
+    get isHorizontal(){
+        return this.settings.style===FieldSetRepeater.style.HORIZONTAL;
+    }
+
+    get repeaterFieldSetClass(){
+        return this.isHorizontal?"d-inline-block":"d-flex";
+    }
+
     addFieldSet(event, data){
         this.mutableData.push({});
         this.setState();
@@ -39,7 +47,9 @@ class FieldSetRepeater extends AdharaMutableView{
                 let _field = field.clone(`repeater-${this.safeName}-${i}`);
                 _field.mutator = this;
                 _field.parentContainer = `#fieldset-${i}-${this.safeName} [data-field=${_field.safeName}]`;
-                _field.config.label = i===0;
+                if(!this.isHorizontal){
+                    _field.config.label = i===0;
+                }
                 _field.config.list_index = i;
                 _field.config.attributes["data-repeaterIndex"] = i;
                 if(!this.fieldSetMap[i]) this.fieldSetMap[i] = {};
@@ -85,11 +95,16 @@ class FieldSetRepeater extends AdharaMutableView{
         //    can override as required
     }
 
-    _onFieldValueChanged(field_name, value, old_value, {event, data}){
-        let index = data.repeaterindex;
+    _onFieldValueChanged(field_name, value, old_value, {event, data} = {}){
+        let index = data.repeaterindex || data.list_index;
         setValueToJson(this.mutableData[index], this.fieldSetMap[index][field_name].name, value);
         this.onFieldValueChangedForIndex(field_name, value, old_value, index);
         this.onMutableDataChanged();
     }
 
 }
+
+FieldSetRepeater.style = {
+    HORIZONTAL: "h",
+    VERTICAL: "v"
+};

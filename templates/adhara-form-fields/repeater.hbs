@@ -1,6 +1,6 @@
-<div class="repeater">
+<div class="repeater {{#if isHorizontal}}align-items-center d-flex{{/if}}">
     {{#each mutableData as |datum index|}}
-        <div class="d-flex repeater-fieldset-container" id="fieldset-{{@index}}-{{../safeName}}">
+        <div class="{{../repeaterFieldSetClass}} repeater-fieldset-container" id="fieldset-{{@index}}-{{../safeName}}">
             <div class="repeater-fieldset flex-1">
                 {{include ../settings.fieldSetTemplate this}}
             </div>
@@ -9,9 +9,8 @@
             </div>
         </div>
     {{/each}}
-    <div class="d-flex repeater-fieldset-container">
-        <div class="repeater-fieldset flex-1">
-        </div>
+    <div class="{{../repeaterFieldSetClass}} repeater-fieldset-container new-fieldset">
+        {{#unless isHorizontal}}<div class="repeater-fieldset flex-1"></div>{{/unless}}
         <div class="modifiers d-flex">
             <div class="add modifier" data-onclick="addFieldSet"></div>
         </div>
