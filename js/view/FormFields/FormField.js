@@ -58,7 +58,7 @@ class FormField extends AdharaView{
     }
 
     get safeName(){
-        return this.name.replace('.', '-');
+        return this.name.replace(/\./g, '-');
     }
 
     get showLabel(){
@@ -76,11 +76,7 @@ class FormField extends AdharaView{
     }
 
     get labelProperties() {
-        let _p =  (this.config.label_properties || []).slice();
-        if(this.config.required){
-            _p.push("required");
-        }
-        return _p;
+        return  (this.config.label_properties || []).slice();
     }
 
     get placeholder(){
@@ -101,7 +97,11 @@ class FormField extends AdharaView{
     }
 
     get fieldProperties() {
-        return this.config.properties || [];
+        let _p =  (this.config.label_properties || []).slice();
+        if(this.config.required){
+            _p.push("required");
+        }
+        return _p;
     }
 
     get isNullable() {
@@ -117,6 +117,10 @@ class FormField extends AdharaView{
 
     queryValue(target){
         return (target || this.getField()).value;
+    }
+
+    queryRaw(target){
+        return this.queryValue(target);
     }
 
     onDataChange(event, data){
