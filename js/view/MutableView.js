@@ -70,7 +70,11 @@ class AdharaMutableView extends AdharaView{
      * @returns {*} Field data
      * */
     getFieldValue(field_name){
-        return getValueFromJSON(this.mutableData, this.fieldMap[field_name].name);
+        let d = getValueFromJSON(this.mutableData, this.fieldMap[field_name].name);
+        if(d===undefined){
+            d = this.fieldMap[field_name].value;
+        }
+        return d;
     }
 
     /**
@@ -91,6 +95,10 @@ class AdharaMutableView extends AdharaView{
             setValueToJson(data, field.name, field.serialize());
         }
         return data;
+    }
+
+    getField(field_name){
+        return this.fieldMap[field_name];
     }
 
     /**
