@@ -39,4 +39,12 @@ class SelectField extends FormField{
         this.value = this.queryValue();
     }
 
+    queryRaw(target){
+        let $f = (target || this.getField());
+        return {
+            value: $f.value,
+            display: $f.children[$f.selectedIndex].innerText
+        }
+    }
+
 }
