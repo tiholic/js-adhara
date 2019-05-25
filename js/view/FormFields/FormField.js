@@ -9,6 +9,7 @@ class FormField extends AdharaView{
      * @param {Array} [config.label_properties=[]]
      * @param {Map} [config.attributes={}]
      * @param {Array} [config.properties=[]]
+     * @param {String} [config.help_text=null]
      * @param {Boolean} [config.readonly=false]
      * @param {String} [config.field_display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
@@ -57,6 +58,10 @@ class FormField extends AdharaView{
 
     }
 
+    get helpTemplate(){
+        return 'adhara-form-fields/help';
+    }
+
     get safeName(){
         return this.name.replace(/\./g, '-');
     }
@@ -93,7 +98,7 @@ class FormField extends AdharaView{
             id: this.safeName,
             name: this.safeName,
             placeholder: this.placeholder || "",
-        }, this.config.attributes || {});
+        }, this.config.attributes || {class: "form-control"});
     }
 
     get fieldProperties() {
@@ -102,6 +107,10 @@ class FormField extends AdharaView{
             _p.push("required");
         }
         return _p;
+    }
+
+    get helpText(){
+        return this.config.help_text;
     }
 
     get isNullable() {

@@ -6,7 +6,7 @@ class AdharaMutableView extends AdharaView{
      * @param {String} [settings.name] - field name
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
-     * @param {String} settings.fields - CSS Selector from parent view to place content of this class
+     * @param {String} [settings.fields=[]] - CSS Selector from parent view to place content of this class
      * */
     constructor(settings = {}) {
         settings.key = settings.key || settings.name;
