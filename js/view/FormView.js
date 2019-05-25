@@ -175,8 +175,9 @@ class AdharaFormView extends AdharaMutableView{
         try{
             await this.executeDataSubmission(apiData);
         }catch(e){
-            this.updateFormState(false);
             return false;
+        }finally {
+            this.updateFormState(false);
         }
         return true;
     }
