@@ -90,10 +90,14 @@ class AdharaFormView extends AdharaMutableView{
     }
 
     updateFormState(submitting){
-        this.formElement.submitting = submitting;
-        this.handleSubmitButton();
-        if(!submitting){
-            this.reSubmitIfRequired();
+        try{
+            this.formElement.submitting = submitting;
+            this.handleSubmitButton();
+            if(!submitting){
+                this.reSubmitIfRequired();
+            }
+        }catch (e) {
+            // Do nothing
         }
     }
 

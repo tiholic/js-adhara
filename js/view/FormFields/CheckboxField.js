@@ -8,4 +8,8 @@ class CheckboxField extends InputField{
         return (target || this.getField()).checked;
     }
 
+    get defaultFieldAttributes(){
+        return {};
+    }
+
 }

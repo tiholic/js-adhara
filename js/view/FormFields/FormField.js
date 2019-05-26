@@ -93,12 +93,16 @@ class FormField extends AdharaView{
         }
     }
 
+    get defaultFieldAttributes(){
+        return {class: "form-control"};
+    }
+
     get fieldAttributes() {
         return Object.assign({
             id: this.safeName,
             name: this.safeName,
             placeholder: this.placeholder || "",
-        }, this.config.attributes || {class: "form-control"});
+        }, this.config.attributes || this.defaultFieldAttributes);
     }
 
     get fieldProperties() {
