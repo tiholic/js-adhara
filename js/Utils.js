@@ -217,7 +217,7 @@ function setValueToJson(object, path, value){
     let keys = path.split('.');
     loop(keys, function(i, key){
         if(i+1 < keys.length){
-            if(!object.hasOwnProperty(key)){
+            if(!object.hasOwnProperty(key) || !object[key] || typeof object[key] !== "object"){
                 object[key]={}
             }
             object=object[key];

@@ -85,7 +85,8 @@ class FormField extends AdharaView{
     }
 
     get placeholder(){
-        if(this.config.placeholder){
+        //placeholder can be disabled by setting config.placeholder to false to by enabling label
+        if(this.config.placeholder || (!this.showLabel && this.config.placeholder!==false)){
             if(typeof this.config.placeholder === "string"){
                 return this.config.placeholder;
             }
@@ -102,11 +103,12 @@ class FormField extends AdharaView{
             id: this.safeName,
             name: this.safeName,
             placeholder: this.placeholder || "",
+            // title: this.value?this.value:this.placeholder
         }, this.config.attributes || this.defaultFieldAttributes);
     }
 
     get fieldProperties() {
-        let _p =  (this.config.label_properties || []).slice();
+        let _p =  (this.config.properties || []).slice();
         if(this.config.required){
             _p.push("required");
         }
