@@ -4,6 +4,7 @@
  * @param {String} [settings.name] - field name
  * @param {String} [settings.key=undefined] - Instance key
  * @param {String} settings.c - CSS Selector from parent view to place content of this class
+ * @param {Function} settings.get_fields - fields list for index
  * @param {Function} settings.serializedRowFilter -  filter put serialized rows based on input values
  * @param {HandlebarTemplate} settings.fieldSetTemplate - CSS Selector from parent view to place content of this class
  * */
@@ -24,6 +25,10 @@ class FieldSetRepeater extends AdharaMutableView{
         return this.settings.style===FieldSetRepeater.style.HORIZONTAL;
     }
 
+    get addNewText(){
+        return this.settings.add_new_text;
+    }
+
     get repeaterFieldSetClass(){
         return this.isHorizontal?"d-inline-block":"d-flex";
     }
@@ -40,10 +45,14 @@ class FieldSetRepeater extends AdharaMutableView{
         }
     }
 
+    getFieldsForIndex(idx){
+        return (this.settings.get_fields && this.settings.get_fields(idx)) || this.settings.fields;
+    }
+
     get subViews(){
         let repeated_fields = [];
-        for(let field of this.mutableFields){
-            for(let i=0; i<this.mutableData.length; i++){
+        for(let i=0; i<this.mutableData.length; i++){
+            for(let field of this.getFieldsForIndex(i).filter(this.isFormField)){
                 let _field = field.clone(`repeater-${this.safeName}-${i}`);
                 _field.mutator = this;
                 _field.parentContainer = `#fieldset-${i}-${this.safeName} [data-field=${_field.safeName}]`;
@@ -70,7 +79,7 @@ class FieldSetRepeater extends AdharaMutableView{
     }
 
     getFieldValue(field_name){
-        throw new Error("invalid function call for a repeater field set");
+        throw new Error("invalid function called for a repeater field set. Use getFieldValueByIndex");
     }
 
     /**
@@ -78,6 +87,13 @@ class FieldSetRepeater extends AdharaMutableView{
      * */
     getFieldValueByIndex(field_name, row_index){
         return getValueFromJSON(this.mutableData[row_index], this.fieldSetMap[row_index][field_name].name);
+    }
+
+    /**
+     * @returns {*} Field data
+     * */
+    getFieldByIndex(field_name, index){
+        return this.rendered_fields.filter(_ => _.name===field_name && _.config.list_index === index)[0];
     }
 
     serialize(){

@@ -83,6 +83,17 @@
 }
 
 .repeater{
+  &.repeater-horizontal{
+    .repeater-fieldset{
+      position: relative;
+      .modifiers{
+        position: absolute;
+        z-index: 1;
+        right: 5px;
+        top: -10px;
+      }
+    }
+  }
   .repeater-fieldset-container{
     &:first-child{
       .modifiers {
@@ -126,4 +137,8 @@
       }
     }
   }
+}
+
+.pointer{
+  cursor: pointer;
 }

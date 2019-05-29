@@ -54,8 +54,12 @@ class AdharaMutableView extends AdharaView{
         return this._fields || [];
     }
 
+    isFormField(f){
+        return (f instanceof FormField || f instanceof AdharaMutableView);
+    }
+
     get mutableFields(){
-        return this.fields.filter(f => (f instanceof FormField || f instanceof AdharaMutableView));
+        return this.fields.filter(this.isFormField);
     }
 
     set mutableData(_){

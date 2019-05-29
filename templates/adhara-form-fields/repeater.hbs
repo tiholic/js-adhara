@@ -1,18 +1,28 @@
 <div class="repeater {{#if isHorizontal}}repeater-horizontal align-items-center d-flex{{/if}}">
     {{#each mutableData as |datum index|}}
-        <div class="{{../repeaterFieldSetClass}} repeater-fieldset-container" id="fieldset-{{@index}}-{{../safeName}}">
+        <div class="{{../repeaterFieldSetClass}} repeater-fieldset-container"
+             id="fieldset-{{@index}}-{{../safeName}}"
+             data-idx='{{@index}}'>
             <div class="repeater-fieldset flex-1">
+                {{#if ../isHorizontal}}
+                    <div class="modifiers d-flex mb-3">
+                        <div class="remove modifier" data-idx='{{@index}}' data-onclick="removeFieldSet"></div>
+                    </div>
+                {{/if}}
                 {{include ../settings.fieldSetTemplate this}}
             </div>
-            <div class="modifiers d-flex mb-3">
-                <div class="remove modifier" data-idx='{{@index}}' data-onclick="removeFieldSet"></div>
-            </div>
+            {{#unless ../isHorizontal}}
+                <div class="modifiers d-flex mb-3">
+                    <div class="remove modifier" data-idx='{{@index}}' data-onclick="removeFieldSet"></div>
+                </div>
+            {{/unless}}
         </div>
     {{/each}}
     <div class="{{../repeaterFieldSetClass}} repeater-fieldset-container new-fieldset {{#unless isHorizontal}}d-flex{{/unless}}">
         {{#unless isHorizontal}}<div class="repeater-fieldset flex-1"></div>{{/unless}}
-        <div class="modifiers d-flex">
+        <div class="modifiers d-flex add-modifier">
             <div class="add modifier" data-onclick="addFieldSet"></div>
+            <span class="pointer" data-onclick="addFieldSet">{{addNewText}}</span>
         </div>
     </div>
 </div>
