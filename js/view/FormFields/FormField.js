@@ -10,7 +10,7 @@ class FormField extends AdharaView{
      * @param {Map} [config.attributes={}]
      * @param {Array} [config.properties=[]]
      * @param {String} [config.help_text=null]
-     * @param {Boolean} [config.readonly=false]
+     * @param {Boolean} [config.readonly=false]input_type
      * @param {String} [config.field_display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {Object} [settings]
@@ -44,6 +44,10 @@ class FormField extends AdharaView{
 
     get template(){
         return "adhara-form-fields/index";
+    }
+
+    get inputType(){
+        return this.config.input_type;
     }
 
     get labelTemplate(){
@@ -153,6 +157,7 @@ class FormField extends AdharaView{
     }
 
     serialize(){
+        if(this.value===undefined) this.value = this.queryValue();
         return this.value;
     }
 

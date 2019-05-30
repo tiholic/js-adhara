@@ -96,7 +96,7 @@ class FieldSetRepeater extends AdharaMutableView{
         return this.rendered_fields.filter(_ => _.name===field_name && _.config.list_index === index)[0];
     }
 
-    serialize(){
+    getMutatedData(){
         let data = [];
         for(let field of this.rendered_fields){
             if(!data[field.config.list_index]){

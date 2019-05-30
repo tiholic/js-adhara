@@ -96,7 +96,8 @@ class AdharaMutableView extends AdharaView{
     getMutatedData(){
         let data = {};
         for(let field of this.rendered_fields){
-            setValueToJson(data, field.name, field.serialize());
+            let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
+            setValueToJson(data, field.name, serialized_value);
         }
         return data;
     }
