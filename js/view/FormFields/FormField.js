@@ -26,7 +26,7 @@ class FormField extends AdharaView{
          * {AdharaFormView} form
          * */
         this.mutator = null;
-        this.readonly = config.readonly;
+        this.readonly = config.readonly || false;
         this.config = config || {};
     }
 

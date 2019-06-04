@@ -23,6 +23,7 @@ class AdharaView extends AdharaEventHandler{
         this._registerEvents(["ViewRendered", "SubViewsRendered", "ViewFormatted", "ViewDestroyed"]);
         this.fetching_data = false;
         this.onInit();
+        this._subViews = [];
         this.rendered = false;
         this.initialized = true;
     }
@@ -213,7 +214,7 @@ class AdharaView extends AdharaEventHandler{
      * @returns Array<AdharaView>
      * */
     get subViews(){
-        return [];
+        return this._subViews;
     }
 
     renderSubViews(){

@@ -10,19 +10,11 @@
     {{#each rows as |row index|}}
         <tr adhara-datum-row="{{index}}">
             {{#each ../columns as |column value|}}
-                <td adhara-datum-col="{{index}}-{{column.name}}" align="{{column.align}}">
-                    {{#if column.formatter '!=' null}}
-                        {{#if column.trust_as_html}}
-                            {{{fn_call column.formatter (get row column.name) row}}}
-                        {{else}}
-                            {{fn_call column.formatter (get row column.name) row}}
-                        {{/if}}
+                <td data-field="{{index}}-{{column.name}}" adhara-datum-col="{{index}}-{{column.name}}" align="{{column.align}}">
+                    {{#if column.trust_as_html}}
+                        {{{fn_call ../../formatColumn row column index}}}
                     {{else}}
-                        {{#if column.trust_as_html}}
-                            {{{get row column.name}}}
-                        {{else}}
-                            {{get row column.name}}
-                        {{/if}}
+                        {{fn_call ../../formatColumn row column index}}
                     {{/if}}
                 </td>
             {{/each}}

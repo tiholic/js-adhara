@@ -1,10 +1,11 @@
 class AdharaListView extends AdharaView{
 
-    constructor(parentViewInstance){
-        super(parentViewInstance);
+    constructor(settings){
+        super(settings);
         this._page_number = 1;
         this.searchText = null;
         this._rows = [];
+        this.formatColumn = this.formatColumn.bind(this);
     }
 
     get template(){
@@ -74,6 +75,10 @@ class AdharaListView extends AdharaView{
         return AdharaListView.DEFAULT_TEMPLATES[this.listType].itemTemplate;
     }
 
+    get name(){
+        return this.title;
+    }
+
     /**
      * @method
      * @getter
@@ -96,6 +101,8 @@ class AdharaListView extends AdharaView{
      * @typedef {Object} ColumnConfig
      * @property {String} name - column key for lookup in objects
      * @property {String} display_name - column name that is to be rendered
+     * @property {Function} formatter - A data formatter function that will return formatted data
+     * @property {FormField} form_field - render data as a readonly Form Field
      * @property {Boolean} trust_as_html - whether to render as text content or HTML content
      * @example
      * {
@@ -112,6 +119,28 @@ class AdharaListView extends AdharaView{
      * */
     get columns(){
         return [];
+    }
+
+    /**
+     * @param {Object} row_data - row data
+     * @param {ColumnConfig} column - column config
+     * @param {Number} row_index
+     * */
+    formatColumn(row_data, column, row_index){
+        if(column.form_field){
+            this._subViews.push(
+                new column.form_field(`${row_index}-${column.name}`, {
+                    readonly: true,
+                    label: false,
+                    attributes: {class: ""}
+                })
+            );
+            return "";
+        }
+        if(column.formatter){
+            return column.formatter(row_data, column);
+        }
+        return row_data[column.name];
     }
 
     set rows(_){

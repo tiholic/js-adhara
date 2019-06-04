@@ -81,6 +81,10 @@ class AdharaMutableView extends AdharaView{
         return d;
     }
 
+    ignoreNulls(){
+        return false;
+    }
+
     /**
      * @returns {*} Field data
      * */
@@ -97,7 +101,9 @@ class AdharaMutableView extends AdharaView{
         let data = {};
         for(let field of this.rendered_fields){
             let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
-            setValueToJson(data, field.name, serialized_value);
+            if(!this.ignoreNulls || serialized_value!==null){
+                setValueToJson(data, field.name, serialized_value);
+            }
         }
         return data;
     }
