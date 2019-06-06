@@ -64,6 +64,16 @@ let AdharaRouter = null;
      * */
     let baseURI = "";
 
+    let defaultTitle = document.title;
+
+    /**
+     * @private
+     * @member {String}
+     * @description
+     * App Name to be used as first half of document title
+     * */
+    let appName = "";
+
     /**
      * @private
      * @member {Object<String, String>}
@@ -230,7 +240,7 @@ let AdharaRouter = null;
                     matchFound = true;
                     let opts = registeredUrlPatterns[regex];
                     let params = formed_regex.exec(path);
-                    return {opts, path, params};
+                    return {opts, path, params, meta: opts.meta};
                 }
             }
         }
@@ -249,7 +259,7 @@ let AdharaRouter = null;
     function matchAndCall(){
         let matchOptions = matchUrl();
         if(matchOptions){
-            let {opts, path, params} = matchOptions;
+            let {opts, path, params, meta} = matchOptions;
             params.splice(0,1);
             if(opts && opts.fn){
                 let _pathParams = {};
@@ -269,6 +279,7 @@ let AdharaRouter = null;
                     path_params: _pathParams
                 }, () => {
                     params.push(queryParams);
+                    document.title = [(appName || defaultTitle), meta.title].filter(_=>_).join(" | ");
                     if(opts.fn.constructor instanceof AdharaView.constructor){
                         Adhara.onRoute(opts.fn, params);
                     }else{
@@ -426,6 +437,7 @@ let AdharaRouter = null;
 
             pattern = "^"+this.transformURL(pattern.substring(1));
             pattern = pattern.replace(/[?]/g, '\\?');   //Converting ? to \? as RegExp(pattern) dosen't handle that
+            meta = meta || {};
             registeredUrlPatterns[pattern] = { view_name, fn, path_param_keys, meta };
         }
 
@@ -480,6 +492,9 @@ let AdharaRouter = null;
         static configure(router_configuration){
             if(router_configuration.base_uri){
                 baseURI = router_configuration.base_uri;
+            }
+            if(router_configuration.app_name){
+                appName = router_configuration.app_name;
             }
             if(router_configuration.routes){
                 Router.register(router_configuration.routes);
@@ -675,7 +690,7 @@ let AdharaRouter = null;
          * And if provided URL is same as current URL, view function will not be called unless force parameter is true.
          * */
         static navigateTo(url, force){
-            url =this.transformURL(url);
+            url = this.transformURL(url);
             if (!isCurrentPath(url)) {
                 let gone = this.go(url);
                 if(gone){
