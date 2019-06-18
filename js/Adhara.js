@@ -136,7 +136,8 @@ let Adhara = null;
         if(active_view){
             return active_view;
         }else if(parentViewInstance){
-            return new viewClass(parentViewInstance);
+            return viewClass;
+            // return new viewClass(parentViewInstance);
         }else{
             throw new Error(`parent view is required to construct a view. Failed to create view: ${viewClass.constructor.name}`);
         }

@@ -25,6 +25,10 @@ class InputField extends FormField{
         return field.checked;
     }
 
+    query_file(value, field){
+        return field.files[0];
+    }
+
 }
 
 

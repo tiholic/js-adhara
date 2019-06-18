@@ -84,15 +84,15 @@ class NetworkProvider {
     }
 
     ajax(o) {
-        if(o.type !== "get" && o.data instanceof Object){
+        if(o.method !== "get" && o.data instanceof Object){
             if(!Object.keys(o.data).length){
                 delete o.data;
             } else {
                 o.data = JSON.stringify(o.data);
             }
         }
-        /*if(o.type === "get" || o.type === "patch" || o.type === "post") { if (o.type === "get") { /!*if (o.data) { o.data = {data: o.data}; }*!/ } }*/
-        if(o.type !== "get" && o.type !== "delete"){
+        /*if(o.method === "get" || o.method === "patch" || o.method === "post") { if (o.method === "get") { /!*if (o.data) { o.data = {data: o.data}; }*!/ } }*/
+        if(o.method !== "get" && o.method !== "delete"){
             o.headers['Content-Type'] = 'application/json';
         }
         jQuery.ajax(o);
@@ -100,7 +100,8 @@ class NetworkProvider {
 
     multipart(o) {
         let xhr = new XMLHttpRequest();
-        xhr.open(o.type.toUpperCase(), o.url);
+        xhr.open(o.method.toUpperCase(), o.url);
+        o.headers['Content-Type'] = "multipart/form-data";
         loop(o.headers, function (header, value) {
             xhr.setRequestHeader(header, value)
         });

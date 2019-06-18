@@ -81,7 +81,7 @@ class AdharaMutableView extends AdharaView{
         return d;
     }
 
-    ignoreNulls(){
+    get ignoreNulls(){
         return false;
     }
 
@@ -97,12 +97,42 @@ class AdharaMutableView extends AdharaView{
         }
     }
 
+    getFormData(){
+        let hasFiles = false;
+        for(let rendered_field of this.rendered_fields){
+            if(rendered_field instanceof InputField && rendered_field.config.input_type === InputField.FILE){
+                hasFiles = true;
+            }
+        }
+        if(hasFiles){
+            let formData = new FormData();
+            for(let [key, value] of Object.entries(data)){
+                formData.append(key, value);
+            }
+            return formData;
+        }
+    }
+
+    get hasFileFields(){
+        for(let rendered_field of this.rendered_fields){
+            if(rendered_field instanceof InputField && rendered_field.config.input_type === InputField.FILE){
+                return true;
+            }
+        }
+        return false;
+    }
+
     getMutatedData(){
-        let data = {};
+        let hasFiles = this.hasFileFields;
+        let data = hasFiles?new FormData():{};
         for(let field of this.rendered_fields){
             let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
-            if(!this.ignoreNulls || serialized_value!==null){
-                setValueToJson(data, field.name, serialized_value);
+            if((!this.ignoreNulls || serialized_value!==null)){
+                if(hasFiles){
+                    data.append(field.name, serialized_value);
+                }else{
+                    setValueToJson(data, field.name, serialized_value);
+                }
             }
         }
         return data;

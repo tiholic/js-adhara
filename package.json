@@ -1,9 +1,10 @@
 {
   "name": "adhara",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-alpha.8",
   "description": "foundation for any kind of website: microframework",
   "main": "index.js",
   "scripts": {
+    "start": "node server",
     "build.templates": "grunt handlebars",
     "build": "grunt",
     "deploy": "firebase publish",

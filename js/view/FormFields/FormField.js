@@ -8,10 +8,10 @@ class FormField extends AdharaView{
      * @param {Map} [config.label_attributes={}]
      * @param {Array} [config.label_properties=[]]
      * @param {Map} [config.attributes={}]
-     * @param {Array} [config.properties=[]]
+     * @param {Array} [config.properties=[]] contentContainer
      * @param {String} [config.help_text=null]
      * @param {Boolean} [config.readonly=false]input_type
-     * @param {String} [config.field_display_name=<i18n of form_name.field_name.label>] - display name of the field
+     * @param {String} [config.display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
@@ -75,7 +75,7 @@ class FormField extends AdharaView{
     }
 
     get displayName(){
-        return this.config.field_display_name || Adhara.i18n.get(`${this.mutator?this.mutator.fullName:''}.${this.name}.label`);
+        return this.config.display_name || Adhara.i18n.get(`${this.mutator?this.mutator.fullName:''}.${this.name}.label`);
     }
 
     get labelAttributes() {

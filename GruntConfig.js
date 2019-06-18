@@ -31,6 +31,7 @@ let adhara_min_css = `${minified_styles_dir}${minified_css_file}`;
 
 // let cdn_base = `https://adhara-js.firebaseapp.com/${dist_dir}`;
 let cdn_base = `https://cdn.jsdelivr.net/npm/adhara@${pkg.version}/${dist_dir}`;
+// let cdn_base = `http://localhost:4000/${dist_dir}`;
 let cdn_min_templates = cdn_base + templates_dir + templates_output_file;
 let cdn_min_js = cdn_base + js_dir + minified_scripts_file;
 let cdn_min_js_es5 = cdn_base + js_dir + minified_scripts_file_es5;
@@ -44,7 +45,7 @@ module.exports = {
         "js/Router.js",
         // "js/RestAPI.js",
         "js/components/Toast.js",
-        // "js/py.js",
+        "js/py.js",
         // "js/templates.js",   //Commenting out assuming it is not required. TODO check here in case of any template issues
         //Data stores | Blobs
         "js/Blobs/Serializable.js",
