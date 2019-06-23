@@ -129,7 +129,15 @@ class AdharaMutableView extends AdharaView{
             let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
             if((!this.ignoreNulls || serialized_value!==null)){
                 if(hasFiles){
-                    data.append(field.name, serialized_value);
+                    if(field.config.input_type === InputField.FILE && field.fieldAttributes.multiple==="true"){
+                        if(serialized_value){
+                            for(let file of serialized_value){
+                                data.append(field.name, file);
+                            }
+                        }
+                    }else{
+                        data.append(field.name, serialized_value);
+                    }
                 }else{
                     setValueToJson(data, field.name, serialized_value);
                 }

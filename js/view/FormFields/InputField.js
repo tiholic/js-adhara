@@ -26,7 +26,7 @@ class InputField extends FormField{
     }
 
     query_file(value, field){
-        return field.files[0];
+        return this.fieldAttributes.multiple?field.files:field.files[0];
     }
 
 }

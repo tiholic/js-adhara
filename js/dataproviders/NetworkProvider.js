@@ -101,16 +101,16 @@ class NetworkProvider {
     multipart(o) {
         let xhr = new XMLHttpRequest();
         xhr.open(o.method.toUpperCase(), o.url);
-        o.headers['Content-Type'] = "multipart/form-data";
+        delete o.headers['Content-Type'];
         loop(o.headers, function (header, value) {
             xhr.setRequestHeader(header, value)
         });
         xhr.onreadystatechange = function () {
             if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
-                    o.success(xhr.responseText, "success", xhr);
-                }else{
+                if(xhr.status >= 400) {
                     o.error(xhr, "error", xhr.responseText);
+                }else{
+                    o.success(xhr.responseText, "success", xhr);
                 }
             }
         };
