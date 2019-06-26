@@ -142,3 +142,13 @@
 .pointer{
   cursor: pointer;
 }
+
+label.required{
+  &:after {
+    content: "*";
+    color: red;
+    margin-left: 2px;
+    position: relative;
+    top: -2px;
+  }
+}

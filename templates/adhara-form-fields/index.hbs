@@ -1,3 +1,19 @@
 {{include labelTemplate this}}
-{{include fieldTemplate this}}
+{{#if prependTemplate '||' appendTemplate}}
+    <div class="input-group mb-2">
+        {{#if prependTemplate}}
+            <div class="input-group-prepend">
+                {{include prependTemplate this}}
+            </div>
+        {{/if}}
+        {{include fieldTemplate this}}
+        {{#if appendTemplate}}
+            <div class="input-group-append">
+                {{include appendTemplate this}}
+            </div>
+        {{/if}}
+    </div>
+{{else}}
+    {{include fieldTemplate this}}
+{{/if}}
 {{include helpTemplate this}}

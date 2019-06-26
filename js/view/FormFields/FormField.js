@@ -22,12 +22,12 @@ class FormField extends AdharaView{
         super(settings);
         this.name = name;
         this._value = config.value;
+        this.readonly = config.readonly || false;
+        this.config = config || {};
         /**
          * {AdharaFormView} form
          * */
         this.mutator = null;
-        this.readonly = config.readonly || false;
-        this.config = config || {};
     }
 
     get parentContainer(){
@@ -36,6 +36,14 @@ class FormField extends AdharaView{
 
     set parentContainer(_){
         super.parentContainer = _;
+    }
+
+    set mutator(_){
+        this._mutator = _;
+    }
+
+    get mutator(){
+        return this._mutator;
     }
 
     clone(key){
@@ -52,6 +60,14 @@ class FormField extends AdharaView{
 
     get labelTemplate(){
         return 'adhara-form-fields/label';
+    }
+
+    get prependTemplate(){
+        return this.config.prependTemplate;
+    }
+
+    get appendTemplate(){
+        return this.config.appendTemplate;
     }
 
     /**
@@ -74,18 +90,35 @@ class FormField extends AdharaView{
         return this.config.label !== false;
     }
 
+    get isRequired(){
+        return this.config.required || this.fieldProperties.indexOf("required")!==-1;
+    }
+
+    get isMultiple(){
+        return this.config.multiple || this.fieldProperties.indexOf("multiple")!==-1;
+    }
+
     get displayName(){
         return this.config.display_name || Adhara.i18n.get(`${this.mutator?this.mutator.fullName:''}.${this.name}.label`);
     }
 
     get labelAttributes() {
-        return Object.assign({
+        let _ = Object.assign({
             for: this.safeName,
         }, this.config.label_attributes);
+        if(this.isRequired){
+            _.class = _.class || [];
+            _.class.push("required");
+        }
+        return _;
     }
 
     get labelProperties() {
         return  (this.config.label_properties || []).slice();
+    }
+
+    set placeholder(_){
+        this.config.placeholder = _;
     }
 
     get placeholder(){
@@ -113,9 +146,8 @@ class FormField extends AdharaView{
 
     get fieldProperties() {
         let _p =  (this.config.properties || []).slice();
-        if(this.config.required){
-            _p.push("required");
-        }
+        if(this.config.required) _p.push("required");
+        if(this.config.multiple) _p.push("multiple");
         return _p;
     }
 

@@ -56,8 +56,8 @@ class FieldSetRepeater extends AdharaMutableView{
                 let _field = field.clone(`repeater-${this.safeName}-${i}`);
                 _field.mutator = this;
                 _field.parentContainer = `#fieldset-${i}-${this.safeName} [data-field=${_field.safeName}]`;
-                if(!this.isHorizontal){
-                    _field.config.label = i===0;
+                if(!this.isHorizontal){ //=> vertical growing repeater
+                    _field.config.label = _field.config.label!==false && i===0;
                 }
                 _field.config.list_index = i;
                 _field.config.attributes["data-repeaterIndex"] = i;
