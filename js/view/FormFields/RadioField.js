@@ -1,6 +1,6 @@
 class RadioField extends FormField{
 
-    get fieldTemplate(){
+    get editableFieldTemplate(){
         return "adhara-form-fields/radio";
     }
 

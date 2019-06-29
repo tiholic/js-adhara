@@ -1,7 +1,11 @@
 class SelectField extends FormField{
 
-    get fieldTemplate(){
+    get editableFieldTemplate(){
         return "adhara-form-fields/select";
+    }
+
+    get nonEditableFieldTemplate(){
+        return this.config.options.filter(_ => _.value===this._value)[0] || "-";
     }
 
     set value(_){
@@ -36,7 +40,7 @@ class SelectField extends FormField{
     }
 
     format(container){
-        this.value = this.queryValue();
+        if(this.isEditable) this.value = this.queryValue();
     }
 
     queryRaw(target){

@@ -1,4 +1,4 @@
-{{include labelTemplate this}}
+{{#if isEditable}}{{include labelTemplate this}}{{/if}}
 {{#if prependTemplate '||' appendTemplate}}
     <div class="input-group mb-2">
         {{#if prependTemplate}}
@@ -16,4 +16,4 @@
 {{else}}
     {{include fieldTemplate this}}
 {{/if}}
-{{include helpTemplate this}}
+{{#if isEditable}}{{include helpTemplate this}}{{/if}}

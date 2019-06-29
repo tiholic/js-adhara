@@ -6,6 +6,7 @@ class AdharaMutableView extends AdharaView{
      * @param {String} [settings.name] - field name
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
+     * @param {Object} settings.options - custom options to be passed
      * @param {String} [settings.fields=[]] - CSS Selector from parent view to place content of this class
      * */
     constructor(settings = {}) {
@@ -157,6 +158,13 @@ class AdharaMutableView extends AdharaView{
      * */
     async submitData(data){
         throw new Error("Must override `submitData`");
+    }
+
+    get isExclusivelyEditable(){
+        if(this.mutator){
+            return this.mutator.isExclusivelyEditable;
+        }
+        return true;
     }
 
     /**

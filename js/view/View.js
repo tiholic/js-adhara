@@ -9,11 +9,13 @@ class AdharaView extends AdharaEventHandler{
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
+     * @param {Object} settings.options - custom options to be passed
      * @param {HandlebarTemplate} settings.t - View template
      * */
     constructor(settings = {}){
         super();
         this.settings = settings;
+        if(!this.settings.options) this.settings.options = {};
         let {key, c} = this.settings;
         this.ts = `d${performance.now().toString().replace(".", '-')}`;
         this.context = new Context(key||this.ts, this);

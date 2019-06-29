@@ -132,7 +132,9 @@ class AdharaListView extends AdharaView{
                 new column.form_field(`${row_index}-${column.name}`, {
                     readonly: true,
                     label: false,
-                    attributes: {class: ""}
+                    attributes: {class: ""},
+                    mutator: this,
+                    value: row_data[column.name]
                 })
             );
             return "";

@@ -1,6 +1,6 @@
 class InputField extends FormField{
 
-    get fieldTemplate(){
+    get editableFieldTemplate(){
         return "adhara-form-fields/input";
     }
 

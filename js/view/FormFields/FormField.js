@@ -13,6 +13,7 @@ class FormField extends AdharaView{
      * @param {Boolean} [config.readonly=false]input_type
      * @param {String} [config.display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
+     * @param {boolean} [config.editable=true] - whether the field is editable or not. Used for display only purposes in details page, etc
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
@@ -27,7 +28,7 @@ class FormField extends AdharaView{
         /**
          * {AdharaFormView} form
          * */
-        this.mutator = null;
+        this.mutator = this.config.mutator || null;
     }
 
     get parentContainer(){
@@ -75,7 +76,16 @@ class FormField extends AdharaView{
      * @returns {HandlebarTemplate} - template for the field
      * */
     get fieldTemplate(){
+        if(this.isEditable) return this.editableFieldTemplate;
+        return this.nonEditableFieldTemplate;
+    }
 
+    get editableFieldTemplate(){
+
+    }
+
+    get nonEditableFieldTemplate(){
+        return this.value || "-";
     }
 
     get helpTemplate(){
@@ -132,7 +142,8 @@ class FormField extends AdharaView{
     }
 
     get defaultFieldAttributes(){
-        return {class: "form-control"};
+        if(this.isEditable) return {class: "form-control"};
+        return {};
     }
 
     get fieldAttributes() {
@@ -157,6 +168,10 @@ class FormField extends AdharaView{
 
     get isNullable() {
         return this.config.nullable===true;
+    }
+
+    get isEditable(){
+        return this.config.editable===undefined && this.mutator.isExclusivelyEditable;
     }
 
     /**
