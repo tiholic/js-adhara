@@ -57,30 +57,16 @@ class NetworkProvider {
         return baseURL + '/' + url;
     }
 
-    handleSuccess(fns, fne, d, s, x){  //data, success, xhr
-        if(s === "nocontent"){
-            //DO NOTHING
-            return;
-        }
-        if(s === "success") {
-            if (x.getResponseHeader('Content-Disposition')) {
-                return call_fn(fns, d, x);
-            } else {
-                return call_fn(fns, d, x);
+    _handleSE(xhr, success_fn, error_fn){
+        if(xhr.status >= 400) {
+            if( xhr.readyState === 0 && xhr.status === 0 && error_fn.err === ""){
+                error_fn.err = "Unable to connect to server";
             }
+            error_fn(xhr, error_fn.err || "error", xhr.responseText);
+            //    return Toast.error(error_fn.err+"\n"+x.responseText);
+        }else{
+            success_fn(xhr.responseText, "success", xhr);
         }
-        call_fn(fne, d, x);
-    }
-
-    handleFailure(fne, x, s, e){  //xhr, status, error
-        if( x.readyState === 0 && x.status === 0 && e === ""){
-            e = "Unable to connect to server";
-        }
-        call_fn(fne, e, x);
-        // if(x.responseText){
-        //     return Toast.error(e+"\n"+x.responseText);
-        // }
-        // Toast.error(e);
     }
 
     ajax(o) {
@@ -96,6 +82,8 @@ class NetworkProvider {
             o.headers['Content-Type'] = 'application/json';
         }
         jQuery.ajax(o);
+        // let jqXHR = jQuery.ajax(o);
+        // o.abort = jqXHR.abort;
     }
 
     multipart(o) {
@@ -115,21 +103,18 @@ class NetworkProvider {
             }
         };
         xhr.send(o.data);
+        // o.abort = xhr.abort;
     }
 
     async send(o){
         return new Promise((resolve, reject)=>{
             o.success = (d,s,x) => {
-                this.handleSuccess((d, s)=>{
-                    resolve([d, x]);
-                },(d, x)=>{
-                    reject([d, x]);
-                },d,s,x,o.handleError,o.successMessage);
+                this._handleSE(x, () => resolve([d, x]), () => reject([d, x]));
             };
             o.error = (x,s,e) => {
-                this.handleFailure((e, x)=>{
-                    reject([e, x]);
-                },x,s,e);
+                let err_fn = () => reject([e, x]);
+                err_fn.err = e;
+                this._handleSE(x, null, err_fn);
             };
             if(o.data instanceof FormData){
                 this.multipart(o);
@@ -183,7 +168,7 @@ class NetworkProvider {
     }
 
     async get(url, data, options){
-        if(typeof data === "object"){
+        if(data && typeof data === "object"){
             data = Object.entries(data).map(([k, v]) => `${k}=${v}`).join("&");
         }
         return await this._send(NetworkMethods.GET, url, data, options);
@@ -197,7 +182,7 @@ class NetworkProvider {
         return await this._send(NetworkMethods.PUT, url, data, options);
     }
 
-    async delete(url, options){
+    async delete(url, data, options){
         return await this._send(NetworkMethods.DELETE, url, data, options);
     }
 
