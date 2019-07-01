@@ -53,8 +53,11 @@ class AdharaTabView extends AdharaView{
     }
 
     changeCurrentTab(tabId){
-        this._current_Tab = this.tabs.filter(tab=>tab.id===tabId)[0];
+        let new_tab = this.tabs.filter(tab=>tab.id===tabId)[0];
+        if(!new_tab) return false;
+        this._current_Tab = new_tab;
         this.setState();
+        return true;
     }
 
     onLinklessTabClick(event, data){
