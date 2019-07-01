@@ -1,6 +1,12 @@
 class FormField extends AdharaView{
 
     /**
+     * @typedef {Function} OnFieldValueChangeCallback
+     * @param {*} old_value - old value
+     * @param {*} new_value - new value
+     * */
+
+    /**
      * @constructor
      * @param {String} name - field name
      * @param {Object} [config={}]
@@ -14,6 +20,7 @@ class FormField extends AdharaView{
      * @param {String} [config.display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {boolean} [config.editable=true] - whether the field is editable or not. Used for display only purposes in details page, etc
+     * @param {OnFieldValueChangeCallback} [config.onChange=null] - Callback function for on change
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
@@ -109,7 +116,7 @@ class FormField extends AdharaView{
     }
 
     get displayName(){
-        return this.config.display_name || Adhara.i18n.get(`${this.mutator?this.mutator.fullName:''}.${this.name}.label`);
+        return this.config.display_name || Adhara.i18n.get(`${this.mutatorName}.${this.name}.label`);
     }
 
     get labelAttributes() {
@@ -131,13 +138,17 @@ class FormField extends AdharaView{
         this.config.placeholder = _;
     }
 
+    get mutatorName(){
+        return this.mutator?this.mutator.fullName:'';
+    }
+
     get placeholder(){
         //placeholder can be disabled by setting config.placeholder to false to by enabling label
         if(this.config.placeholder || (!this.showLabel && this.config.placeholder!==false)){
             if(typeof this.config.placeholder === "string"){
                 return this.config.placeholder;
             }
-            return Adhara.i18n.get([this.mutator?this.mutator.fullName:'', this.name, 'placeholder'].filter(_=>_).join('.'));
+            return Adhara.i18n.get([this.mutatorName, this.name, 'placeholder'].filter(_=>_).join('.'));
         }
     }
 
@@ -190,8 +201,14 @@ class FormField extends AdharaView{
     }
 
     onDataChange(event, data){
-        let old_value = this.value;
-        this.value = this.queryValue(event && event.target);
+        this.handleDataChange(this.queryValue(event && event.target), this.value, {event, data});
+    }
+
+    handleDataChange(value, old_value, {event, data}){
+        if(this.config.onChange){
+            this.config.onChange(this.value, old_value);
+        }
+        this.value = value;
         this.mutator._onFieldValueChanged(this.name, this.value, old_value, {event, data});
     }
 

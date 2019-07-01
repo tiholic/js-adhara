@@ -90,12 +90,9 @@ class AdharaMutableView extends AdharaView{
      * @returns {*} Field data
      * */
     setFieldValue(field_name, value){
-        let field = this.formElement[field_name];
-        if(field.type==="checkbox"){
-            field.checked = true;
-        }else{
-            field.value = value;
-        }
+        let field = this.getField(field_name);
+        field.value = value;
+        field.setState();
     }
 
     getFormData(){
@@ -137,6 +134,9 @@ class AdharaMutableView extends AdharaView{
                             }
                         }
                     }else{
+                        if(typeof serialized_value !== "string"){
+                            serialized_value = JSON.stringify(serialized_value);
+                        }
                         data.append(field.name, serialized_value);
                     }
                 }else{
