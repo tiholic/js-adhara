@@ -82,16 +82,21 @@
   margin-top: 1rem;
 }
 
-.repeater{
-  &.repeater-horizontal{
-    overflow: auto;
-    .repeater-fieldset{
-      position: relative;
-      .modifiers{
-        position: absolute;
-        z-index: 1;
-        right: 5px;
-        top: -10px;
+.repeater-container{
+  .repeater {
+    .repeater-fieldset-container{
+      margin-top: 7px;
+    }
+    &.repeater-horizontal {
+      overflow: auto;
+      .repeater-fieldset {
+        position: relative;
+        .modifiers {
+          position: absolute;
+          z-index: 1;
+          right: 5px;
+          top: -10px;
+        }
       }
     }
   }
@@ -107,7 +112,7 @@
       padding-right: 16px;
     }
     .modifiers {
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
       .modifier {
         width: 20px;
