@@ -26,7 +26,7 @@ class Context {
     }
 
     get childContexts() {
-        return this._childContexts;
+        return this._childContexts || [];
     }
 
     /**
