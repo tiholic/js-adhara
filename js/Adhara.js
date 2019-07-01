@@ -147,6 +147,7 @@ let Adhara = null;
     Adhara.createView = (adhara_view_instance, parentViewInstance) => {
         adhara_view_instance.context.parentContext = parentViewInstance.context;
         adhara_view_instance.create();
+        return adhara_view_instance;
     };
 
     //On route listener

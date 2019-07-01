@@ -29,6 +29,10 @@ class Context {
         return this._childContexts || [];
     }
 
+    removeFromParent() {
+        this.parentContext.childContexts.splice(this.parentContext.childContexts.indexOf(this), 1);
+    }
+
     /**
      * @function
      * @description searches context tree and returns a class instance
