@@ -124,6 +124,7 @@ class AdharaMutableView extends AdharaView{
         let hasFiles = this.hasFileFields;
         let data = hasFiles?new FormData():{};
         for(let field of this.rendered_fields){
+            if(field instanceof FormField && field.isReadOnly) continue;
             let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
             if((!this.ignoreNulls || serialized_value!==null)){
                 if(hasFiles){

@@ -115,6 +115,10 @@ class FormField extends AdharaView{
         return this.config.multiple || this.fieldProperties.indexOf("multiple")!==-1;
     }
 
+    get isReadOnly(){
+        return this.config.readonly || this.fieldProperties.indexOf("readonly")!==-1;
+    }
+
     get displayName(){
         return this.config.display_name || Adhara.i18n.get(`${this.mutatorName}.${this.name}.label`);
     }
@@ -170,6 +174,7 @@ class FormField extends AdharaView{
         let _p =  (this.config.properties || []).slice();
         if(this.config.required) _p.push("required");
         if(this.config.multiple) _p.push("multiple");
+        if(this.config.readonly) _p.push("readonly");
         return _p;
     }
 
