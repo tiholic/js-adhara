@@ -29,6 +29,7 @@ class AdharaView extends AdharaEventHandler{
         this.rednered_subviews = [];
         this.rendered = false;
         this.initialized = true;
+        this.error = null;
     }
 
     /**
@@ -110,7 +111,7 @@ class AdharaView extends AdharaEventHandler{
      * @description Helper method to get required template. Error template or success template.
      * */
     getTemplate(){
-        return this.fetching_data?this.fetchingDataTemplate:(this.errors?(this.errorTemplate||this.template):this.template);
+        return this.fetching_data?this.fetchingDataTemplate:(this.error?(this.errorTemplate||this.template):this.template);
     }
 
     get isImmortal(){

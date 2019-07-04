@@ -17,6 +17,7 @@ class AdharaMutableView extends AdharaView{
         this._fields = settings.fields;
         this.mutator = null;
         this._registerEvents(["Saved", "Cancelled"]);
+        this.has_field_errors = false;
     }
 
     onInit(){
@@ -95,6 +96,9 @@ class AdharaMutableView extends AdharaView{
         field.setState();
     }
 
+    /**
+     * @deprecated use getMutableData instead.
+     * */
     getFormData(){
         let hasFiles = false;
         for(let rendered_field of this.rendered_fields){
@@ -120,7 +124,24 @@ class AdharaMutableView extends AdharaView{
         return false;
     }
 
-    getMutatedData(){
+    validate(update_state=false) {
+        this.clearErrors();
+        for(let field of this.rendered_fields) {
+            field.validate();
+            this.has_field_errors = !!field.field_errors;
+        }
+        update_state && this.setState();
+    }
+
+    clearErrors(update_state=false){
+        for(let field of this.rendered_fields) {
+            field.clearErrors();
+        }
+        update_state && this.setState();
+    }
+
+    getMutatedData() {
+        this.validate();
         let hasFiles = this.hasFileFields;
         let data = hasFiles?new FormData():{};
         for(let field of this.rendered_fields){

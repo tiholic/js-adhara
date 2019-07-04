@@ -16,7 +16,8 @@ class FormField extends AdharaView{
      * @param {Map} [config.attributes={}]
      * @param {Array} [config.properties=[]] contentContainer
      * @param {String} [config.help_text=null]
-     * @param {Boolean} [config.readonly=false]input_type
+     * @param {Boolean} [config.readonly=false]
+     * @param {String} [config.input_type='']
      * @param {String} [config.display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {boolean} [config.editable=true] - whether the field is editable or not. Used for display only purposes in details page, etc
@@ -76,6 +77,32 @@ class FormField extends AdharaView{
 
     get appendTemplate(){
         return this.config.appendTemplate;
+    }
+
+    get fieldErrorsTemplate(){
+        return 'adhara-form-fields/error';
+    }
+
+    validate(){
+        if(this.isRequired && this.value===undefined){
+            this.field_errors.push(Adhara.i18n.get(`${this.mutatorName}.${this.name}.error`, 'This field is required'));
+        }
+        this.refreshErrors();
+    }
+
+    refreshErrors(){
+        let errors = this.querySelector('.invalid-feedback');
+        if(this.field_errors.length) {
+            errors.classList.add("d-none");
+        }else{
+            errors.classList.remove("d-none");
+        }
+        errors.innerHTML = this.field_errors.join(", ");
+    }
+
+    clearErrors(){
+        this.field_errors = [];
+        this.refreshErrors();
     }
 
     /**
@@ -172,7 +199,7 @@ class FormField extends AdharaView{
 
     get fieldProperties() {
         let _p =  (this.config.properties || []).slice();
-        if(this.config.required) _p.push("required");
+        if(_p.indexOf("required") !== -1) _p.splice(_p.indexOf("required"), 1);
         if(this.config.multiple) _p.push("multiple");
         if(this.config.readonly) _p.push("readonly");
         return _p;
@@ -214,6 +241,7 @@ class FormField extends AdharaView{
             this.config.onChange(this.value, old_value);
         }
         this.value = value;
+        if(this.field_errors.length) this.validate();
         this.mutator._onFieldValueChanged(this.name, this.value, old_value, {event, data});
     }
 

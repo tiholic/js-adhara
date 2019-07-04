@@ -41,19 +41,11 @@ class AdharaFormView extends AdharaMutableView{
     /**
      * @function
      * @instance
-     * @param {Error} error - Error thrown from validator
+     * @param {Array<String>} errors - Error thrown from validator
      * */
-    onValidationError(error){
-        Toast.error(error.message);
+    onValidationError(){
+        Toast.error("This form has errors");
     }
-
-    /**
-     * @function
-     * @instance
-     * @param {Object} data - Form data
-     * @returns {Boolean} Whether the data is valid or not
-     * */
-    validate(data){}
 
     /**
      * @function
@@ -169,10 +161,9 @@ class AdharaFormView extends AdharaMutableView{
             return false;
         }
         let apiData = this.getMutatedData();
-        try{
-            this.validate(apiData);
-        }catch(e){
-            return this.onValidationError(e);
+        if(this.has_field_errors){
+            this.onValidationError();
+            return;
         }
         apiData = this.formatData(apiData);
         this.updateFormState(true);
@@ -188,17 +179,14 @@ class AdharaFormView extends AdharaMutableView{
 
     _format(container){
         super._format(container);
-        if(this.errors){
-            return;
-        }
-        if(this.formElement.dataset['_ae_'] === "true"){
-            return;
-        }
+        if(this.error) return;
+        if(this.formElement.dataset['_ae_'] === "true") return;
         this.formElement.dataset['_ae_'] = "true";
         this.formElement.addEventListener("submit", (event) => {
             event.preventDefault();
             this.submit();
         });
+        this.formElement.setAttribute('novalidate', '');
         this.cancelButton && this.cancelButton.addEventListener("click", (event) => {
             this.trigger("Cancelled");
         });

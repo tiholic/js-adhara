@@ -454,10 +454,14 @@ class Internationalize{
      * @instance
      * @function
      * @param {String} key - key
-     * @param {Array<String>} [subs=[]] - substitutes
+     * @param {Array<String>|String} [subs=[]] - substitutes
+     * @param {String} [default_value=null] - substitutes
      * */
-    get(key, subs){
-        return this.getValue(key, subs, key);
+    get(key, subs, default_value=null){
+        if(typeof subs === "string"){
+            default_value = subs;
+        }
+        return this.getValue(key, subs, default_value||key);
     }
 
 }
