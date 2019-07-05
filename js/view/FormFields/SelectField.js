@@ -32,7 +32,24 @@ class SelectField extends FormField{
      * }
      * */
     get options(){
-        let _o = (this.config.options || []).slice();
+        let _o = this.options_cache;
+        if(!_o && this.config.options){
+            if(this.config.options.call){
+                let promise = this.config.options();
+                if(promise.then) {
+                    promise.then(_options => {
+                        this.options_cache = _options;
+                        this.setState();
+                    });
+                }else{
+                    _o = promise;
+                }
+                return [];
+            }else{
+                _o = this.config.options;
+            }
+        }
+        _o = (_o || []).slice();
         if(this.isNullable){
             _o.unshift({value: null, display: this.placeholder || "----------"});
         }
