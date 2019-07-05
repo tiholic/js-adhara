@@ -124,11 +124,15 @@ class AdharaMutableView extends AdharaView{
         return false;
     }
 
+    get hasFieldErrors(){
+        return this.has_field_errors;
+    }
+
     validate(update_state=false) {
         this.clearErrors();
         for(let field of this.rendered_fields) {
             field.validate();
-            this.has_field_errors = !!field.field_errors;
+            this.has_field_errors = !!field.hasFieldErrors;
         }
         update_state && this.setState();
     }

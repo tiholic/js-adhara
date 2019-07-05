@@ -7,6 +7,12 @@ class FormField extends AdharaView{
      * */
 
     /**
+     * @typedef {Function} FieldValidator
+     * @param {*} value - value
+     * @param {AdharaMutableView} mutator - Instance of Mutator
+     * */
+
+    /**
      * @constructor
      * @param {String} name - field name
      * @param {Object} [config={}]
@@ -21,6 +27,8 @@ class FormField extends AdharaView{
      * @param {String} [config.display_name=<i18n of form_name.field_name.label>] - display name of the field
      * @param {boolean} [config.nullable=true] - whether the field is nullable or not
      * @param {boolean} [config.editable=true] - whether the field is editable or not. Used for display only purposes in details page, etc
+     * @param {Function} [config.nullable=true] - whether the field is nullable or not
+     * @param {FieldValidator} [config.validator=null] - Field validator
      * @param {OnFieldValueChangeCallback} [config.onChange=null] - Callback function for on change
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
@@ -33,6 +41,7 @@ class FormField extends AdharaView{
         this._value = config.value;
         this.readonly = config.readonly || false;
         this.config = config || {};
+        this.field_errors = [];
         /**
          * {AdharaFormView} form
          * */
@@ -87,6 +96,9 @@ class FormField extends AdharaView{
         if(this.isRequired && this.value===undefined){
             this.field_errors.push(Adhara.i18n.get(`${this.mutatorName}.${this.name}.error`, 'This field is required'));
         }
+        this.field_errors.push(...(
+            (this.config.validator && this.config.validator(this.value, this.mutator)) || []
+        ));
         this.refreshErrors();
     }
 
@@ -173,14 +185,21 @@ class FormField extends AdharaView{
         return this.mutator?this.mutator.fullName:'';
     }
 
+    get hasFieldErrors(){
+        return this.field_errors.length;
+    }
+
     get placeholder(){
         //placeholder can be disabled by setting config.placeholder to false to by enabling label
+        let _p = "";
         if(this.config.placeholder || (!this.showLabel && this.config.placeholder!==false)){
             if(typeof this.config.placeholder === "string"){
-                return this.config.placeholder;
+                _p = this.config.placeholder;
+            }else{
+                _p = Adhara.i18n.get([this.mutatorName, this.name, 'placeholder'].filter(_=>_).join('.'));
             }
-            return Adhara.i18n.get([this.mutatorName, this.name, 'placeholder'].filter(_=>_).join('.'));
         }
+        return (this.isRequired && _p)?`${_p} *`:_p;
     }
 
     get defaultFieldAttributes(){
