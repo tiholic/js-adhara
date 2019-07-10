@@ -182,6 +182,10 @@ class NetworkProvider {
         return await this._send(NetworkMethods.PUT, url, data, options);
     }
 
+    async patch(url, data, options){
+        return await this._send(NetworkMethods.PATCH, url, data, options);
+    }
+
     async delete(url, data, options){
         return await this._send(NetworkMethods.DELETE, url, data, options);
     }
