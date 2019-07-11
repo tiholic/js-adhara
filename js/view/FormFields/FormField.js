@@ -102,7 +102,7 @@ class FormField extends AdharaView{
     }
 
     validate(){
-        if(this.isRequired && this.value===undefined){
+        if(this.isRequired && this.isEmpty){
             this.field_errors.push(Adhara.i18n.get(`${this.mutatorName}.${this.name}.error`, 'This field is required'));
         }
         this.field_errors.push(...(
@@ -296,6 +296,12 @@ class FormField extends AdharaView{
         event_data.initiator = event_data.initiator || "external";
         this.handleDataChange(value, this.value, event_data);
         this.setState();
+    }
+
+    get isEmpty(){
+        if(typeof this.value === "boolean") return false;
+        if(this.value instanceof Array) return !this.value.length;
+        return !this.value;
     }
 
     set value(_){

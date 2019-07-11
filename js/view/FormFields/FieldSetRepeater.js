@@ -6,6 +6,7 @@
  * @param {String} settings.c - CSS Selector from parent view to place content of this class
  * @param {Function} settings.get_fields - fields list for index
  * @param {Function} settings.serializedRowFilter -  filter put serialized rows based on input values
+ * @param {Boolean} settings.nullable -  whether at-least one row data must be provided or not.
  * @param {HandlebarTemplate} settings.fieldSetTemplate - CSS Selector from parent view to place content of this class
  * */
 class FieldSetRepeater extends AdharaMutableView{
@@ -49,9 +50,13 @@ class FieldSetRepeater extends AdharaMutableView{
         return (this.settings.get_fields && this.settings.get_fields(idx)) || this.settings.fields;
     }
 
+    get rowCount(){
+        return this.mutableData.length;
+    }
+
     get subViews(){
         let repeated_fields = [];
-        for(let i=0; i<this.mutableData.length; i++){
+        for(let i=0; i<this.rowCount; i++){
             for(let field of this.getFieldsForIndex(i).filter(this.isFormField)){
                 let _field = field.clone(`repeater-${this.safeName}-${i}`);
                 _field.mutator = this;
@@ -89,6 +94,10 @@ class FieldSetRepeater extends AdharaMutableView{
         return getValueFromJSON(this.mutableData[row_index], this.fieldSetMap[row_index][field_name].name);
     }
 
+    get isNullable() {
+        return this.settings.nullable!==false;
+    }
+
     /**
      * @returns {*} Field data
      * */
@@ -116,6 +125,19 @@ class FieldSetRepeater extends AdharaMutableView{
         setValueToJson(this.mutableData[index], this.fieldSetMap[index][field_name].name, value);
         this.onFieldValueChangedForIndex(field_name, value, old_value, index);
         this.onMutableDataChanged();
+    }
+
+    getFieldsForValidation(){
+        let _to_validate = [];
+        for(let fieldset of this.fieldSetMap){
+            if(Object.values(fieldset).filter(_ => !_.isEmpty).length){
+                _to_validate.push(...Object.values(fieldset));
+            }
+        }
+        if(!this.isNullable && _to_validate.length===0){
+            return Object.values(this.fieldSetMap[0]);
+        }
+        return _to_validate;
     }
 
 }
