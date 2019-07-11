@@ -896,11 +896,12 @@ let AdharaRouter = null;
                     }
                 }catch(e){/*Do nothing. Try catches the invalid url on new ULR(...)*/}
                 let go_back = this.getAttribute("data-back");
-                let force = this.getAttribute("data-force") !== "false";
                 if (go_back) {
-                    return AdharaRouter.goBack(url);
+                    AdharaRouter.goBack(url);
+                }else{
+                    let force = this.getAttribute("data-force") !== "false";
+                    AdharaRouter.navigateTo(url, force);
                 }
-                AdharaRouter.navigateTo(url, force);
                 if (url) {
                     event.preventDefault();
                     event.stopPropagation();
