@@ -4,6 +4,8 @@ class FormField extends AdharaView{
      * @typedef {Function} OnFieldValueChangeCallback
      * @param {*} old_value - old value
      * @param {*} new_value - new value
+     * @param {Object} event_data - data for the event.
+     * @param {String} event_data.initiator - sender tag who is initiating this event self and external will be set by default
      * */
 
     /**
@@ -29,7 +31,9 @@ class FormField extends AdharaView{
      * @param {boolean} [config.editable=true] - whether the field is editable or not. Used for display only purposes in details page, etc
      * @param {Function} [config.nullable=true] - whether the field is nullable or not
      * @param {FieldValidator} [config.validator=null] - Field validator
+     * @param {Array<String>} [config.depends_on=null] - field depends on another field
      * @param {OnFieldValueChangeCallback} [config.onChange=null] - Callback function for on change
+     * @param {OnFieldValueChangeCallback} [config.onDependentParentChanged=null] - Callback function for on dependent change
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
      * @param {String} settings.c - CSS Selector from parent view to place content of this class
@@ -42,6 +46,11 @@ class FormField extends AdharaView{
         this.readonly = config.readonly || false;
         this.config = config || {};
         this.field_errors = [];
+
+        /**
+         * @field {Array<FormField>} dependent form field instances
+         * */
+        this._dependent_fields = [];
         /**
          * {AdharaFormView} form
          * */
@@ -236,6 +245,16 @@ class FormField extends AdharaView{
         return this.config.editable===undefined && this.mutator.isExclusivelyEditable;
     }
 
+    get dependsOn(){
+        return this.config.depends_on || [];
+    }
+
+    addToDependentFields(field){
+        if(this._dependent_fields.indexOf(field) === -1){
+            this._dependent_fields.push(field);
+        }
+    }
+
     /**
      * @returns {HTMLElement} dom element of the field that is rendered by the fieldTemplate
      * */
@@ -243,25 +262,40 @@ class FormField extends AdharaView{
         return document.querySelector(this.parentContainer+" [name='"+this.safeName+"']");
     }
 
-    queryValue(target){
-        return (target || this.getField()).value;
+    queryValue(){
+        return this.getField().value;
     }
 
-    queryRaw(target){
-        return this.queryValue(target);
+    queryRaw(){
+        return this.queryValue();
     }
 
-    onDataChange(event, data){
-        this.handleDataChange(this.queryValue(event && event.target), this.value, {event, data});
+    onDataChange(event, event_data){
+        this.handleDataChange(this.queryValue(), this.value, event_data);
     }
 
-    handleDataChange(value, old_value, {event, data}){
+    handleDataChange(value, old_value, event_data={}){
+        event_data.initiator = event_data.initiator || "self";
         if(this.config.onChange){
-            this.config.onChange(this.value, old_value);
+            this.config.onChange(value, old_value, event_data);
+        }
+        for(let dependent_field of this._dependent_fields){
+            let d_event_data = Object.assign({}, event_data, {initiator: "dependency"});
+            if(dependent_field.config.onDependentParentChanged){
+                dependent_field.config.onDependentParentChanged(value, old_value, d_event_data);
+            }else if(event_data.initiator==="self"){
+                dependent_field.changeData(null, d_event_data);
+            }
         }
         this.value = value;
         if(this.field_errors.length) this.validate();
-        this.mutator._onFieldValueChanged(this.name, this.value, old_value, {event, data});
+        this.mutator._onFieldValueChanged(this.name, this.value, old_value, event_data);
+    }
+
+    changeData(value, event_data={}){
+        event_data.initiator = event_data.initiator || "external";
+        this.handleDataChange(value, this.value, event_data);
+        this.setState();
     }
 
     set value(_){

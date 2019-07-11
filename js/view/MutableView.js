@@ -91,9 +91,7 @@ class AdharaMutableView extends AdharaView{
      * @returns {*} Field data
      * */
     setFieldValue(field_name, value){
-        let field = this.getField(field_name);
-        field.value = value;
-        field.setState();
+        this.getField(field_name).changeData(value);
     }
 
     /**
@@ -132,7 +130,7 @@ class AdharaMutableView extends AdharaView{
         this.clearErrors();
         for(let field of this.rendered_fields) {
             field.validate();
-            this.has_field_errors = !!field.hasFieldErrors;
+            this.has_field_errors = this.has_field_errors || !!field.hasFieldErrors;
         }
         update_state && this.setState();
     }
@@ -149,7 +147,7 @@ class AdharaMutableView extends AdharaView{
         let hasFiles = this.hasFileFields;
         let data = hasFiles?new FormData():{};
         for(let field of this.rendered_fields){
-            if(field instanceof FormField && field.isReadOnly) continue;
+            if((field instanceof FormField) && field.isReadOnly) continue;
             let serialized_value = (field instanceof AdharaMutableView)?field.getMutatedData():field.serialize();
             if((!this.ignoreNulls || serialized_value!==null)){
                 if(hasFiles){
@@ -210,8 +208,23 @@ class AdharaMutableView extends AdharaView{
         return field;
     }
 
-    get subViews(){
+    /**
+     * @returns {Array<FormField>}
+     * */
+    prepareFieldsForRendering(){
         let fields = this.mutableFields.map((_) => this.enhanceFieldForSubViewRendering(_));
+        for(let field of fields){
+            if((field instanceof FormField) && field.dependsOn.length){
+                for(let dependent_field_name of field.dependsOn){
+                    this.getField(dependent_field_name).addToDependentFields(field);
+                }
+            }
+        }
+        return fields;
+    }
+
+    get subViews(){
+        let fields = this.prepareFieldsForRendering();
         this.rendered_fields = fields.slice();
         return fields;
     }
