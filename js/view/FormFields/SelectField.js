@@ -60,22 +60,26 @@ class SelectField extends FormField{
         if(this.isEditable) this.value = this.queryValue();
     }
 
+    getSelectedValue(htmlValue){
+        return (htmlValue==="")?null:htmlValue;
+    }
+
     queryRaw(target){
         let $f = (target || this.getField());
         if(this.isMultiple){
-            return [...$f.selectedOptions].map(_ => { return {value: _.value, display: _.innerText}; });
+            return [...$f.selectedOptions].map(_ => { return {value: this.getSelectedValue(_.value), display: _.innerText}; });
         }
         return {
-            value: $f.value,
+            value: this.getSelectedValue($f.value),
             display: $f.children[$f.selectedIndex].innerText
         }
     }
 
     queryValue(target){
         if(this.isMultiple){
-            return this.queryRaw(target).map(_ => _.value);
+            return this.queryRaw(target).map(_ => this.getSelectedValue(_.value));
         }
-        return super.queryValue(target);
+        return this.getSelectedValue(super.queryValue(target));
     }
 
 }
