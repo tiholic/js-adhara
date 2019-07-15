@@ -229,10 +229,10 @@ class AdharaView extends AdharaEventHandler{
     }
 
     _format(container){
-        for(let action of [ "click", "change", "blur", "focus", "scroll", "contextmenu", "copy", "cut",
+        for(let action of [ "click", "change", "blur", "scroll", "contextmenu", "copy", "cut",
             "dblclick", "drag", "dragend", "dragenter", "dragleave", "dragover", "dragstart",
             "drop", "focus", "focusin", "focusout", "input", "invalid", "mousedown", "mouseenter",
-            "mouseleave", "mouseover", "mouseout", "mouseup", "paste", "scroll", "show",
+            "mouseleave", "mouseover", "mouseout", "mouseup", "paste", "show",
             "toggle", "wheel", "keyup", "keydown", "keypress", "load" ]){
             let onActionElements = container.querySelectorAll(`[data-on${action}]`);
             for(let actionElement of onActionElements){

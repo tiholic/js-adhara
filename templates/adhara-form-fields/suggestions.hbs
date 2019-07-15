@@ -1,0 +1,9 @@
+{{include labelTemplate this}}
+<div class="suggestible-input">
+    <input type="text" {{addAttr fieldAttributes}} {{addProps fieldProperties}}
+           data-onfocus="onFocus" data-onblur="onBlur"
+           data-onchange="onTermChange" data-onpaste="onTermChange"
+           data-onkeyup="onTermChange" data-onkeydown="onKeyDown"
+           autocomplete="new-password"/>
+    <div class="hints" id="{{ts}}"></div>
+</div>

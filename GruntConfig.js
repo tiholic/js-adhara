@@ -40,8 +40,10 @@ let cdn_min_css = cdn_base + css_dir + minified_css_file;
 module.exports = {
     app_scripts: [
         "js/TemplateEngineHelpers.js",
+        "js/Misc.js",
         "js/Utils.js",
         "js/Ticker.js",
+        "js/CoalesceTasker.js",
         "js/Router.js",
         // "js/RestAPI.js",
         "js/components/Toast.js",
@@ -72,6 +74,8 @@ module.exports = {
         "js/view/FormFields/SelectField.js",
         "js/view/FormFields/RadioField.js",
         "js/view/FormFields/CheckboxField.js",
+        "js/view/FormFields/SuggestionHintsMetaField.js",
+        "js/view/FormFields/SuggestionMetaField.js",
         "js/view/FormFields/FieldSetRepeater.js",
         //dependent component views
         "js/view/GridView.js",

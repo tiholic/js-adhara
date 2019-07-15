@@ -1,0 +1,14 @@
+{{#if hints.length}}
+    <div class="hint-container {{#unless enable}}d-none{{/unless}}" data-onscroll="onScroll">
+        {{#each hints}}
+            <div class="hint {{#if @index '===' ../cursor}}active{{/if}}"
+                 data-index="{{@index}}" data-onclick="onChoice">
+                {{#if ../hintTempalate}}
+                    {{include ../hintTempalate this}}
+                {{else}}
+                    {{display}}
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+{{/if}}
