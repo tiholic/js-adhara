@@ -122,8 +122,9 @@ class AdharaView extends AdharaEventHandler{
         return Adhara.isActiveView(this) && this.is_active;
     }
 
-    create(){
+    create(parentViewInstance){
         Adhara.addToActiveViews(this);
+        this.parentViewInstance = parentViewInstance;
         this.is_active = true;
         this.fetch().then(()=>{this.render();});
         this.render();
@@ -183,6 +184,7 @@ class AdharaView extends AdharaEventHandler{
     }
 
     render(){
+        if(this.parentViewInstance) this.context.parentContext = this.parentViewInstance.context;
         let container = this.getParentContainerElement();
         if(!container){
             console.warn(`No container defined/available for ${this.constructor.name}, selecting with ${this.parentContainer}`);

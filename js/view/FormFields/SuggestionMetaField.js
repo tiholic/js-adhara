@@ -6,7 +6,7 @@ class SuggestionMetaField extends FormField{
      * */
     constructor(name, config, settings){
         super(name, config, settings);
-        if(!(config.dataProvider instanceof SuggestionDataProvider)){
+        if(!(config.data_provider instanceof SuggestionDataProvider)){
             //TODO throw error...
             // throw new Error(`field config error: ${this.name} | dataProvider must be an instance of SuggestionDataProvider`);
         }
@@ -145,7 +145,7 @@ class SuggestionMetaField extends FormField{
         if(is_new_term || force_re_fetch) page = 1;
 
         let term = options.term || this.term;
-        let has_next_page = page===1 || this.config.dataProvider.hasNextPage;
+        let has_next_page = page===1 || this.config.data_provider.hasNextPage;
 
         if(!has_next_page) return;
         if(!is_new_term && !is_new_page && !force_re_fetch) return false;
@@ -153,11 +153,11 @@ class SuggestionMetaField extends FormField{
         this.querying_results_for_page = page;
         this.tasker.execute(async ()=>{
             if(page===1){
-                let results = await this.config.dataProvider.getFirstPage(term);
+                let results = await this.config.data_provider.getFirstPage(term);
                 if(this.querying_results_for_term !== term) return;
                 this.paginated_hints = results;
             }else{
-                let results = await this.config.dataProvider.getNextPage();
+                let results = await this.config.data_provider.getNextPage();
                 if(this.querying_results_for_term !== term) return;
                 this.paginated_hints.push(...results);
             }

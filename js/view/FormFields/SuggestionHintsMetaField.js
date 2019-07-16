@@ -50,8 +50,10 @@ class SuggestionHintsMetaField extends AdharaView{
 
     format(container) {
         super.format(container);
-        let hintContainer = this.querySelector('.hint-container');
-        if(hintContainer) hintContainer.scrollTop = this.scroll_position;
+        try{
+            let hintContainer = this.querySelector('.hint-container');
+            if(hintContainer) hintContainer.scrollTop = this.scroll_position;
+        }catch(e){/*--Do nothing--*/}
         this.scroll_position = 0;
     }
 

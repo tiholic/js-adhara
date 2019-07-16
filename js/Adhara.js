@@ -145,8 +145,7 @@ let Adhara = null;
 
     //Create a view instance
     Adhara.createView = (adhara_view_instance, parentViewInstance) => {
-        adhara_view_instance.context.parentContext = parentViewInstance.context;
-        adhara_view_instance.create();
+        adhara_view_instance.create(parentViewInstance);
         return adhara_view_instance;
     };
 
