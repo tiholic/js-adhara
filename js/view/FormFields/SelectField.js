@@ -13,7 +13,6 @@ class SelectField extends FormField{
     }
 
     set value(_){
-        console.log("_", _);
         super.value = _;
     }
 
@@ -63,7 +62,6 @@ class SelectField extends FormField{
     }
 
     isSelectedValue(rendering_value){
-        console.log(1009, rendering_value, this.value);
         if(!this.value) return !rendering_value;
         if(this.isMultiple){
             return this.value.indexOf(rendering_value && rendering_value.toString())!==-1;
