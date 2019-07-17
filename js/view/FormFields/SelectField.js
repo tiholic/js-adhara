@@ -1,5 +1,9 @@
 class SelectField extends FormField{
 
+    onInit(){
+        this.isSelectedValue = this.isSelectedValue.bind(this);
+    }
+
     get editableFieldTemplate(){
         return "adhara-form-fields/select";
     }
@@ -9,15 +13,13 @@ class SelectField extends FormField{
     }
 
     set value(_){
+        console.log("_", _);
         super.value = _;
     }
 
     get value(){
         let _  = super.value;
-        if(_===undefined){
-            return null;
-        }
-        return super.value;
+        return (_===undefined)?null:_;
     }
 
     /**
@@ -58,6 +60,15 @@ class SelectField extends FormField{
 
     format(container){
         if(this.isEditable) this.value = this.queryValue();
+    }
+
+    isSelectedValue(rendering_value){
+        console.log(1009, rendering_value, this.value);
+        if(!this.value) return !rendering_value;
+        if(this.isMultiple){
+            return this.value.indexOf(rendering_value && rendering_value.toString())!==-1;
+        }
+        return rendering_value === this.value;
     }
 
     getSelectedValue(htmlValue){
