@@ -66,7 +66,9 @@ class SelectField extends FormField{
         if(this.isMultiple){
             return this.value.indexOf(rendering_value && rendering_value.toString())!==-1;
         }
-        return rendering_value === this.value;
+        rendering_value = rendering_value && rendering_value.toString();
+        let current_value = this.value && this.value.toString();
+        return rendering_value === current_value;
     }
 
     getSelectedValue(htmlValue){
