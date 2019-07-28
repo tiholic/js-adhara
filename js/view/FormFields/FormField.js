@@ -94,6 +94,9 @@ class FormField extends AdharaView{
     }
 
     get appendTemplate(){
+        if(this.config.appendTemplate && this.config.appendTemplate.call){
+            return this.config.appendTemplate();
+        }
         return this.config.appendTemplate;
     }
 
@@ -293,6 +296,7 @@ class FormField extends AdharaView{
     }
 
     changeData(value, event_data={}){
+        event_data = Object.assign({}, this.getField().dataset, event_data);
         event_data.initiator = event_data.initiator || "external";
         this.handleDataChange(value, this.value, event_data);
         this.setState();
