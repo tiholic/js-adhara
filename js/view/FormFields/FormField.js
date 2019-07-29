@@ -33,6 +33,7 @@ class FormField extends AdharaView{
      * @param {FieldValidator} [config.validator=null] - Field validator
      * @param {Array<String>} [config.depends_on=null] - field depends on another field
      * @param {OnFieldValueChangeCallback} [config.onChange=null] - Callback function for on change
+     * @param {OnFieldValueChangeCallback} [config.postChange=null] - a delayed Callback function for on change event
      * @param {OnFieldValueChangeCallback} [config.onDependentParentChanged=null] - Callback function for on dependent change
      * @param {Object} [settings]
      * @param {String} [settings.key=undefined] - Instance key
@@ -293,6 +294,11 @@ class FormField extends AdharaView{
         this.value = value;
         if(this.field_errors.length) this.validate();
         this.mutator._onFieldValueChanged(this.name, this.value, old_value, event_data);
+        setTimeout(()=>{
+            if(this.config.postChange){
+                this.config.postChange(value, old_value, event_data);
+            }
+        }, 0);
     }
 
     changeData(value, event_data={}){

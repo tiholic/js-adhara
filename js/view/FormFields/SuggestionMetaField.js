@@ -42,7 +42,7 @@ class SuggestionMetaField extends FormField{
 
     focus(term){
         let i = this.getParentContainerElement().querySelector("input");
-        i.focus();
+        i.dispatchEvent(new Event("focus"));
         if(term!==undefined){
             i.value = term;
             i.dispatchEvent(new Event("change"));
@@ -50,6 +50,7 @@ class SuggestionMetaField extends FormField{
     }
 
     onFocus(e, d){
+        this.getField().classList.remove("d-none");
         if(!this.hint.hints || !this.hint.hints.length){
             this.updateHints({start_fetching: true}).then(()=>{});
         }else{
