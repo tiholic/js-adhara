@@ -76,6 +76,7 @@ module.exports = {
         "js/view/FormFields/CheckboxField.js",
         "js/view/FormFields/SuggestionHintsMetaField.js",
         "js/view/FormFields/SuggestionMetaField.js",
+        "js/view/FormFields/SuggestibleSelectField.js",
         "js/view/FormFields/FieldSetRepeater.js",
         //dependent component views
         "js/view/GridView.js",
@@ -104,6 +105,7 @@ module.exports = {
         //Adhara
         "less/adhara.css",
         "less/cards.css",
+        "less/components.css",
     ],
     index_dir,
     styles_dir,

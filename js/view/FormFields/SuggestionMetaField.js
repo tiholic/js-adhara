@@ -50,7 +50,11 @@ class SuggestionMetaField extends FormField{
     }
 
     onFocus(e, d){
-        this.hint.show();
+        if(!this.hint.hints || !this.hint.hints.length){
+            this.updateHints({start_fetching: true}).then(()=>{});
+        }else{
+            this.hint.show();
+        }
         this.trigger("Focused", e, d);
     }
 
@@ -59,8 +63,13 @@ class SuggestionMetaField extends FormField{
         setTimeout(()=>{
             if(e.target.name !== document.activeElement.name){
                 this.hint.hide();
+                this.getField().classList.add("d-none");
             }
         }, 1000);
+        //TODO try to remove this delay!!!
+        // Delay is used to safely closing the dropdown, so it can be opened again!
+        // If no delay is used, dropdown won't open again!
+
     }
 
     handleHintUpdate(isDeleted=false){
@@ -137,21 +146,21 @@ class SuggestionMetaField extends FormField{
 
     async updateHints(options){
         let start_fetching = options.start_fetching===true;
-        let is_new_term = start_fetching || options.term && this.isNewTerm(options.term);
+        let is_new_term = start_fetching || (options.term!==undefined && this.isNewTerm(options.term));
         let is_new_page = start_fetching || options.page!==undefined;
         let force_re_fetch = options.re_fetch===true;
 
         let page = is_new_page?(options.page||1):1;
         if(is_new_term || force_re_fetch) page = 1;
 
-        let term = options.term || this.term;
+        let term = options.term || (options.page?this.term:"");
         let has_next_page = page===1 || this.config.data_provider.hasNextPage;
 
         if(!has_next_page) return;
         if(!is_new_term && !is_new_page && !force_re_fetch) return false;
         this.querying_results_for_term = term;
         this.querying_results_for_page = page;
-        this.tasker.execute(async ()=>{
+        return await this.tasker.execute(async ()=>{
             if(page===1){
                 let results = await this.config.data_provider.getFirstPage(term);
                 if(this.querying_results_for_term !== term) return;

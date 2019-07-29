@@ -1,0 +1,33 @@
+.suggestible-selection{
+  position: relative;
+  a{
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 50px;
+    position: relative;
+    .chevron{
+      position: absolute;
+      right: 10px;
+      margin-top: 5px;
+      color: #aeaeae;
+      &.fa-times{
+        right: 30px;
+      }
+    }
+  }
+  .suggestions{
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    .suggestible-input{
+      .hint-container{
+        //width: ~'calc(100% - 30px)';
+      }
+    }
+    input{
+      width: 100%;
+    }
+  }
+}
