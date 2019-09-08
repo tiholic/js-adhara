@@ -144,7 +144,7 @@ class FormField extends AdharaView{
     }
 
     get nonEditableFieldTemplate(){
-        return this.value || "-";
+        return 'adhara-form-fields/non-editable';
     }
 
     get helpTemplate(){
@@ -312,6 +312,12 @@ class FormField extends AdharaView{
         if(typeof this.value === "boolean") return false;
         if(this.value instanceof Array) return !this.value.length;
         return !this.value;
+    }
+
+    get isBlank(){
+        if(this.value === null || this.value === undefined) return true;
+        if(typeof this.value === "string") return !this.value.trim();
+        return false;
     }
 
     set value(_){
