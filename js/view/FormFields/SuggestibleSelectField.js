@@ -5,6 +5,7 @@ class SuggestibleSelectField extends FormField{
         if(!config.selected_template) console.warn("No selected_template for", this.name);
         this.suggestions_field = new SuggestionMetaField(`__internal_${this.ts}__`, {
             label: false,
+            hide_input: true,
             placeholder: false,
             data_provider: this.config.data_provider,
             attributes: {class: "form-control"},

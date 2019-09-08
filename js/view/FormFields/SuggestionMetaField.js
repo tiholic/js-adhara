@@ -50,7 +50,7 @@ class SuggestionMetaField extends FormField{
     }
 
     onFocus(e, d){
-        this.getField().classList.remove("d-none");
+        (this.config.hide_input!==false) && this.getField().classList.remove("d-none");
         if(!this.hint.hints || !this.hint.hints.length){
             this.updateHints({start_fetching: true}).then(()=>{});
         }else{
@@ -64,7 +64,7 @@ class SuggestionMetaField extends FormField{
         setTimeout(()=>{
             if(e.target.name !== document.activeElement.name){
                 this.hint.hide();
-                this.getField().classList.add("d-none");
+                (this.config.hide_input!==false) && this.getField().classList.add("d-none");
             }
         }, 1000);
         //TODO try to remove this delay!!!
