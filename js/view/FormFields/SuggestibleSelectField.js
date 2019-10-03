@@ -53,14 +53,14 @@ class SuggestibleSelectField extends FormField{
             isValid = isValid || (96 <= event.which) && (event.which <= 111);   //numpad keys
             isValid = isValid || (186 <= event.which) && (event.which <= 192);  //semi-colon 186, equal sign 187, comma 188, dash 189, period 190, forward slash 191, grave accent	192
             isValid = isValid || (219 <= event.which) && (event.which <= 222);  //open bracket	219, back slash	220, close bracket 221, single quote 222
-            this.showSuggestions(isValid?event.key:undefined);
+            this.showSuggestions(isValid?event.key:undefined, true);
             event.preventDefault();
         }
     }
 
-    showSuggestions(term){
+    showSuggestions(term, append=false){
         this.getField().nextElementSibling.classList.remove("d-none");
-        this.suggestions_field.focus(term);
+        this.suggestions_field.update(term, append);
     }
 
     removeSelection(event, data){
@@ -70,6 +70,7 @@ class SuggestibleSelectField extends FormField{
     }
 
     hideSuggestions(){
+        this.suggestions_field.hide();
         this.getField().nextElementSibling.classList.add("d-none");
     }
 

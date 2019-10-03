@@ -2,8 +2,7 @@
     <a {{addAttr fieldAttributes}} {{addProps fieldProperties}}
             data-selected="{{value.value}}"
             data-onclick="onFocusToggle" data-focus="onFocusToggle"
-            data-onkeyup="onFocusToggle" data-onkeydown="onFocusToggle"
-            data-onblur="onFocusToggle"
+            data-onkeydown="onFocusToggle" data-onblur="onFocusToggle"
             onclick="event.preventDefault();" href="javascript:void(0);">
         {{#if value}}
             {{include selectedTemplate value}}

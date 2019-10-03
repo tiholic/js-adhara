@@ -40,6 +40,26 @@ class SuggestionMetaField extends FormField{
         return {};
     }
 
+    update(term, append=false){
+        let i = this.getParentContainerElement().querySelector("input");
+        i.focus();
+        i.setAttribute('autofocus', true);
+        i.dispatchEvent(new Event("focus"));
+        if(term!==undefined){
+            if(append) i.value += term;
+            else i.value = term;
+            i.dispatchEvent(new Event("change"));
+        }
+    }
+
+    hide(){
+        let i = this.getParentContainerElement().querySelector("input");
+        i.removeAttribute('autofocus');
+    }
+
+    /**
+     * @deprecated
+     * */
     focus(term){
         let i = this.getParentContainerElement().querySelector("input");
         i.dispatchEvent(new Event("focus"));
