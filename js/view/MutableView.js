@@ -204,8 +204,12 @@ class AdharaMutableView extends AdharaView{
         field.mutator = this;
         let _v = this.getFieldValue(field.name);
         if(field instanceof AdharaMutableView){
-            if(_v && _v instanceof Array && _v.length){
-                field.mutableData = _v;
+            if(_v){
+                if(_v instanceof Array){
+                    if(_v.length) field.mutableData = _v;
+                }else{
+                    field.mutableData = _v;
+                }
             }
         }else{
             field.value = _v;
@@ -246,6 +250,9 @@ class AdharaMutableView extends AdharaView{
         setValueToJson(this._mutable_data, this.fieldMap[field_name].name, value);
         this.onFieldValueChanged(field_name, value, old_value);
         this.onMutableDataChanged();
+        if(this.mutator){
+            this.mutator._onFieldValueChanged(this.name, this._mutable_data, this._mutable_data, {event, data});    //TODO sending same data for old and new values!
+        }
     }
 
 }
