@@ -13,8 +13,13 @@ class FieldSetRepeater extends AdharaMutableView{
 
     onInit(){
         super.onInit();
-        this.fieldMap = null;
+        this._resetMetaAndData();
+    }
+
+    _resetMetaAndData(){
+        super._resetMetaAndData();
         this.mutableData = ((this.mutableData instanceof Array) && this.mutableData.length) ? this.mutableData : [{}];
+        this.fieldMap = null;
         this.fieldSetMap = [];
     }
 

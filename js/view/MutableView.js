@@ -21,6 +21,10 @@ class AdharaMutableView extends AdharaView{
     }
 
     onInit(){
+        this._resetMetaAndData();
+    }
+
+    _resetMetaAndData(){
         this._mutable_data = {};
         this.fieldMap = {};
         this.rendered_fields = [];
@@ -73,10 +77,19 @@ class AdharaMutableView extends AdharaView{
     }
 
     /**
+     * @param {String} field_name
+     * @returns {*} Field data
+     * */
+    getFieldValueFromMutableData(field_name){
+        return getValueFromJSON(this.mutableData, this.fieldMap[field_name].name);
+    }
+
+    /**
+     * @param {String} field_name
      * @returns {*} Field data
      * */
     getFieldValue(field_name){
-        let d = getValueFromJSON(this.mutableData, this.fieldMap[field_name].name);
+        let d = this.getFieldValueFromMutableData(field_name);
         if(d===undefined){
             d = this.fieldMap[field_name].value;
         }
@@ -202,13 +215,19 @@ class AdharaMutableView extends AdharaView{
     enhanceFieldForSubViewRendering(field){
         this.fieldMap[field.name] = field;
         field.mutator = this;
-        let _v = this.getFieldValue(field.name);
+        let _v = this.getFieldValueFromMutableData(field.name);
         if(field instanceof AdharaMutableView){
             if(_v){
                 if(_v instanceof Array){
                     if(_v.length) field.mutableData = _v;
                 }else{
                     field.mutableData = _v;
+                }
+            }else{
+                if(field instanceof FieldSetRepeater){
+                    field.mutableData = [{}];
+                }else{
+                    field.mutableData = {};
                 }
             }
         }else{
