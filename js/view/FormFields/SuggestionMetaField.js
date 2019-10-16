@@ -15,12 +15,12 @@ class SuggestionMetaField extends FormField{
         this.paginated_hints = [];
         this.hint = new SuggestionHintsMetaField({
             c: `.hints#${this.ts}`,
-            options:{
+            options: {
                 hint_template: config.hint_template
             }
         });
         this.hint.onHintSelected((hint)=>{
-            this.handleHintUpdate(false,);
+            this.handleHintSelection(false,);
         });
         this.hint.onScrollHitBottom(()=>{
             this.updateHints({page: this.page+1}).then(_ => _);
@@ -43,7 +43,7 @@ class SuggestionMetaField extends FormField{
     update(term, append=false){
         let i = this.getParentContainerElement().querySelector("input");
         i.focus();
-        i.setAttribute('autofocus', true);
+        i.setAttribute('autofocus', "true");
         i.dispatchEvent(new Event("focus"));
         if(term!==undefined){
             if(append) i.value += term;
@@ -108,7 +108,7 @@ class SuggestionMetaField extends FormField{
             event.preventDefault();*/
         }else if(/*key===TAB || */key===ENTER){
             if(this.hint.selectedHint){
-                this.handleHintUpdate(false);
+                this.handleHintSelection(false);
             }
             event.preventDefault();
         }else if(key===UP_ARROW){
@@ -126,7 +126,7 @@ class SuggestionMetaField extends FormField{
             }
             event.preventDefault();
         }else if(key===BACKSPACE && !event.target.value){
-            this.handleHintUpdate( true);
+            this.handleHintSelection( true);
         }
     }
 
