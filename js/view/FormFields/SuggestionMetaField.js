@@ -57,18 +57,6 @@ class SuggestionMetaField extends FormField{
         i.removeAttribute('autofocus');
     }
 
-    /**
-     * @deprecated
-     * */
-    focus(term){
-        let i = this.getParentContainerElement().querySelector("input");
-        i.dispatchEvent(new Event("focus"));
-        if(term!==undefined){
-            i.value = term;
-            i.dispatchEvent(new Event("change"));
-        }
-    }
-
     onFocus(e, d){
         (this.config.hide_input!==false) && this.getField().classList.remove("d-none");
         if(!this.hint.hints || !this.hint.hints.length){
@@ -80,11 +68,11 @@ class SuggestionMetaField extends FormField{
     }
 
     onBlur(e, d){
-        this.trigger("Blurred", e, d);
         setTimeout(()=>{
             if(e.target.name !== document.activeElement.name){
                 this.hint.hide();
                 (this.config.hide_input!==false) && this.getField().classList.add("d-none");
+                this.trigger("Blurred", e, d);
             }
         }, 1000);
         //TODO try to remove this delay!!!
@@ -181,6 +169,7 @@ class SuggestionMetaField extends FormField{
         if(!is_new_term && !is_new_page && !force_re_fetch) return false;
         this.querying_results_for_term = term;
         this.querying_results_for_page = page;
+        console.log("hello, here", this.querying_results_for_term, term, page);
         return await this.tasker.execute(async ()=>{
             if(page===1){
                 let results = await this.config.data_provider.getFirstPage(term);
