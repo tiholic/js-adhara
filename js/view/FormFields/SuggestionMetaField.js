@@ -93,7 +93,7 @@ class SuggestionMetaField extends FormField{
 
     }
 
-    handleHintUpdate(isDeleted=false){
+    handleHintSelection(isDeleted=false){
         this.trigger(isDeleted?"HintDeleted":"HintSelected", this.hint.selectedHint);
         this.updateHints({term: "", re_fetch: true}).then(_=>_);
         this.selected_hint = this.hint.selectedHint;
