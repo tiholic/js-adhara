@@ -3,6 +3,13 @@ class SuggestibleSelectField extends FormField{
     constructor(name, config = {}, settings){
         super(name, config, settings);
         if(!config.selected_template) console.warn("No selected_template for", this.name);
+
+        let _onDependentParentChanged = config.onDependentParentChanged;
+        config.onDependentParentChanged = (value, old_value, d_event_data)=>{
+            this.suggestions_field.parentChanged = true;
+            _onDependentParentChanged && _onDependentParentChanged(value, old_value, d_event_data);
+        };
+
         this.suggestions_field = new SuggestionMetaField(`__internal_${this.ts}__`, {
             label: false,
             hide_input: true,

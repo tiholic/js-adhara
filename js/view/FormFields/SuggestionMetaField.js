@@ -2,6 +2,7 @@ class SuggestionMetaField extends FormField{
     //THIS IS A META CLASS ONLY, to be used inside other select classes..!
 
     /**
+     * @extends {FormField}
      * @param {SuggestionDataProvider} config.dataProvider
      * */
     constructor(name, config, settings){
@@ -10,6 +11,7 @@ class SuggestionMetaField extends FormField{
             //TODO throw error...
             // throw new Error(`field config error: ${this.name} | dataProvider must be an instance of SuggestionDataProvider`);
         }
+        this.parentChanged = false;
         this.term = "";
         this.page = 1;
         this.paginated_hints = [];
@@ -59,8 +61,9 @@ class SuggestionMetaField extends FormField{
 
     onFocus(e, d){
         (this.config.hide_input!==false) && this.getField().classList.remove("d-none");
-        if(!this.hint.hints || !this.hint.hints.length){
+        if(this.parentChanged || !this.hint.hints || !this.hint.hints.length){
             this.updateHints({start_fetching: true}).then(()=>{});
+            this.parentChanged = false;
         }else{
             this.hint.show();
         }
@@ -169,7 +172,6 @@ class SuggestionMetaField extends FormField{
         if(!is_new_term && !is_new_page && !force_re_fetch) return false;
         this.querying_results_for_term = term;
         this.querying_results_for_page = page;
-        console.log("hello, here", this.querying_results_for_term, term, page);
         return await this.tasker.execute(async ()=>{
             if(page===1){
                 let results = await this.config.data_provider.getFirstPage(term);

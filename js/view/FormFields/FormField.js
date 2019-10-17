@@ -285,10 +285,18 @@ class FormField extends AdharaView{
         }
         for(let dependent_field of this._dependent_fields){
             let d_event_data = Object.assign({}, event_data, {initiator: "dependency"});
+            let clearValue = true;
             if(dependent_field.config.onDependentParentChanged){
-                dependent_field.config.onDependentParentChanged(value, old_value, d_event_data);
-            }else if(event_data.initiator==="self"){
-                dependent_field.changeData(null, d_event_data);
+                clearValue = dependent_field.config.onDependentParentChanged(value, old_value, d_event_data);
+            }
+            if(event_data.initiator==="self" && clearValue!==false){
+                let clearDependencyChain = (_d_field) => {
+                    _d_field.changeData(null, d_event_data);
+                    for(let _nested_dependent_field of _d_field._dependent_fields){
+                        clearDependencyChain(_nested_dependent_field);
+                    }
+                };
+                clearDependencyChain(dependent_field);
             }
         }
         this.value = value;
