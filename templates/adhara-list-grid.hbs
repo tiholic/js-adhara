@@ -8,7 +8,7 @@
     </thead>
     <tbody>
     {{#each rows as |row index|}}
-        <tr adhara-datum-row="{{index}}">
+        <tr adhara-datum-row="{{index}}" {{addAttr (fn_call ../getRowAttributes row index)}}>
             {{#each ../columns as |column value|}}
                 <td {{addAttr column.cell_attributes}} data-field="{{index}}-{{column.name}}" adhara-datum-col="{{index}}-{{column.name}}">
                     {{#if column.trust_as_html}}

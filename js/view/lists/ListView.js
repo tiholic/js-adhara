@@ -122,6 +122,17 @@ class AdharaListView extends AdharaView{
     }
 
     /**
+     * @method
+     * @instance
+     * @param {*} row - data of current row
+     * @param {Number} index - index of current row
+     * @returns {Object} a key value pair of attributes for tr element
+     * */
+    getRowAttributes(row, index){
+        return {};
+    }
+
+    /**
      * @param {Object} row_data - row data
      * @param {ColumnConfig} column - column config
      * @param {Number} row_index

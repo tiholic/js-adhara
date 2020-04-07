@@ -63,7 +63,7 @@ module.exports = {
         //basic view
         "js/view/View.js",
         //component views
-        "js/view/ListView.js",
+        "js/view/lists/ListView.js",
         "js/view/MutableView.js",
         "js/view/FormView.js",
         "js/view/DetailView.js",
@@ -79,8 +79,8 @@ module.exports = {
         "js/view/FormFields/SuggestibleSelectField.js",
         "js/view/FormFields/FieldSetRepeater.js",
         //dependent component views
-        "js/view/GridView.js",
-        "js/view/TemplateView.js",
+        "js/view/lists/GridView.js",
+        "js/view/lists/TemplateView.js",
         "js/view/CardView.js",
         "js/view/DialogView.js",
         "js/view/TabView.js",

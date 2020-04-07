@@ -251,6 +251,9 @@ class AdharaMutableView extends AdharaView{
         return fields;
     }
 
+    /**
+     * @returns {Array}
+     * */
     get subViews(){
         let fields = this.prepareFieldsForRendering();
         this.rendered_fields = fields.slice();

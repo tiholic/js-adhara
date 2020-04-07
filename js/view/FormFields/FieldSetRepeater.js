@@ -70,6 +70,7 @@ class FieldSetRepeater extends AdharaMutableView{
                     _field.config.label = _field.config.label!==false && i===0;
                 }
                 _field.config.list_index = i;
+                if(!_field.config.attributes) _field.config.attributes = {};
                 _field.config.attributes["data-repeaterIndex"] = i;
                 if(!this.fieldSetMap[i]) this.fieldSetMap[i] = {};
                 this.fieldSetMap[i][_field.name] = _field;

@@ -265,7 +265,7 @@ class AdharaView extends AdharaEventHandler{
     }
 
     refresh(){
-        Adhara.createView(this);
+        Adhara.createView(this, this.parentViewInstance);
     }
 
     onDestroy(){

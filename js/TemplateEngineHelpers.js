@@ -38,7 +38,7 @@ class TemplateEngineHelpers{
                     let class_names = attributes?(attributes.className||attributes["class"]||""):"";
                     class_names += default_attributes.hasOwnProperty("class")?" "+default_attributes['class']:"";
                     attributes = Object.assign( default_attributes, attributes );
-                    attributes['class'] = class_names;
+                    if(class_names) attributes['class'] = class_names;
                     loop(attributes, function(key, value){
                         if(key && value !== undefined){
                             if(key === "style"){
