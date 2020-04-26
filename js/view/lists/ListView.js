@@ -126,10 +126,6 @@ class AdharaListView extends AdharaView{
         return 'adhara-list-selector-header';
     }
 
-    _updateSelection(){
-
-    }
-
     selectOne(event, data){
         event.preventDefault();
         event.stopPropagation();
@@ -158,6 +154,10 @@ class AdharaListView extends AdharaView{
 
     get allInViewSelected(){
         return (this.selectedRows.length===this.rows.length);
+    }
+
+    resetSelection(){
+        this._selectedRows = [];
     }
 
     /**
@@ -387,11 +387,9 @@ class AdharaListView extends AdharaView{
             $search.focus();
             $search.setSelectionRange(this.searchText.length, this.searchText.length);
         }
-        setTimeout(()=>{
-            if(this.selectedRows.length && (this.selectedRows.length !== this.rows.length)){
-                this.querySelector('thead tr .select-all-selector input').indeterminate = true;
-            }
-        }, 0);
+        if(this.selectedRows.length && (this.selectedRows.length !== this.rows.length)){
+            this.querySelector('thead tr .select-all-selector input').indeterminate = true;
+        }
         super.format(container);
     }
 
