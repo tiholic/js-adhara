@@ -1,0 +1,9 @@
+{{#if tableView.selectionMode '===' 'single'}}
+    <input type="radio" name="{{tableView.name}}-selector"
+           data-onchange="selectOne" data-rowindex="{{currentIndex}}"
+           title="Choose" {{#if currentIndex 'in' tableView.selectedRows}}checked{{/if}}>
+{{else if tableView.selectionMode '===' 'multiple'}}
+    <input type="checkbox" name="{{tableView.name}}-selector"
+           data-onchange="selectOne" data-rowindex="{{currentIndex}}"
+           title="Select" {{#if currentIndex 'in' tableView.selectedRows}}checked{{/if}}>
+{{/if}}

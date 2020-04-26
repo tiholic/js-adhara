@@ -1,3 +1,6 @@
+{{#if selectionMode}}
+    {{include selectorHeaderTemplate this}}&nbsp;|
+{{/if}}
 {{#each this as |column index|}}
     <b>{{column.display_name}}</b>&nbsp;|
 {{/each}}

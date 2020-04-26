@@ -26,7 +26,7 @@ class AdharaView extends AdharaEventHandler{
         this.fetching_data = false;
         this.onInit();
         this._subViews = [];
-        this.rednered_subviews = [];
+        this.rendered_subviews = [];
         this.rendered = false;
         this.initialized = true;
         this.error = null;
@@ -224,9 +224,10 @@ class AdharaView extends AdharaEventHandler{
     }
 
     renderSubViews(){
-        this.rednered_subviews.forEach(_ => { _.destroy(); });
+        this.rendered_subviews.forEach(_ => { _.destroy(); });
+        this.rendered_subviews = [];
         for(let sub_view of (this.subViews || [])){
-            this.rednered_subviews.push(Adhara.createView(sub_view, this));
+            this.rendered_subviews.push(Adhara.createView(sub_view, this));
         }
     }
 

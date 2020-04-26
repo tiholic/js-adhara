@@ -8,6 +8,7 @@
         <tbody>
         {{#each rows as |row index|}}
             <tr adhara-datum-row="{{index}}">
+                {{#if ../selectionMode}}<td>{{include ../selectorTemplate ../this}}</td>{{/if}}
                 <td adhara-datum-col="{{index}}-{{column}}">
                     {{include ../itemTemplate row}}
                 </td>

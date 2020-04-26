@@ -1,6 +1,9 @@
 <table class="table {{tableClass}}">
     <thead>
     <tr>
+        {{#if selectionMode}}<th class="select-all-selector">
+            {{include selectorHeaderTemplate this}}
+        </th>{{/if}}
         {{#each columns as |column index|}}
             <th {{addAttr column.cell_attributes}}>{{column.display_name}}</th>
         {{/each}}
@@ -9,6 +12,7 @@
     <tbody>
     {{#each rows as |row index|}}
         <tr adhara-datum-row="{{index}}" {{addAttr (fn_call ../getRowAttributes row index)}}>
+            {{#if ../selectionMode}}<td>{{include ../selectorTemplate (make_context 'tableView' ../this 'currentRow' this 'currentIndex' index)}}</td>{{/if}}
             {{#each ../columns as |column value|}}
                 <td {{addAttr column.cell_attributes}} data-field="{{index}}-{{column.name}}" adhara-datum-col="{{index}}-{{column.name}}">
                     {{#if column.trust_as_html}}

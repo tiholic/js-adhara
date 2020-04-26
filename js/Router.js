@@ -275,7 +275,7 @@ let AdharaRouter = null;
                 callMiddlewares({
                     view_name: opts.view_name,
                     path: path,
-                    query_params: getQueryParams(),
+                    query_params: _getQueryParams(),
                     path_params: _pathParams
                 }, () => {
                     params.push(queryParams);
@@ -327,7 +327,7 @@ let AdharaRouter = null;
      * Fetches the search query from current URL and transforms it to query param's object.
      * @returns {Object<String, String>} The search query will be decoded and returned as an object.
      * */
-    function getQueryParams(){
+    function _getQueryParams(){
         let qp = {};
         if(getSearchString()){
             loop(getSearchString().split('&'), function(i, paramPair){
@@ -348,7 +348,7 @@ let AdharaRouter = null;
      * The search query will be decoded and stored.
      * */
     function fetchQueryParams(){
-        queryParams = getQueryParams();
+        queryParams = _getQueryParams();
     }
 
     /**
@@ -745,6 +745,10 @@ let AdharaRouter = null;
         static getQueryParam(param_name){
             updateParams();
             return queryParams[param_name];
+        }
+
+        static getQueryParams(){
+            return _getQueryParams();
         }
 
         static getPathParam(param_name){

@@ -5,6 +5,7 @@ class AdharaListView extends AdharaView{
         this._page_number = 1;
         this.searchText = null;
         this._rows = [];
+        this._selectedRows = [];
         this.formatColumn = this.formatColumn.bind(this);
     }
 
@@ -95,6 +96,68 @@ class AdharaListView extends AdharaView{
      * */
     get isPaginationRequired(){
         return false;
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {String|null} What type of selection is to be enabled
+     * Can return "single", "multiple" and null
+     * */
+    get selectionMode(){
+        return null;
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} selector
+     * */
+    get selectorTemplate(){
+        return 'adhara-list-selector';
+    }
+
+    /**
+     * @method
+     * @getter
+     * @returns {HandlebarTemplate} selector in table header
+     * */
+    get selectorHeaderTemplate(){
+        return 'adhara-list-selector-header';
+    }
+
+    _updateSelection(){
+
+    }
+
+    selectOne(event, data){
+        event.preventDefault();
+        event.stopPropagation();
+        let eIndex = this._selectedRows.indexOf(+data.rowindex);
+        if(eIndex===-1){
+            this._selectedRows.push(+data.rowindex);
+        }else{
+            this._selectedRows.splice(eIndex, 1);
+        }
+        this.setState();
+    }
+
+    toggleSelectingAll(event, data){
+        this._selectedRows = [];
+        if(event.target.checked){
+            for(let i=0; i<this.rows.length; i++){
+                this._selectedRows.push(i);
+            }
+        }
+        this.setState();
+    }
+
+    get selectedRows(){
+        return this._selectedRows;
+    }
+
+    get allInViewSelected(){
+        return (this.selectedRows.length===this.rows.length);
     }
 
     /**
@@ -324,6 +387,11 @@ class AdharaListView extends AdharaView{
             $search.focus();
             $search.setSelectionRange(this.searchText.length, this.searchText.length);
         }
+        setTimeout(()=>{
+            if(this.selectedRows.length && (this.selectedRows.length !== this.rows.length)){
+                this.querySelector('thead tr .select-all-selector input').indeterminate = true;
+            }
+        }, 0);
         super.format(container);
     }
 
