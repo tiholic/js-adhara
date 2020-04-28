@@ -56,6 +56,10 @@ class AdharaDialogView extends AdharaView{
         return true;
     }
 
+    get modalAttributes(){
+        return {};
+    }
+
     getParentContainerElement(){
         // return document.querySelector('.adhara-dialog')
         return document.querySelector('#'+this.wrapperId);
