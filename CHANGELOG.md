@@ -1,5 +1,8 @@
 ## Adhara.js Change log
 
+#### [28th Apr, 2020] 2.3.0
+1. Multiple enhancements. Breaking change w.r.t. rendered subviews instance variable in View
+
 #### [07th Apr, 2020] 2.2.0
 1. Enhancing list views
 2. Fix refresh issue on View
