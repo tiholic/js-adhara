@@ -98,6 +98,10 @@ class AdharaListView extends AdharaView{
         return false;
     }
 
+    get paginationInFooter(){
+        return false;
+    }
+
     /**
      * @method
      * @getter

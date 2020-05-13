@@ -5,6 +5,7 @@
             {{include fetchingDataTemplate this}}
         {{else}}
             {{#if isPaginationRequired}}
+                {{#unless paginationInFooter}}
                 <div class="row flex-row-reverse">
                     <div class="col-xs-12">
                         <div class="btn-group float-right" role="group">
@@ -13,6 +14,7 @@
                         </div>
                     </div>
                 </div>
+                {{/unless}}
             {{/if}}
         <div class="list-contents">
             {{#if rows}}
